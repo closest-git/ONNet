@@ -49,8 +49,8 @@ def train(model, device, train_loader, optimizer, epoch, optical_trans):
         optimizer.zero_grad()
         output = model(optical_trans(data))
         #output = model(data)
-        #loss = F.cross_entropy(output, target)
-        loss = F.nll_loss(output, target)
+        loss = F.cross_entropy(output, target)
+        #loss = F.nll_loss(output, target)
         loss.backward()
         optimizer.step()
         if batch_idx % 50 == 0:
@@ -66,8 +66,13 @@ def test(model, device, test_loader, optical_trans):
         for data, target in test_loader:
             data, target = data.to(device), target.to(device)
             output = model(optical_trans(data))
-            test_loss += F.cross_entropy(output, target, reduction='sum').item() # sum up batch loss
-            pred = output.max(1, keepdim=True)[1] # get the index of the max log-probability
+            #output = model(data)
+            if True:
+                test_loss += F.cross_entropy(output, target, reduction='sum').item() # sum up batch loss
+                pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
+            else:
+                test_loss += F.nll_loss(output, target, reduction='sum').item()  # sum up batch loss
+                pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
             correct += pred.eq(target.view_as(pred)).sum().item()
 
     test_loss /= len(test_loader.dataset)
@@ -100,23 +105,6 @@ def main():
     device = torch.device("cuda" if use_cuda else "cpu")
     optical_trans = OpticalTrans()
 
-    model = BaseNet()
-    model.float()
-    model.type(torch.complex64)
-
-    model.to(device)
-    print(model)
-
-    #initialize
-    for m in model.modules():
-        if isinstance(m, nn.Conv2d):
-            n = m.kernel_size[0] * m.kernel_size[1] * m.in_channels
-            m.weight.data.normal_(0, 2./math.sqrt(n))
-            m.bias.data.zero_()
-        if isinstance(m, nn.Linear):
-            m.weight.data.normal_(0, 2./math.sqrt(m.in_features))
-            m.bias.data.zero_()
-
     # DataLoaders
     if use_cuda:
         num_workers = 4
@@ -138,7 +126,24 @@ def main():
             transforms.Normalize((0.1307,), (0.3081,))
         ])),
         batch_size=128, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
-    #model = D2NNet().to(device)
+
+    #model = BaseNet()
+    model = D2NNet()
+    model.double()
+    model.to(device)
+    print(model)
+
+    if False:       # So strange in initialize
+        for m in model.modules():
+            if isinstance(m, nn.Conv2d):
+                n = m.kernel_size[0] * m.kernel_size[1] * m.in_channels
+                m.weight.data.normal_(0, 2. / math.sqrt(n))
+                m.bias.data.zero_()
+            if isinstance(m, nn.Linear):
+                m.weight.data.normal_(0, 2. / math.sqrt(m.in_features))
+                m.bias.data.zero_()
+
+    #
     for name, param in model.named_parameters():
         if param.requires_grad:
             print(name)
