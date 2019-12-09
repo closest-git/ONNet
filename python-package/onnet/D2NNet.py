@@ -16,6 +16,9 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.optim.lr_scheduler import StepLR
 
+def fft_test(N = 28):
+    pass
+
 #https://pytorch.org/tutorials/beginner/pytorch_with_examples.html#pytorch-custom-nn-modules
 class DiffractiveLayer(torch.nn.Module):
     def __init__(self, M_in, N_in):
@@ -59,7 +62,8 @@ class DiffractiveLayer(torch.nn.Module):
         H_z[..., 0] = Hshift.real
         H_z[..., 1] = Hshift.imag
         H_z = torch.from_numpy(H_z).cuda()
-        u1 = Z_Hadamard(Z_fft(z0),H_z)
+        z0 = Z_fft(z0)
+        u1 = Z_Hadamard(z0,H_z)
         u2 = Z_fft(u1,"C2C",inverse=True)
         return  u2 * N * N * df * df
 
@@ -79,10 +83,10 @@ class D2NNet(nn.Module):
         layer = DiffractiveLayer
         self.z_modulus = Z_modulus()
         self.D1 = layer(self.M, self.N)
-        self.D2 = layer(self.M, self.N)
-        self.D3 = layer(self.M, self.N)
-        self.D4 = layer(self.M, self.N)
-        self.D5 = layer(self.M, self.N)
+        #self.D2 = layer(self.M, self.N)
+        #self.D3 = layer(self.M, self.N)
+        #self.D4 = layer(self.M, self.N)
+        #self.D5 = layer(self.M, self.N)
 
         self.fc1 = nn.Linear(self.M*self.N, 10)
         print(self.parameters())
@@ -92,10 +96,10 @@ class D2NNet(nn.Module):
     def forward(self, x):
         x = x.double()
         x = self.D1(x)
-        x = self.D2(x)
-        x = self.D3(x)
-        x = self.D4(x)
-        x = self.D5(x)
+        #x = self.D2(x)
+        #x = self.D3(x)
+        #x = self.D4(x)
+        #x = self.D5(x)
         x = self.z_modulus(x).cuda()
         x = torch.flatten(x, 1)
         x = self.fc1(x)
