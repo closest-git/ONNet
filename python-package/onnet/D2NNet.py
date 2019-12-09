@@ -7,7 +7,6 @@
 from __future__ import print_function
 import argparse
 import torch
-from PIL import Image
 import torchvision.transforms.functional as F
 import torch.nn as nn
 import torch.nn.functional as F
@@ -82,10 +81,10 @@ class D2NNet(nn.Module):
         layer = DiffractiveLayer
         self.z_modulus = Z.modulus
         self.D1 = layer(self.M, self.N)
-        #self.D2 = layer(self.M, self.N)
-        #self.D3 = layer(self.M, self.N)
-        #self.D4 = layer(self.M, self.N)
-        #self.D5 = layer(self.M, self.N)
+        self.D2 = layer(self.M, self.N)
+        self.D3 = layer(self.M, self.N)
+        self.D4 = layer(self.M, self.N)
+        self.D5 = layer(self.M, self.N)
 
         self.fc1 = nn.Linear(self.M*self.N, 10)
         print(self.parameters())
@@ -95,10 +94,10 @@ class D2NNet(nn.Module):
     def forward(self, x):
         x = x.double()
         x = self.D1(x)
-        #x = self.D2(x)
-        #x = self.D3(x)
-        #x = self.D4(x)
-        #x = self.D5(x)
+        x = self.D2(x)
+        x = self.D3(x)
+        x = self.D4(x)
+        x = self.D5(x)
         x = self.z_modulus(x).cuda()
         x = torch.flatten(x, 1)
         x = self.fc1(x)

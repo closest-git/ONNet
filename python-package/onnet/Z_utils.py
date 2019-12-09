@@ -18,7 +18,17 @@ class COMPLEX_utils(object):
         return input.size(-1) == 1
 
     @staticmethod
-    def Z_relu(input_r,input_i):
+    def ToZ(u0):
+        if COMPLEX_utils.isComplex(u0):
+            return u0
+        else:
+            z0 = u0.new_zeros(u0.shape + (2,))
+            z0[..., 0] = u0
+            assert(COMPLEX_utils.isComplex(z0))
+            return z0
+
+    @staticmethod
+    def relu(input_r,input_i):
         return relu(input_r), relu(input_i)
 
     @staticmethod
@@ -83,7 +93,8 @@ class COMPLEX_utils(object):
             output = torch.irfft(input, 2, normalized=False, onesided=False)*input.size(-2)*input.size(-3)
         elif direction == 'C2C':
             if inverse:
-                output = torch.ifft(input, 2, normalized=False)*input.size(-2)*input.size(-3)
+                #output = torch.ifft(input, 2, normalized=False)*input.size(-2)*input.size(-3)
+                output = torch.ifft(input, 2, normalized=False)
             else:
                 output = torch.fft(input, 2, normalized=False)
 

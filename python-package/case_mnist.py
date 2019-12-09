@@ -148,7 +148,7 @@ def main():
         if param.requires_grad:
             print(name)
     # Optimizer
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.0001, momentum=0.9,
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9,
                                 weight_decay=0.0005)
 
     for epoch in range(1, 16):
