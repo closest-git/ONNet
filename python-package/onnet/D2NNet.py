@@ -7,24 +7,23 @@
 from __future__ import print_function
 import argparse
 import torch
+from PIL import Image
+import torchvision.transforms.functional as F
 import torch.nn as nn
 import torch.nn.functional as F
-from .Z_utils import *
+from .Z_utils import COMPLEX_utils as Z
 import  numpy as np
 
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.optim.lr_scheduler import StepLR
 
-def fft_test(N = 28):
-    pass
-
 #https://pytorch.org/tutorials/beginner/pytorch_with_examples.html#pytorch-custom-nn-modules
 class DiffractiveLayer(torch.nn.Module):
     def __init__(self, M_in, N_in):
         super(DiffractiveLayer, self).__init__()
         assert(M_in==N_in)
-        self.z_modulus = Z_modulus()
+        self.z_modulus = Z.modulus
         self.size = M_in
         self.delta = 0.03
         self.dL = 0.02
@@ -34,7 +33,7 @@ class DiffractiveLayer(torch.nn.Module):
         self.amp.data.uniform_(0, 1)
 
     def Diffractive_(self,u0,  theta=0.0):
-        if isComplex(u0):
+        if Z.isComplex(u0):
             z0 = u0
         else:
             z0 = u0.new_zeros(u0.shape + (2,))
@@ -62,15 +61,15 @@ class DiffractiveLayer(torch.nn.Module):
         H_z[..., 0] = Hshift.real
         H_z[..., 1] = Hshift.imag
         H_z = torch.from_numpy(H_z).cuda()
-        z0 = Z_fft(z0)
-        u1 = Z_Hadamard(z0,H_z)
-        u2 = Z_fft(u1,"C2C",inverse=True)
+        z0 = Z.fft(z0)
+        u1 = Z.Hadamard(z0,H_z)
+        u2 = Z.fft(u1,"C2C",inverse=True)
         return  u2 * N * N * df * df
 
     def forward(self, x):
         #x = self.Diffractive_(x)*self.amp
         diffrac = self.Diffractive_(x)
-        x = Z_Hadamard(diffrac,self.amp)
+        x = Z.Hadamard(diffrac,self.amp)
         return x
 
 class D2NNet(nn.Module):
@@ -81,7 +80,7 @@ class D2NNet(nn.Module):
         self.M=28;      self.N=28
         layer = nn.Linear
         layer = DiffractiveLayer
-        self.z_modulus = Z_modulus()
+        self.z_modulus = Z.modulus
         self.D1 = layer(self.M, self.N)
         #self.D2 = layer(self.M, self.N)
         #self.D3 = layer(self.M, self.N)
