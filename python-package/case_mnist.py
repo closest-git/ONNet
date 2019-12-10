@@ -127,9 +127,11 @@ def main():
         ])),
         batch_size=128, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
 
-    #model = BaseNet()
-    model = D2NNet()
-    model.double()
+    if False:
+        model = BaseNet()
+    else:
+        model = D2NNet()
+        model.double()
     model.to(device)
     print(model)
 

@@ -41,6 +41,16 @@ class COMPLEX_utils(object):
                           ceil_mode, return_indices)
 
     @staticmethod
+    def rDrop2D(rDrop,d_shape,isComlex=False):
+        drop = np.random.binomial(1, rDrop, size=d_shape).astype(np.float)
+        drop[drop == 0] = 1.0e-6
+        # print(f"x={x.shape} drop={drop.shape}")
+        drop = torch.from_numpy(drop).cuda()
+        if isComlex:
+            drop = COMPLEX_utils.ToZ(drop)
+        return drop
+    '''
+    @staticmethod
     def dropout(input_r,input_i, p=0.5, training=True, inplace=False):
         return dropout(input_r, p, training, inplace), \
                dropout(input_i, p, training, inplace)
@@ -49,6 +59,7 @@ class COMPLEX_utils(object):
     def dropout2d(input_r,input_i, p=0.5, training=True, inplace=False):
         return dropout2d(input_r, p, training, inplace), \
                dropout2d(input_i, p, training, inplace)
+    '''
 
     #the absolute value or modulus of z     https://en.wikipedia.org/wiki/Absolute_value#Complex_numbers
     @staticmethod
