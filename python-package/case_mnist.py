@@ -130,7 +130,7 @@ def main():
     if False:
         model = BaseNet()
     else:
-        model = D2NNet()
+        model = D2NNet(10)
         model.double()
     model.to(device)
     print(model)

@@ -4,12 +4,12 @@
     PyTorch implementation of D2CNN     ------      All-optical machine learning using diffractive deep neural networks
 '''
 
-from __future__ import print_function
 import torch
 import torchvision.transforms.functional as F
 import torch.nn as nn
 import torch.nn.functional as F
 from .Z_utils import COMPLEX_utils as Z
+from .PoolForCls import *
 import  numpy as np
 
 import torch.optim as optim
@@ -80,11 +80,13 @@ class DiffractiveLayer(torch.nn.Module):
 class D2NNet(nn.Module):
     # https://github.com/szagoruyko/diracnets
 
-    def __init__(self):
+    def __init__(self,nCls):
         super(D2NNet, self).__init__()
         self.M=28;      self.N=28
         self.z_modulus = Z.modulus
-        self.isFC=True
+        self.isFC = False
+        self.nClass = nCls
+        assert(self.M>=self.nClass and self.N>=self.nClass)
 
         layer = nn.Linear
         layer = DiffractiveLayer
@@ -98,12 +100,11 @@ class D2NNet(nn.Module):
         self.nD = len(self.DD)
         #self.DD.append(DropOutLayer(self.M, self.N,drop=0.9999))
         if self.isFC:
-            self.fc1 = nn.Linear(self.M*self.N, 10)
+            self.fc1 = nn.Linear(self.M*self.N, self.nClass)
         else:
-            self.avg = nn.AvgPool2d((self.M, self.N))
+            self.last_pool = PoolForCls(self.nClass,pooling="max")
         print(self.parameters())
         print(self)
-
 
     def forward(self, x):
         x = x.double()
@@ -115,7 +116,7 @@ class D2NNet(nn.Module):
             x = torch.flatten(x, 1)
             x = self.fc1(x)
         else:
-            x = self.avg(x)
+            x = self.last_pool(x)
 
         output = F.log_softmax(x, dim=1)
         return output
