@@ -67,7 +67,7 @@ def Init_H(d=delta, N = size, dL = dL, lmb = c/Hz,theta=0.0):
     return H,H_f
 
 H,H_f=Init_H()
-fft_test();             input(...)
+#fft_test();             input(...)
 
 def _propogation(u0, N = size, dL = dL):
     df = 1.0 / dL

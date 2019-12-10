@@ -5,7 +5,6 @@
 '''
 
 from __future__ import print_function
-import argparse
 import torch
 import torchvision.transforms.functional as F
 import torch.nn as nn
@@ -16,26 +15,6 @@ import  numpy as np
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.optim.lr_scheduler import StepLR
-
-#Very strange behavior of DROPOUT
-class DropOutLayer(torch.nn.Module):
-    def __init__(self, M_in, N_in,drop=0.5):
-        super(DropOutLayer, self).__init__()
-        assert (M_in == N_in)
-        self.M = M_in
-        self.N = N_in
-        self.rDrop = drop
-
-    def forward(self, x):
-        assert(Z.isComplex(x))
-        nX = x.numel()//2
-        d_shape=x.shape[:-1]
-        drop = np.random.binomial(1, self.rDrop, size=d_shape).astype(np.float)
-        #print(f"x={x.shape} drop={drop.shape}")
-        drop = torch.from_numpy(drop).cuda()
-        x[...,0] *= drop
-        x[...,1] *= drop
-        return x
 
 #https://pytorch.org/tutorials/beginner/pytorch_with_examples.html#pytorch-custom-nn-modules
 class DiffractiveLayer(torch.nn.Module):
@@ -104,40 +83,40 @@ class D2NNet(nn.Module):
     def __init__(self):
         super(D2NNet, self).__init__()
         self.M=28;      self.N=28
+        self.z_modulus = Z.modulus
+        self.isFC=True
+
         layer = nn.Linear
         layer = DiffractiveLayer
-        self.z_modulus = Z.modulus
-
         self.DD = nn.ModuleList([
             layer(self.M, self.N),
             layer(self.M, self.N),
             layer(self.M, self.N),
-            layer(self.M, self.N, rDrop=0.1),
-            layer(self.M, self.N, rDrop=0.1)]
+            layer(self.M, self.N),
+            layer(self.M, self.N)]
         )
         self.nD = len(self.DD)
         #self.DD.append(DropOutLayer(self.M, self.N,drop=0.9999))
-
-        self.fc1 = nn.Linear(self.M*self.N, 10)
+        if self.isFC:
+            self.fc1 = nn.Linear(self.M*self.N, 10)
+        else:
+            self.avg = nn.AvgPool2d((self.M, self.N))
         print(self.parameters())
         print(self)
 
 
     def forward(self, x):
         x = x.double()
-        if False:
-            x = self.D1(x)
-            x = self.D2(x)
-            x = self.D3(x)
-            x = self.D4(x)
-            x = self.D5(x)
-        else:
-            for layD in self.DD:
-                x = layD(x)
+        for layD in self.DD:
+            x = layD(x)
 
         x = self.z_modulus(x).cuda()
-        x = torch.flatten(x, 1)
-        x = self.fc1(x)
+        if self.isFC:
+            x = torch.flatten(x, 1)
+            x = self.fc1(x)
+        else:
+            x = self.avg(x)
+
         output = F.log_softmax(x, dim=1)
         return output
 

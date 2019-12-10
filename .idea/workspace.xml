@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="617760e5-c3b6-4c49-8d8a-74f37b516c48" name="Default Changelist" comment="1)Z:::ToZ,ifft 2)D2NN_tf">
+    <list default="true" id="617760e5-c3b6-4c49-8d8a-74f37b516c48" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/python-package/case_dog_cat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python-package/case_face_detect.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python-package/onnet/BinaryDetector.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/python-package/onnet/DropOutLayer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python-package/case_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/case_mnist.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python-package/onnet/D2NN_tf.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/D2NN_tf.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python-package/onnet/D2NNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/D2NNet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python-package/onnet/Z_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/Z_utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,19 +19,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://D:/Anaconda3/Lib/codecs.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="309" selection-start-line="309" selection-end-line="309" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NNet.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="143">
-              <caret line="114" column="45" lean-forward="true" selection-start-line="114" selection-start-column="45" selection-end-line="114" selection-end-column="45" />
+            <state relative-caret-position="1444">
+              <caret line="86" column="22" selection-start-line="86" selection-start-column="22" selection-end-line="86" selection-end-column="22" />
               <folding>
                 <element signature="e#173#210#0" expanded="true" />
               </folding>
@@ -37,28 +31,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://D:/Anaconda3/Lib/site-packages/torch/tensor.py">
+        <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NN_tf.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="106" selection-start-line="106" selection-end-line="106" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/module.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="157">
-              <caret line="492" selection-start-line="492" selection-end-line="492" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python-package/net_source/try_tensor.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="475">
-              <caret line="25" column="34" lean-forward="true" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
+            <state relative-caret-position="3306">
+              <caret line="180" selection-start-line="180" selection-end-line="180" />
+              <folding>
+                <element signature="e#58#116#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -66,8 +45,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python-package/case_mnist.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-724">
-              <caret line="53" selection-start-line="53" selection-end-line="53" />
+            <state relative-caret-position="2413">
+              <caret line="127" column="46" selection-start-line="127" selection-start-column="46" selection-end-line="127" selection-end-column="46" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -76,10 +55,45 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/conv.py">
+        <entry file="file://$PROJECT_DIR$/python-package/case_dog_cat.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="317" column="8" selection-start-line="317" selection-start-column="8" selection-end-line="317" selection-end-column="8" />
+            <state relative-caret-position="-19">
+              <caret line="2" column="100" selection-start-line="2" selection-start-column="100" selection-end-line="2" selection-end-column="100" />
+              <folding>
+                <element signature="e#84#141#0" expanded="true" />
+                <element signature="e#856#1279#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/python-package/case_face_detect.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="184">
+              <caret line="225" column="34" lean-forward="true" selection-start-line="225" selection-start-column="34" selection-end-line="225" selection-end-column="34" />
+              <folding>
+                <element signature="e#110#122#0" expanded="true" />
+                <element signature="e#1792#3416#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/loss.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="123">
+              <caret line="941" selection-start-line="941" selection-end-line="941" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/module.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="123">
+              <caret line="492" selection-start-line="492" selection-end-line="492" />
             </state>
           </provider>
         </entry>
@@ -87,20 +101,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python-package/onnet/Z_utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="246">
-              <caret line="46" column="36" lean-forward="true" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="36" />
+            <state relative-caret-position="817">
+              <caret line="46" column="36" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="36" />
               <folding>
                 <element signature="e#82#94#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/functional.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="680">
-              <caret line="869" column="30" lean-forward="true" selection-start-line="869" selection-start-column="30" selection-end-line="869" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -116,8 +121,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>_ten_regions</find>
-      <find>ten_regions</find>
       <find>reduce_mean</find>
       <find>Net</find>
       <find>_propogation_phase_out</find>
@@ -142,6 +145,11 @@
       <find>z_modulus</find>
       <find>modulus</find>
       <find>optical_trans</find>
+      <find>rang</find>
+      <find>fft_test</find>
+      <find>_ten_regions</find>
+      <find>ten_regions</find>
+      <find>classes</find>
     </findStrings>
     <replaceStrings>
       <replace>optical_trans</replace>
@@ -163,17 +171,21 @@
         <option value="$PROJECT_DIR$/python-package/net_source/try_tensor.py" />
         <option value="$PROJECT_DIR$/python-package/net_source/D2NN_tf.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/__init__.py" />
-        <option value="$PROJECT_DIR$/python-package/onnet/D2NN_tf.py" />
         <option value="$PROJECT_DIR$/python-package/case_fft.py" />
-        <option value="$PROJECT_DIR$/python-package/case_mnist.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/Z_utils.py" />
+        <option value="$PROJECT_DIR$/python-package/onnet/DropOutLayer.py" />
+        <option value="$PROJECT_DIR$/python-package/case_mnist.py" />
+        <option value="$PROJECT_DIR$/python-package/onnet/D2NN_tf.py" />
+        <option value="$PROJECT_DIR$/python-package/onnet/BinaryDetector.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/D2NNet.py" />
+        <option value="$PROJECT_DIR$/python-package/case_dog_cat.py" />
+        <option value="$PROJECT_DIR$/python-package/case_face_detect.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-10" />
-    <option name="y" value="-10" />
+    <option name="x" value="-19" />
+    <option name="y" value="6" />
     <option name="width" value="1765" />
     <option name="height" value="1100" />
   </component>
@@ -198,12 +210,6 @@
               <item name="ONNet" type="b2602c69:ProjectViewProjectNode" />
               <item name="ONNet" type="462c0819:PsiDirectoryNode" />
               <item name="python-package" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ONNet" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ONNet" type="462c0819:PsiDirectoryNode" />
-              <item name="python-package" type="462c0819:PsiDirectoryNode" />
-              <item name="onnet" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -236,29 +242,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.case_mnist">
-    <configuration name="D2NN_tf (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="ONNet" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/python-package/net_source" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python-package/net_source/D2NN_tf.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.case_face_detect">
     <configuration name="D2NN_tf" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="ONNet" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -303,7 +287,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="case_fft" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="case_dog_cat" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="ONNet" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -316,7 +300,29 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python-package/case_fft.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python-package/case_dog_cat.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="case_face_detect" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ONNet" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/python-package" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python-package/case_face_detect.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -349,11 +355,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.case_face_detect" />
+        <item itemvalue="Python.case_dog_cat" />
         <item itemvalue="Python.case_mnist" />
         <item itemvalue="Python.D2NNet" />
-        <item itemvalue="Python.case_fft" />
         <item itemvalue="Python.D2NN_tf" />
-        <item itemvalue="Python.D2NN_tf (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -382,7 +388,9 @@
       <workItem from="1575538304470" duration="4913000" />
       <workItem from="1575548023586" duration="32000" />
       <workItem from="1575854483877" duration="10118000" />
-      <workItem from="1575942437754" duration="5314000" />
+      <workItem from="1575942437754" duration="5484000" />
+      <workItem from="1575956133119" duration="4711000" />
+      <workItem from="1575960893533" duration="3904000" />
     </task>
     <task id="LOCAL-00001" summary="optical_trans">
       <created>1575352870575</created>
@@ -419,22 +427,29 @@
       <option name="project" value="LOCAL" />
       <updated>1575873782941</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="1)dropout">
+      <created>1575947797139</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1575947797139</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="63911000" />
+    <option name="totallyTimeSpent" value="72696000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1409" height="878" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7676768" visible="true" weight="0.13323463" />
-      <window_info id="Structure" order="1" sideWeight="0.23232323" side_tool="true" visible="true" weight="0.13323463" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.76438355" visible="true" weight="0.1361954" />
+      <window_info id="Structure" order="1" sideWeight="0.23561645" side_tool="true" visible="true" weight="0.1361954" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.4691689" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.41152814" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.5107239" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.47050938" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -447,7 +462,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="SciView" order="3" visible="true" weight="0.19467062" />
+      <window_info anchor="right" id="SciView" order="3" visible="true" weight="0.22871947" />
       <window_info anchor="right" id="Database" order="4" />
     </layout>
   </component>
@@ -460,7 +475,8 @@
     <MESSAGE value="1)D2NNet_tf 2)fft_test" />
     <MESSAGE value="1)class COMPLEX_utils 2)case_fft" />
     <MESSAGE value="1)Z:::ToZ,ifft 2)D2NN_tf" />
-    <option name="LAST_COMMIT_MESSAGE" value="1)Z:::ToZ,ifft 2)D2NN_tf" />
+    <MESSAGE value="1)dropout" />
+    <option name="LAST_COMMIT_MESSAGE" value="1)dropout" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -495,6 +511,11 @@
           <line>9</line>
           <option name="timeStamp" value="52" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/python-package/onnet/D2NN_tf.py</url>
+          <line>103</line>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -507,18 +528,21 @@
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="x.shape" />
+        <watch expression="self" />
       </configuration>
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ONNet$D2NNet.coverage" NAME="D2NNet Coverage Results" MODIFIED="1575947177327" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
+    <SUITE FILE_PATH="coverage/ONNet$D2NNet.coverage" NAME="D2NNet Coverage Results" MODIFIED="1575957496154" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
+    <SUITE FILE_PATH="coverage/ONNet$case_dog_cat.coverage" NAME="case_dog_cat Coverage Results" MODIFIED="1575962483412" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
     <SUITE FILE_PATH="coverage/ONNet$test_1.coverage" NAME="test_1 Coverage Results" MODIFIED="1574833886089" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
     <SUITE FILE_PATH="coverage/ONNet$case_mnist___.coverage" NAME="case_mnist - 副本 Coverage Results" MODIFIED="1575363618084" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/net_source" />
     <SUITE FILE_PATH="coverage/ONNet$case_fft.coverage" NAME="case_fft Coverage Results" MODIFIED="1575873179511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
     <SUITE FILE_PATH="coverage/ONNet$D2NN_tf__1_.coverage" NAME="D2NN_tf (1) Coverage Results" MODIFIED="1575542940093" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/net_source" />
-    <SUITE FILE_PATH="coverage/ONNet$case_mnist.coverage" NAME="case_mnist Coverage Results" MODIFIED="1575947665280" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
-    <SUITE FILE_PATH="coverage/ONNet$D2NN_tf.coverage" NAME="D2NN_tf Coverage Results" MODIFIED="1575872919888" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
+    <SUITE FILE_PATH="coverage/ONNet$case_mnist.coverage" NAME="case_mnist Coverage Results" MODIFIED="1575958553505" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
+    <SUITE FILE_PATH="coverage/ONNet$D2NN_tf.coverage" NAME="D2NN_tf Coverage Results" MODIFIED="1575956639323" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$try_tensor.coverage" NAME="try_tensor Coverage Results" MODIFIED="1575453260380" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/net_source" />
+    <SUITE FILE_PATH="coverage/ONNet$case_face_detect.coverage" NAME="case_face_detect Coverage Results" MODIFIED="1575964746628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/python-package/test_2.py" />
@@ -547,13 +571,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="116">
           <caret line="103" selection-start-line="103" selection-end-line="103" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/Anaconda3/Lib/site-packages/tensorflow/python/ops/map_fn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3403">
-          <caret line="256" selection-start-line="256" selection-end-line="256" />
         </state>
       </provider>
     </entry>
@@ -630,13 +647,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/Anaconda3/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="309" selection-start-line="309" selection-end-line="309" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/python-package/case_fft.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1159">
@@ -657,13 +667,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/functional.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="680">
-          <caret line="869" column="30" lean-forward="true" selection-start-line="869" selection-start-column="30" selection-end-line="869" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/python-package/onnet/optical_trans.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="247">
@@ -673,68 +676,145 @@
     </entry>
     <entry file="file://D:/Anaconda3/Lib/site-packages/torch/tensor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
+        <state relative-caret-position="1843">
           <caret line="106" selection-start-line="106" selection-end-line="106" />
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/module.py">
+    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/conv.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="492" selection-start-line="492" selection-end-line="492" />
+        <state relative-caret-position="5890">
+          <caret line="317" column="8" selection-start-line="317" selection-start-column="8" selection-end-line="317" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/functional.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16264">
+          <caret line="869" column="30" selection-start-line="869" selection-start-column="30" selection-end-line="869" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/DropOutLayer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="12" column="25" lean-forward="true" selection-start-line="12" selection-start-column="25" selection-end-line="12" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/net_source/try_tensor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="433">
+          <caret line="25" column="34" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/pooling.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="271">
+          <caret line="550" column="8" selection-start-line="550" selection-start-column="8" selection-end-line="550" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Anaconda3/Lib/site-packages/tensorflow/python/ops/map_fn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="137">
+          <caret line="37" column="4" selection-start-line="37" selection-start-column="4" selection-end-line="37" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/BinaryDetector.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Anaconda3/Lib/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="298" column="48" selection-start-line="298" selection-start-column="48" selection-end-line="298" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NNet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1444">
+          <caret line="86" column="22" selection-start-line="86" selection-start-column="22" selection-end-line="86" selection-end-column="22" />
+          <folding>
+            <element signature="e#173#210#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NN_tf.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="45" selection-start-line="45" selection-end-line="45" />
+        <state relative-caret-position="3306">
+          <caret line="180" selection-start-line="180" selection-end-line="180" />
           <folding>
             <element signature="e#58#116#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/conv.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="317" column="8" selection-start-line="317" selection-start-column="8" selection-end-line="317" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/net_source/try_tensor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="25" column="34" lean-forward="true" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/python-package/onnet/Z_utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="46" column="36" lean-forward="true" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="36" />
+        <state relative-caret-position="817">
+          <caret line="46" column="36" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="36" />
           <folding>
             <element signature="e#82#94#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/loss.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="123">
+          <caret line="941" selection-start-line="941" selection-end-line="941" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/module.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="123">
+          <caret line="492" selection-start-line="492" selection-end-line="492" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/python-package/case_mnist.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-724">
-          <caret line="53" selection-start-line="53" selection-end-line="53" />
+        <state relative-caret-position="2413">
+          <caret line="127" column="46" selection-start-line="127" selection-start-column="46" selection-end-line="127" selection-end-column="46" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NNet.py">
+    <entry file="file://$PROJECT_DIR$/python-package/case_dog_cat.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="114" column="45" lean-forward="true" selection-start-line="114" selection-start-column="45" selection-end-line="114" selection-end-column="45" />
+        <state relative-caret-position="-19">
+          <caret line="2" column="100" selection-start-line="2" selection-start-column="100" selection-end-line="2" selection-end-column="100" />
           <folding>
-            <element signature="e#173#210#0" expanded="true" />
+            <element signature="e#84#141#0" expanded="true" />
+            <element signature="e#856#1279#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/case_face_detect.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="225" column="34" lean-forward="true" selection-start-line="225" selection-start-column="34" selection-end-line="225" selection-end-column="34" />
+          <folding>
+            <element signature="e#110#122#0" expanded="true" />
+            <element signature="e#1792#3416#0" />
           </folding>
         </state>
       </provider>
