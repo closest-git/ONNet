@@ -9,6 +9,7 @@ import os
 from .optical_trans import OpticalTrans
 from .D2NNet import D2NNet
 from .Z_utils import COMPLEX_utils
+from .Loss import *
 '''
 try:
 except ImportError:
@@ -25,6 +26,6 @@ except ImportError:
 dir_path = os.path.dirname(os.path.realpath(__file__))
 #print(f"__init_ dir_path={dir_path}")
 
-__all__ = ['D2NNet','OpticalTrans','COMPLEX_utils']
+__all__ = ['D2NNet','OpticalTrans','COMPLEX_utils','UserLoss']
 
 

@@ -7,6 +7,7 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.optim.lr_scheduler import StepLR
 from onnet import *
+
 import math
 
 class BaseNet(nn.Module):
@@ -42,15 +43,17 @@ class View(nn.Module):
     def forward(self, x):
         return x.view(-1,*self.shape)
 
+_loss_ = UserLoss.cys_loss
+
 def train(model, device, train_loader, optimizer, epoch, optical_trans):
+    nClass = model.nClass
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
         optimizer.zero_grad()
         output = model(optical_trans(data))
         #output = model(data)
-        loss = F.cross_entropy(output, target)
-        #loss = F.nll_loss(output, target)
+        loss = _loss_(output, target)
         loss.backward()
         optimizer.step()
         if batch_idx % 50 == 0:
@@ -68,7 +71,7 @@ def test(model, device, test_loader, optical_trans):
             output = model(optical_trans(data))
             #output = model(data)
             if True:
-                test_loss += F.cross_entropy(output, target, reduction='sum').item() # sum up batch loss
+                test_loss += _loss_(output, target, reduction='sum').item() # sum up batch loss
                 pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
             else:
                 test_loss += F.nll_loss(output, target, reduction='sum').item()  # sum up batch loss
@@ -148,7 +151,7 @@ def main():
     #
     for name, param in model.named_parameters():
         if param.requires_grad:
-            print(name)
+            print(f"\t{name}={param.nelement()}")
     # Optimizer
     optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9,
                                 weight_decay=0.0005)

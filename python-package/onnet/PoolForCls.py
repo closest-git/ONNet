@@ -1,7 +1,5 @@
 import torch
-from .Z_utils import COMPLEX_utils as Z
 
-#Very strange behavior of DROPOUT
 class PoolForCls(torch.nn.Module):
     def __init__(self, nCls,pooling="max"):
         super(PoolForCls, self).__init__()

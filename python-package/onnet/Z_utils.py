@@ -115,6 +115,7 @@ class COMPLEX_utils(object):
     def Hadamard(A, B, inplace=False):
         """
             Complex pointwise multiplication between (batched) tensor A and tensor B.
+            Sincr The Hadamard product is commutative, so Hadamard(A, B)=Hadamard(B, A)
 
             Parameters
             ----------
