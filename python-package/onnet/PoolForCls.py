@@ -6,6 +6,11 @@ class PoolForCls(torch.nn.Module):
         self.nClass = nCls
         self.pooling = pooling
 
+    def __repr__(self):
+        main_str = super(PoolForCls, self).__repr__()
+        main_str += f"_cls[{self.nClass}]_pool[{self.pooling}]"
+        return main_str
+
     def forward(self, x):
         nSamp = x.shape[0]
         if False:

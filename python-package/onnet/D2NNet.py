@@ -140,6 +140,10 @@ class D2NNet(nn.Module):
         #print(f"nParameters={total}")#\nparams={self.parameters()}
         #print(self)
 
+    def __repr__(self):
+        main_str = super(D2NNet, self).__repr__()
+        return main_str
+
     def forward(self, x):
         x = x.double()
         for layD in self.DD:
@@ -154,6 +158,11 @@ class D2NNet(nn.Module):
 
         output = F.log_softmax(x, dim=1)
         return output
+
+    def predict(self,output):
+        pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
+        #pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
+        return pred
 
 def main():
     pass

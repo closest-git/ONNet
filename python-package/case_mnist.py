@@ -39,6 +39,10 @@ class BaseNet(nn.Module):
         output = F.log_softmax(x, dim=1)
         return output
 
+    def predict(self,output):
+        pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
+        #pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
+        return pred
 
 class View(nn.Module):
     def __init__(self, *args):
@@ -65,6 +69,7 @@ def train(model, device, train_loader, optimizer, epoch, optical_trans):
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
                 100. * batch_idx / len(train_loader), loss.item()))
+        #break
 
 def test(model, device, test_loader, optical_trans):
     model.eval()
@@ -75,12 +80,9 @@ def test(model, device, test_loader, optical_trans):
             data, target = data.to(device), target.to(device)
             output = model(optical_trans(data))
             #output = model(data)
-            if True:
-                test_loss += model.loss(output, target, reduction='sum').item() # sum up batch loss
-                pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
-            else:
-                test_loss += F.nll_loss(output, target, reduction='sum').item()  # sum up batch loss
-                pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
+            test_loss += model.loss(output, target, reduction='sum').item() # sum up batch loss
+            pred = model.predict(output)
+            #pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
             correct += pred.eq(target.view_as(pred)).sum().item()
 
     test_loss /= len(test_loader.dataset)
@@ -162,7 +164,8 @@ def main():
         if param.requires_grad:
             print(f"\t{name}={param.nelement()}")
     # Optimizer
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9,weight_decay=0.0005)
+    #optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9,weight_decay=0.0005)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.01,  weight_decay=0.0005)
 
     for epoch in range(1, 16):
         train( model, device, train_loader, optimizer, epoch, optical_trans)

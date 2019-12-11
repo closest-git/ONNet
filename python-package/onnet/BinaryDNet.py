@@ -17,6 +17,15 @@ class BinaryDNet(D2NNet):
         # loss = F.nll_loss(output, target, reduction=reduction)
         return loss
 
+    def predict(self,output):
+        nGate = len(output)
+        pred = 0
+        for i in range(nGate):
+            pred_i = output[nGate-1-i].max(1, keepdim=True)[1]  # get the index of the max log-probability
+            pred = pred*2+pred_i
+        #pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
+        return pred
+
     def __init__(self, nCls):
         super(BinaryDNet, self).__init__(nCls)
         self.nGate = (int)(math.ceil(math.log2(self.nClass)))
@@ -41,3 +50,4 @@ class BinaryDNet(D2NNet):
             output.append(x2)
 
         return output
+
