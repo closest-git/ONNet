@@ -9,9 +9,12 @@ from torch.optim.lr_scheduler import StepLR
 from onnet import *
 
 import math
+#net_type = "cnn"
+#net_type = "DNet"
+net_type = "BinaryDNet"
 
 class BaseNet(nn.Module):
-    def __init__(self):
+    def __init__(self, nCls=10):
         super(BaseNet, self).__init__()
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
@@ -19,6 +22,8 @@ class BaseNet(nn.Module):
         self.dropout2 = nn.Dropout2d(0.5)
         self.fc1 = nn.Linear(9216, 128)
         self.fc2 = nn.Linear(128, 10)
+        self.loss = F.cross_entropy
+        self.nClass = nCls
 
     def forward(self, x):
         x = self.conv1(x)
@@ -43,7 +48,7 @@ class View(nn.Module):
     def forward(self, x):
         return x.view(-1,*self.shape)
 
-_loss_ = UserLoss.cys_loss
+#_loss_ = UserLoss.cys_loss
 
 def train(model, device, train_loader, optimizer, epoch, optical_trans):
     nClass = model.nClass
@@ -53,7 +58,7 @@ def train(model, device, train_loader, optimizer, epoch, optical_trans):
         optimizer.zero_grad()
         output = model(optical_trans(data))
         #output = model(data)
-        loss = _loss_(output, target)
+        loss = model.loss(output, target)
         loss.backward()
         optimizer.step()
         if batch_idx % 50 == 0:
@@ -71,7 +76,7 @@ def test(model, device, test_loader, optical_trans):
             output = model(optical_trans(data))
             #output = model(data)
             if True:
-                test_loss += _loss_(output, target, reduction='sum').item() # sum up batch loss
+                test_loss += model.loss(output, target, reduction='sum').item() # sum up batch loss
                 pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
             else:
                 test_loss += F.nll_loss(output, target, reduction='sum').item()  # sum up batch loss
@@ -130,11 +135,15 @@ def main():
         ])),
         batch_size=128, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
 
-    if False:
+    if net_type == "cnn":
         model = BaseNet()
-    else:
+    elif net_type == "DNet":
         model = D2NNet(10)
         model.double()
+    elif net_type == "BinaryDNet":
+        model = BinaryDNet(10)
+        model.double()
+
     model.to(device)
     print(model)
 
@@ -153,8 +162,7 @@ def main():
         if param.requires_grad:
             print(f"\t{name}={param.nelement()}")
     # Optimizer
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9,
-                                weight_decay=0.0005)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9,weight_decay=0.0005)
 
     for epoch in range(1, 16):
         train( model, device, train_loader, optimizer, epoch, optical_trans)

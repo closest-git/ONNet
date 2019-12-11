@@ -10,6 +10,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from .Z_utils import COMPLEX_utils as Z
 from .PoolForCls import *
+from .Loss import *
 import  numpy as np
 
 import torch.optim as optim
@@ -116,6 +117,7 @@ class D2NNet(nn.Module):
         self.z_modulus = Z.modulus
         self.isFC = False
         self.nClass = nCls
+        self.loss = UserLoss.cys_loss
         assert(self.M>=self.nClass and self.N>=self.nClass)
         print(f"D2NNet nClass={nCls} shape={self.M,self.N}")
 
@@ -134,9 +136,9 @@ class D2NNet(nn.Module):
             self.fc1 = nn.Linear(self.M*self.N, self.nClass)
         else:
             self.last_pool = PoolForCls(self.nClass,pooling="max")
-        total = sum([param.nelement() for param in self.parameters()])
-        print(f"nParameters={total}")#\nparams={self.parameters()}
-        print(self)
+        #total = sum([param.nelement() for param in self.parameters()])
+        #print(f"nParameters={total}")#\nparams={self.parameters()}
+        #print(self)
 
     def forward(self, x):
         x = x.double()
