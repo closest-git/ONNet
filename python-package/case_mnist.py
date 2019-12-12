@@ -12,6 +12,8 @@ import math
 #net_type = "cnn"
 #net_type = "DNet"
 net_type = "BinaryDNet"
+IMG_size = (28, 28)
+batch_size = 128
 
 class BaseNet(nn.Module):
     def __init__(self, nCls=10):
@@ -20,7 +22,8 @@ class BaseNet(nn.Module):
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.dropout1 = nn.Dropout2d(0.25)
         self.dropout2 = nn.Dropout2d(0.5)
-        self.fc1 = nn.Linear(9216, 128)
+        nFC1=43264  #IMG_size = (56, 56)
+        self.fc1 = nn.Linear(nFC1, 128)
         self.fc2 = nn.Linear(128, 10)
         self.loss = F.cross_entropy
         self.nClass = nCls
@@ -105,6 +108,7 @@ def main():
         scatter + cnn achieves 99.3% in 15 epochs
 
     """
+
     parser = argparse.ArgumentParser(description='MNIST optical_trans  + hybrid examples')
     parser.add_argument('--mode', type=int, default=2,help='optical_trans 1st or 2nd order')
     parser.add_argument('--classifier', type=str, default='linear',help='classifier model')
@@ -123,27 +127,25 @@ def main():
         num_workers = None
         pin_memory = False
 
+    transform = transforms.Compose([
+        transforms.Resize(IMG_size),
+        transforms.ToTensor(),
+        transforms.Normalize((0.1307,), (0.3081,))
+    ])
     train_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('../data', train=True, download=True,
-                       transform=transforms.Compose([
-                           transforms.ToTensor(),
-                           transforms.Normalize((0.1307,), (0.3081,))
-                       ])),
-        batch_size=128, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
+        datasets.MNIST('../data', train=True, download=True,transform=transform),
+        batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
     test_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('../data', train=False, transform=transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.1307,), (0.3081,))
-        ])),
-        batch_size=128, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
+        datasets.MNIST('../data', train=False,transform=transform),
+        batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
 
     if net_type == "cnn":
         model = BaseNet()
     elif net_type == "DNet":
-        model = D2NNet(10)
+        model = D2NNet(IMG_size,10,5)
         model.double()
     elif net_type == "BinaryDNet":
-        model = BinaryDNet(10)
+        model = BinaryDNet(IMG_size,10,5,1)
         model.double()
 
     model.to(device)

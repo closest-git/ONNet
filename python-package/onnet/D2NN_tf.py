@@ -1,9 +1,10 @@
 '''
+    https://github.com/computational-imaging/opticalCNN
     https://github.com/Lyn-Wu/Lyn/blob/master/DNN
 '''
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf 
-import  numpy as np 
+import  numpy as np
 from scipy.misc import  imresize
 from tqdm import tqdm
 import matplotlib.pyplot as plt

@@ -71,6 +71,14 @@ class COMPLEX_utils(object):
         return norm
 
     @staticmethod
+    def sigmoid(x):
+        # norm[...,0] = (x[...,0]*x[...,0] + x[...,1]*x[...,1]).sqrt()
+        s_ = torch.zeros_like(x)
+        s_[...,0] = torch.sigmoid(x[...,0])
+        s_[..., 1] = torch.sigmoid(x[..., 1])
+        return s_
+
+    @staticmethod
     def fft(input, direction='C2C', inverse=False):
         """
             Interface with torch FFT routines for 2D signals.

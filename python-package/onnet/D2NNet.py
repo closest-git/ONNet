@@ -99,10 +99,12 @@ class DiffractiveLayer(torch.nn.Module):
         return  u2 * N * N * df * df
 
     def forward(self, x):
-        #x = self.Diffractive_(x)*self.amp
         diffrac = self.Diffractive_(x)
-        #self.amp[3] = 0
-        x = Z.Hadamard(diffrac,self.amp)
+
+        #amp_s = Z.sigmoid(self.amp)
+        amp_s = torch.clamp(self.amp, 1.0e-6, 1)
+        #amp_s = self.amp
+        x = Z.Hadamard(diffrac,amp_s)
         if(self.rDrop>0):
             drop = Z.rDrop2D(1-self.rDrop,(self.M,self.N),isComlex=True)
             x = Z.Hadamard(x, drop)
@@ -111,10 +113,11 @@ class DiffractiveLayer(torch.nn.Module):
 class D2NNet(nn.Module):
     # https://github.com/szagoruyko/diracnets
 
-    def __init__(self,nCls):
+    def __init__(self,IMG_size,nCls,nDifrac):
         super(D2NNet, self).__init__()
-        self.M=28;      self.N=28
+        self.M,self.N=IMG_size
         self.z_modulus = Z.modulus
+        self.nDifrac = nDifrac
         self.isFC = False
         self.nClass = nCls
         self.loss = UserLoss.cys_loss
@@ -124,12 +127,8 @@ class D2NNet(nn.Module):
         layer = nn.Linear
         layer = DiffractiveLayer
         self.DD = nn.ModuleList([
-            layer(self.M, self.N),
-            layer(self.M, self.N),
-            layer(self.M, self.N),
-            layer(self.M, self.N),
-            layer(self.M, self.N)]
-        )
+            layer(self.M, self.N) for i in range(self.nDifrac)
+        ])
         self.nD = len(self.DD)
         #self.DD.append(DropOutLayer(self.M, self.N,drop=0.9999))
         if self.isFC:
