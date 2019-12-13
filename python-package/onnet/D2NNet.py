@@ -102,8 +102,8 @@ class DiffractiveLayer(torch.nn.Module):
         diffrac = self.Diffractive_(x)
 
         #amp_s = Z.sigmoid(self.amp)
-        amp_s = torch.clamp(self.amp, 1.0e-6, 1)
-        #amp_s = self.amp
+        #amp_s = torch.clamp(self.amp, 1.0e-6, 1)
+        amp_s = self.amp
         x = Z.Hadamard(diffrac,amp_s)
         if(self.rDrop>0):
             drop = Z.rDrop2D(1-self.rDrop,(self.M,self.N),isComlex=True)

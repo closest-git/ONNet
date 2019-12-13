@@ -1,10 +1,11 @@
 import torch
 
 class PoolForCls(torch.nn.Module):
-    def __init__(self, nCls,pooling="max"):
+    def __init__(self, nCls,pooling="max",chunk_dim=-1):
         super(PoolForCls, self).__init__()
         self.nClass = nCls
         self.pooling = pooling
+        self.chunk_dim=chunk_dim
 
     def __repr__(self):
         main_str = super(PoolForCls, self).__repr__()
@@ -23,7 +24,7 @@ class PoolForCls(torch.nn.Module):
             x = x1.cuda()
         else:
             x_max=[]
-            for xx in x.chunk(self.nClass, -1):
+            for xx in x.chunk(self.nClass, self.chunk_dim):
                 x2 = xx.contiguous().view(nSamp, -1)
                 if self.pooling == "max":
                     x3 = torch.max(x2, 1)

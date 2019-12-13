@@ -71,6 +71,11 @@ class COMPLEX_utils(object):
         return norm
 
     @staticmethod
+    def phase(x):
+        phase = torch.atan2(x[..., 0],x[..., 1])
+        return phase
+
+    @staticmethod
     def sigmoid(x):
         # norm[...,0] = (x[...,0]*x[...,0] + x[...,1]*x[...,1]).sqrt()
         s_ = torch.zeros_like(x)

@@ -1,5 +1,6 @@
 from .D2NNet import *
 import math
+import random
 
 class GatePipe(torch.nn.Module):
     def __init__(self,M,N, nHidden,pooling="max"):
@@ -9,7 +10,12 @@ class GatePipe(torch.nn.Module):
         self.nHidden = nHidden
         self.pooling = pooling
         self.layers = nn.ModuleList([DiffractiveLayer(self.M, self.N) for j in range(self.nHidden)])
-        self.gate = PoolForCls(2, pooling=self.pooling)
+        if True:
+            chunk_dim = -1 if random.choice([True, False]) else -2
+            self.pool = PoolForCls(2, pooling=self.pooling,chunk_dim=chunk_dim)
+        else:
+            self.pt1 = (random.randint(0, self.M-1),random.randint(0,self.N-1))
+            self.pt2 = (random.randint(0, self.M - 1), random.randint(0, self.N - 1))
 
     def __repr__(self):
         main_str = super(GatePipe, self).__repr__()
@@ -20,7 +26,13 @@ class GatePipe(torch.nn.Module):
         for lay in self.layers:
             x = lay(x)
         x1 = Z.modulus(x).cuda()
-        x1 = self.gate(x1)
+        #x1 = Z.phase(x).cuda()
+        if True:
+            x1 = self.pool(x1)
+        else:
+            x_pt1 = x1[:, 0, self.pt1[0], self.pt1[1]]
+            x_pt2 = x1[:, 0, self.pt2[0], self.pt2[1]]
+            x1 = torch.stack([x_pt1,x_pt2], 1)
         x2 = F.log_softmax(x1, dim=1)
         return x2
 
