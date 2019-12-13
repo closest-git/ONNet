@@ -1,14 +1,15 @@
 import torch
+import math
 
-class PoolForCls(torch.nn.Module):
+class ChunkPool(torch.nn.Module):
     def __init__(self, nCls,pooling="max",chunk_dim=-1):
-        super(PoolForCls, self).__init__()
+        super(ChunkPool, self).__init__()
         self.nClass = nCls
         self.pooling = pooling
         self.chunk_dim=chunk_dim
 
     def __repr__(self):
-        main_str = super(PoolForCls, self).__repr__()
+        main_str = super(ChunkPool, self).__repr__()
         main_str += f"_cls[{self.nClass}]_pool[{self.pooling}]"
         return main_str
 
@@ -35,4 +36,32 @@ class PoolForCls(torch.nn.Module):
             x = torch.stack(x_max,1)
             #x_np = x.detach().cpu().numpy()
             #print(x_np)
+        return x
+
+class BinaryChunk(torch.nn.Module):
+    def __init__(self, nCls,pooling="max",chunk_dim=-1):
+        super(BinaryChunk, self).__init__()
+        self.nClass = nCls
+        self.nChunk = (int)(math.ceil(math.log2(self.nClass)))
+        self.pooling = pooling
+
+    def __repr__(self):
+        main_str = super(BinaryChunk, self).__repr__()
+        main_str += f"_nChunk{self.nChunk}_cls[{self.nClass}]_pool[{self.pooling}]"
+        return main_str
+
+    def forward(self, x):
+        nSamp = x.shape[0]
+        x_max=[]
+        for ck in x.chunk(self.nChunk, -1):
+            for xx in ck.chunk(2, -2):
+                x2 = xx.contiguous().view(nSamp, -1)
+                if self.pooling == "max":
+                    x3 = torch.max(x2, 1)
+                    x_max.append(x3.values)
+                else:
+                    x3 = torch.mean(x2, 1)
+                    x_max.append(x3)
+        x = torch.stack(x_max,1)
+
         return x

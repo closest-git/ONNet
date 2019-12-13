@@ -15,16 +15,30 @@ import numpy as np
 from .DiffractiveLayer import *
 
 class D2NNet(nn.Module):
-    # https://github.com/szagoruyko/diracnets
+    @staticmethod
+    def binary_loss(output, target, reduction='mean'):
+        nGate = len(output)
+        nSamp = target.shape[0]
+        loss = 0
+        for i in range(nGate):
+            target_i = target % 2
+            # loss = F.binary_cross_entropy(output, target, reduction=reduction)
+            loss_i = F.cross_entropy(output[i], target_i, reduction=reduction)
+            loss += loss_i
+            target = (target - target_i) / 2
 
-    def __init__(self,IMG_size,nCls,nDifrac):
+        # loss = F.nll_loss(output, target, reduction=reduction)
+        return loss
+
+    def __init__(self,IMG_size,nCls,nDifrac,chunk=""):
         super(D2NNet, self).__init__()
         self.M,self.N=IMG_size
         self.z_modulus = Z.modulus
         self.nDifrac = nDifrac
         self.isFC = False
         self.nClass = nCls
-        self.loss = UserLoss.cys_loss
+
+        self.chunk = chunk
         assert(self.M>=self.nClass and self.N>=self.nClass)
         print(f"D2NNet nClass={nCls} shape={self.M,self.N}")
 
@@ -37,8 +51,13 @@ class D2NNet(nn.Module):
         #self.DD.append(DropOutLayer(self.M, self.N,drop=0.9999))
         if self.isFC:
             self.fc1 = nn.Linear(self.M*self.N, self.nClass)
+        elif self.chunk=="binary":
+            self.last_chunk = BinaryChunk(self.nClass, pooling="max")
+            self.loss = D2NNet.binary_loss()
         else:
-            self.last_pool = PoolForCls(self.nClass,pooling="max")
+            self.last_chunk = ChunkPool(self.nClass,pooling="max")
+            self.loss = UserLoss.cys_loss
+
         #total = sum([param.nelement() for param in self.parameters()])
         #print(f"nParameters={total}")#\nparams={self.parameters()}
         #print(self)
@@ -57,9 +76,13 @@ class D2NNet(nn.Module):
             x = torch.flatten(x, 1)
             x = self.fc1(x)
         else:
-            x = self.last_pool(x)
+            x = self.last_chunk(x)
 
-        output = F.log_softmax(x, dim=1)
+        if self.chunk=="binary":
+            output = x
+        else:
+            output = x
+            #output = F.log_softmax(x, dim=1)
         return output
 
     def predict(self,output):
