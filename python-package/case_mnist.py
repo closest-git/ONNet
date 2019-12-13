@@ -145,7 +145,7 @@ def main():
         model = D2NNet(IMG_size,10,5)
         model.double()
     elif net_type == "BinaryDNet":
-        model = BinaryDNet(IMG_size,10,5,1)
+        model = BinaryDNet(IMG_size,10,8,1)
         model.double()
 
     model.to(device)

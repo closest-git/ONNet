@@ -9,7 +9,7 @@ class GatePipe(torch.nn.Module):
         self.N=N
         self.nHidden = nHidden
         self.pooling = pooling
-        self.layers = nn.ModuleList([DiffractiveLayer(self.M, self.N) for j in range(self.nHidden)])
+        self.layers = nn.ModuleList([DiffractiveAMP(self.M, self.N) for j in range(self.nHidden)])
         if True:
             chunk_dim = -1 if random.choice([True, False]) else -2
             self.pool = PoolForCls(2, pooling=self.pooling,chunk_dim=chunk_dim)

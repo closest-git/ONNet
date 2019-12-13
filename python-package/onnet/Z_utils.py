@@ -84,6 +84,13 @@ class COMPLEX_utils(object):
         return s_
 
     @staticmethod
+    def exp_euler(x):       #Euler's formula:   {\displaystyle e^{ix}=\cos x+i\sin x,}
+        s_ = torch.zeros(x.shape + (2,)).double().cuda()
+        s_[..., 0] = torch.cos(x)
+        s_[..., 1] = torch.sin(x)
+        return s_
+
+    @staticmethod
     def fft(input, direction='C2C', inverse=False):
         """
             Interface with torch FFT routines for 2D signals.

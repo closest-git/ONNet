@@ -11,104 +11,8 @@ import torch.nn.functional as F
 from .Z_utils import COMPLEX_utils as Z
 from .PoolForCls import *
 from .Loss import *
-import  numpy as np
-
-import torch.optim as optim
-from torchvision import datasets, transforms
-from torch.optim.lr_scheduler import StepLR
-
-#https://pytorch.org/tutorials/beginner/pytorch_with_examples.html#pytorch-custom-nn-modules
-class DiffractiveLayer(torch.nn.Module):
-    def __init__(self, M_in, N_in,rDrop=0.0):
-        super(DiffractiveLayer, self).__init__()
-        assert(M_in==N_in)
-        self.M=M_in
-        self.N=N_in
-        self.z_modulus = Z.modulus
-        self.size = M_in
-        self.delta = 0.03
-        self.dL = 0.02
-        self.c = 3e8
-        self.Hz = 0.4e12
-        self.amp = torch.nn.Parameter(data=torch.Tensor(self.size, self.size,2), requires_grad=True)
-        self.amp.data.uniform_(0, 1)
-        self.rDrop = rDrop
-        self.H_z = self.Init_H()
-
-    def Init_H(self):
-        # Parameter
-        N = self.size
-        df = 1.0 / self.dL
-        d=self.delta
-        lmb=self.c / self.Hz
-        k = np.pi * 2.0 / lmb
-        D = self.dL * self.dL / (N * lmb)
-        # phase
-        def phase(i, j):
-            i -= N // 2
-            j -= N // 2
-            return ((i * df) * (i * df) + (j * df) * (j * df))
-
-        ph = np.fromfunction(phase, shape=(N, N), dtype=np.float32)
-        # H
-        H = np.exp(1.0j * k * d) * np.exp(-1.0j * lmb * np.pi * d * ph)
-        H_f = np.fft.fftshift(H)*self.dL*self.dL/(N*N)
-        # print(H_f);    print(H)
-        H_z = np.zeros(H_f.shape + (2,))
-        H_z[..., 0] = H_f.real
-        H_z[..., 1] = H_f.imag
-        H_z = torch.from_numpy(H_z).cuda()
-        return H_z
-
-    def Diffractive_(self,u0,  theta=0.0):
-        if Z.isComplex(u0):
-            z0 = u0
-        else:
-            z0 = u0.new_zeros(u0.shape + (2,))
-            z0[...,0] = u0
-
-        N = self.size
-        df = 1.0 / self.dL
-        if False:
-            d=self.delta
-
-            lmb=self.c / self.Hz
-            k = np.pi * 2.0 / lmb
-            D = self.dL * self.dL / (N * lmb)
-
-            # phase
-            def phase(i, j):
-                i -= N // 2
-                j -= N // 2
-                return ((i * df) * (i * df) + (j * df) * (j * df))
-
-            ph = np.fromfunction(phase, shape=(N, N), dtype=np.float32)
-            # H
-            H = np.exp(1.0j * k * d) * np.exp(-1.0j * lmb * np.pi * d * ph)
-            Hshift = np.fft.fftshift(H)*self.dL*self.dL/(N*N)
-
-            H_z = np.zeros(Hshift.shape + (2,))
-            H_z[..., 0] = Hshift.real
-            H_z[..., 1] = Hshift.imag
-            H_z = torch.from_numpy(H_z).cuda()
-            self.H_z = H_z
-
-        z0 = Z.fft(z0)
-        u1 = Z.Hadamard(z0,self.H_z)
-        u2 = Z.fft(u1,"C2C",inverse=True)
-        return  u2 * N * N * df * df
-
-    def forward(self, x):
-        diffrac = self.Diffractive_(x)
-
-        #amp_s = Z.sigmoid(self.amp)
-        #amp_s = torch.clamp(self.amp, 1.0e-6, 1)
-        amp_s = self.amp
-        x = Z.Hadamard(diffrac,amp_s)
-        if(self.rDrop>0):
-            drop = Z.rDrop2D(1-self.rDrop,(self.M,self.N),isComlex=True)
-            x = Z.Hadamard(x, drop)
-        return x
+import numpy as np
+from .DiffractiveLayer import *
 
 class D2NNet(nn.Module):
     # https://github.com/szagoruyko/diracnets
@@ -124,7 +28,7 @@ class D2NNet(nn.Module):
         assert(self.M>=self.nClass and self.N>=self.nClass)
         print(f"D2NNet nClass={nCls} shape={self.M,self.N}")
 
-        layer = nn.Linear
+        #layer = DiffractiveAMP
         layer = DiffractiveLayer
         self.DD = nn.ModuleList([
             layer(self.M, self.N) for i in range(self.nDifrac)
