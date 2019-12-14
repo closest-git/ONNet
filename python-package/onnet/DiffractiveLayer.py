@@ -1,10 +1,13 @@
 import torch
 from .Z_utils import COMPLEX_utils as Z
+from .some_utils import *
 import numpy as np
+import random
+
 
 #https://pytorch.org/tutorials/beginner/pytorch_with_examples.html#pytorch-custom-nn-modules
 class DiffractiveLayer(torch.nn.Module):
-    def SomeInit(self, M_in, N_in,rDrop=0.0):
+    def SomeInit(self, M_in, N_in):
         assert (M_in == N_in)
         self.M = M_in
         self.N = N_in
@@ -14,25 +17,36 @@ class DiffractiveLayer(torch.nn.Module):
         self.dL = 0.02
         self.c = 3e8
         self.Hz = 0.4e12
-        self.rDrop = rDrop
-        self.H_z = self.Init_H()
-        self.init="zero"
 
-    def __init__(self, M_in, N_in,rDrop=0.0,params="phase"):
+        self.H_z = self.Init_H()
+
+
+    def __init__(self, M_in, N_in,init_value="zero",rDrop=0.0,params="phase"):
         super(DiffractiveLayer, self).__init__()
-        self.SomeInit(M_in, N_in,rDrop)
+        self.SomeInit(M_in, N_in)
+        self.init_value = init_value
+        self.rDrop = rDrop
         if params=="phase":
             self.transmission = torch.nn.Parameter(data=torch.Tensor(self.size, self.size), requires_grad=True)
         else:
             self.transmission = torch.nn.Parameter(data=torch.Tensor(self.size, self.size, 2), requires_grad=True)
-        self.init = "anti_symmetry"
 
-        if self.init=="anti_symmetry":    #
+        init_param = self.transmission.data
+        if self.init_value=="reverse":    #
             half=self.transmission.data.shape[-2]//2
-            self.transmission.data[..., :half, :] = 0
-            self.transmission.data[..., half:, :] = np.pi
-        elif self.init=="random":
+            init_param[..., :half, :] = 0
+            init_param[..., half:, :] = np.pi
+        elif self.init_value=="random":
            self.transmission.data.uniform_(0, np.pi*2)
+        elif self.init_value == "random_reverse":
+           init_param = torch.randint_like(init_param,0,2)*np.pi
+        elif self.init_value == "chunk":
+            sections = split__sections()
+            for xx in init_param.split(sections, -1):
+                xx = random.random(0,np.pi*2)
+
+        self.rDrop = rDrop
+
         #self.bias = torch.nn.Parameter(data=torch.Tensor(1, 1), requires_grad=True)
 
     def Init_H(self):

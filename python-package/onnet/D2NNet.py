@@ -76,6 +76,7 @@ class D2NNet(nn.Module):
         self.nDifrac = nDifrac
         self.isFC = False
         self.nClass = nCls
+        self.init_value = "reverse"    #"random"  "zero"
 
         self.chunk = chunk
         assert(self.M>=self.nClass and self.N>=self.nClass)
@@ -84,7 +85,7 @@ class D2NNet(nn.Module):
         #layer = DiffractiveAMP
         layer = DiffractiveLayer
         self.DD = nn.ModuleList([
-            layer(self.M, self.N) for i in range(self.nDifrac)
+            layer(self.M, self.N,init_value=self.init_value) for i in range(self.nDifrac)
         ])
         self.nD = len(self.DD)
         #self.DD.append(DropOutLayer(self.M, self.N,drop=0.9999))
@@ -106,6 +107,7 @@ class D2NNet(nn.Module):
 
     def __repr__(self):
         main_str = super(D2NNet, self).__repr__()
+        main_str += f"\n========init={self.init_value}\n"
         return main_str
 
     def forward(self, x):
