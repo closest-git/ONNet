@@ -16,6 +16,7 @@ class DiffractiveLayer(torch.nn.Module):
         self.Hz = 0.4e12
         self.rDrop = rDrop
         self.H_z = self.Init_H()
+        self.init="zero"
 
     def __init__(self, M_in, N_in,rDrop=0.0,params="phase"):
         super(DiffractiveLayer, self).__init__()
@@ -24,7 +25,14 @@ class DiffractiveLayer(torch.nn.Module):
             self.transmission = torch.nn.Parameter(data=torch.Tensor(self.size, self.size), requires_grad=True)
         else:
             self.transmission = torch.nn.Parameter(data=torch.Tensor(self.size, self.size, 2), requires_grad=True)
-        self.transmission.data.uniform_(0, np.pi*2)
+        self.init = "anti_symmetry"
+
+        if self.init=="anti_symmetry":    #
+            half=self.transmission.data.shape[-2]//2
+            self.transmission.data[..., :half, :] = 0
+            self.transmission.data[..., half:, :] = np.pi
+        elif self.init=="random":
+           self.transmission.data.uniform_(0, np.pi*2)
         #self.bias = torch.nn.Parameter(data=torch.Tensor(1, 1), requires_grad=True)
 
     def Init_H(self):

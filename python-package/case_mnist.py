@@ -9,10 +9,14 @@ from torch.optim.lr_scheduler import StepLR
 from onnet import *
 
 import math
+nClass = 10
+dataset="emnist"
+#dataset="mnist"
 #net_type = "cnn"
 net_type = "DNet"
-#net_type = "BinaryDNet"
+#net_type = "BiDNet"
 IMG_size = (28, 28)
+IMG_size = (112, 112)
 batch_size = 128
 
 class BaseNet(nn.Module):
@@ -132,20 +136,33 @@ def main():
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])
-    train_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('../data', train=True, download=True,transform=transform),
-        batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
-    test_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('../data', train=False,transform=transform),
-        batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
+    if dataset=="emnist":
+        train_loader = torch.utils.data.DataLoader(
+            datasets.EMNIST('../data',split="balanced", train=True, download=True, transform=transform),
+            batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
+        test_loader = torch.utils.data.DataLoader(
+            datasets.EMNIST('../data',split="balanced", train=False, transform=transform),
+            batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
+        # balanced=47       byclass=62
+        nClass = 47
+    else:
+        nClass = 10
+        train_loader = torch.utils.data.DataLoader(
+            datasets.MNIST('../data', train=True, download=True,transform=transform),
+            batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
+        test_loader = torch.utils.data.DataLoader(
+            datasets.MNIST('../data', train=False,transform=transform),
+            batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
 
     if net_type == "cnn":
         model = BaseNet()
     elif net_type == "DNet":
-        model = D2NNet(IMG_size,10,5)
+        model = D2NNet(IMG_size,nClass,5)
         model.double()
-    elif net_type == "BinaryDNet":
-        model = BinaryDNet(IMG_size,10,5,1)
+    elif net_type == "BiDNet":
+        model = D2NNet(IMG_size, nClass, 5, chunk="binary")
+        #model = D2NNet(IMG_size, 10, 5, chunk="logit")
+        #model = BinaryDNet(IMG_size,10,5,1)
         model.double()
 
     model.to(device)

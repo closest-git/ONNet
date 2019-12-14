@@ -17,18 +17,57 @@ from .DiffractiveLayer import *
 class D2NNet(nn.Module):
     @staticmethod
     def binary_loss(output, target, reduction='mean'):
-        nGate = len(output)
         nSamp = target.shape[0]
+        nGate = output.shape[1] // 2
         loss = 0
         for i in range(nGate):
             target_i = target % 2
-            # loss = F.binary_cross_entropy(output, target, reduction=reduction)
-            loss_i = F.cross_entropy(output[i], target_i, reduction=reduction)
+            val_2 = torch.stack([output[:,2*i],output[:,2*i+1]],1)
+
+            loss_i = F.cross_entropy(val_2, target_i, reduction=reduction)
             loss += loss_i
             target = (target - target_i) / 2
 
         # loss = F.nll_loss(output, target, reduction=reduction)
         return loss
+
+    @staticmethod
+    def logit_loss(output, target, reduction='mean'):   #https://stackoverflow.com/questions/53628622/loss-function-its-inputs-for-binary-classification-pytorch
+        nSamp = target.shape[0]
+        nGate = output.shape[1]
+        loss = 0
+        loss_BCE = nn.BCEWithLogitsLoss()
+        for i in range(nGate):
+            target_i = target % 2
+            out_i = output[:,i]
+            loss_i = loss_BCE(out_i, target_i.double())
+            loss += loss_i
+            target = (target - target_i) / 2
+        return loss
+
+    def predict(self,output):
+        if self.chunk == "binary":
+            nGate = output.shape[1] // 2
+            #assert nGate == self.n
+            pred = 0
+            for i in range(nGate):
+                no = 2*(nGate - 1 - i)
+                val_2 = torch.stack([output[:, no], output[:, no + 1]], 1)
+                pred_i = val_2.max(1, keepdim=True)[1]  # get the index of the max log-probability
+                pred = pred * 2 + pred_i
+        elif self.chunk == "logit":
+            nGate = output.shape[1]
+            # assert nGate == self.n
+            pred = 0
+            for i in range(nGate):
+                no = nGate - 1 - i
+                val_2 = F.sigmoid(output[:, no])
+                pred_i = (val_2+0.5).long()
+                pred = pred * 2 + pred_i
+        else:
+            pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
+            #pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
+        return pred
 
     def __init__(self,IMG_size,nCls,nDifrac,chunk=""):
         super(D2NNet, self).__init__()
@@ -53,7 +92,10 @@ class D2NNet(nn.Module):
             self.fc1 = nn.Linear(self.M*self.N, self.nClass)
         elif self.chunk=="binary":
             self.last_chunk = BinaryChunk(self.nClass, pooling="max")
-            self.loss = D2NNet.binary_loss()
+            self.loss = D2NNet.binary_loss
+        elif self.chunk == "logit":
+            self.last_chunk = BinaryChunk(self.nClass,isLogit=True, pooling="max")
+            self.loss = D2NNet.logit_loss
         else:
             self.last_chunk = ChunkPool(self.nClass,pooling="max")
             self.loss = UserLoss.cys_loss
@@ -85,10 +127,7 @@ class D2NNet(nn.Module):
             #output = F.log_softmax(x, dim=1)
         return output
 
-    def predict(self,output):
-        pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
-        #pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
-        return pred
+
 
 def main():
     pass
