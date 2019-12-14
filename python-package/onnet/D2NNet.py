@@ -76,7 +76,7 @@ class D2NNet(nn.Module):
         self.nDifrac = nDifrac
         self.isFC = False
         self.nClass = nCls
-        self.init_value = "reverse"    #"random"  "zero"
+        self.init_value = "random"    #"random"  "zero"
 
         self.chunk = chunk
         assert(self.M>=self.nClass and self.N>=self.nClass)

@@ -11,14 +11,16 @@ from onnet import *
 import math
 nClass = 10
 nLayer = 5
-dataset="emnist"
+#dataset="emnist"
+dataset="fasion_mnist"
 #dataset="mnist"
 #net_type = "cnn"
-#net_type = "DNet"
-net_type = "BiDNet"
-IMG_size = (28, 28)
+net_type = "DNet"
+#net_type = "BiDNet"
+#IMG_size = (28, 28)
 IMG_size = (112, 112)
 batch_size = 128
+print(f"=======dataset={dataset} net={net_type} IMG_size={IMG_size} batch_size={batch_size}\n")
 
 class BaseNet(nn.Module):
     def __init__(self, nCls=10):
@@ -147,6 +149,16 @@ def main():
         # balanced=47       byclass=62
         nClass = 47
         nLayer = 20
+    elif dataset=="fasion_mnist":
+        train_loader = torch.utils.data.DataLoader(
+            datasets.FashionMNIST('../data',train=True, download=True, transform=transform),
+            batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
+        test_loader = torch.utils.data.DataLoader(
+            datasets.FashionMNIST('../data',train=False, transform=transform),
+            batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
+        # balanced=47       byclass=62
+        nClass = 10
+        nLayer = 5
     else:
         nClass = 10
         nLayer = 5

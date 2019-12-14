@@ -3,7 +3,7 @@ from .Z_utils import COMPLEX_utils as Z
 from .some_utils import *
 import numpy as np
 import random
-
+import torch.nn as nn
 
 #https://pytorch.org/tutorials/beginner/pytorch_with_examples.html#pytorch-custom-nn-modules
 class DiffractiveLayer(torch.nn.Module):
@@ -90,6 +90,14 @@ class DiffractiveLayer(torch.nn.Module):
         return  u2 * N * N * df * df
 
     def GetTransCoefficient(self):
+        '''
+            eps = 1e-5; momentum = 0.1; affine = True
+
+            mean = torch.mean(self.transmission, 1)
+            vari = torch.var(self.transmission, 1)
+            amp_bn = torch.batch_norm(self.transmission,mean,vari)
+        :return:
+        '''
         amp_s = Z.exp_euler(self.transmission)
         return amp_s
 
