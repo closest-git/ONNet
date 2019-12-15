@@ -7,7 +7,7 @@ import torch.nn as nn
 
 #https://pytorch.org/tutorials/beginner/pytorch_with_examples.html#pytorch-custom-nn-modules
 class DiffractiveLayer(torch.nn.Module):
-    def SomeInit(self, M_in, N_in):
+    def SomeInit(self, M_in, N_in,HZ=0.4e12):
         assert (M_in == N_in)
         self.M = M_in
         self.N = N_in
@@ -16,36 +16,43 @@ class DiffractiveLayer(torch.nn.Module):
         self.delta = 0.03
         self.dL = 0.02
         self.c = 3e8
-        self.Hz = 0.4e12
+        self.Hz = HZ#0.4e12
 
         self.H_z = self.Init_H()
 
+    def __repr__(self):
+        #main_str = super(DiffractiveLayer, self).__repr__()
+        main_str = f"DiffractiveLayer_[{(int)(self.Hz/1.0e9)}G]_[{self.M},{self.N}]"
+        return main_str
 
-    def __init__(self, M_in, N_in,init_value="zero",rDrop=0.0,params="phase"):
+
+    def __init__(self, M_in, N_in,config,HZ=0.4e12):
         super(DiffractiveLayer, self).__init__()
-        self.SomeInit(M_in, N_in)
-        self.init_value = init_value
-        self.rDrop = rDrop
-        if params=="phase":
+        self.SomeInit(M_in, N_in,HZ)
+        assert config is not None
+        self.config = config
+        #self.init_value = init_value
+        #self.rDrop = rDrop
+        if self.config.modulation=="phase":
             self.transmission = torch.nn.Parameter(data=torch.Tensor(self.size, self.size), requires_grad=True)
         else:
             self.transmission = torch.nn.Parameter(data=torch.Tensor(self.size, self.size, 2), requires_grad=True)
 
         init_param = self.transmission.data
-        if self.init_value=="reverse":    #
+        if self.config.init_value=="reverse":    #
             half=self.transmission.data.shape[-2]//2
             init_param[..., :half, :] = 0
             init_param[..., half:, :] = np.pi
-        elif self.init_value=="random":
+        elif self.config.init_value=="random":
            self.transmission.data.uniform_(0, np.pi*2)
-        elif self.init_value == "random_reverse":
+        elif self.config.init_value == "random_reverse":
            init_param = torch.randint_like(init_param,0,2)*np.pi
-        elif self.init_value == "chunk":
+        elif self.config.init_value == "chunk":
             sections = split__sections()
             for xx in init_param.split(sections, -1):
                 xx = random.random(0,np.pi*2)
 
-        self.rDrop = rDrop
+        #self.rDrop = config.rDrop
 
         #self.bias = torch.nn.Parameter(data=torch.Tensor(1, 1), requires_grad=True)
 
@@ -105,7 +112,7 @@ class DiffractiveLayer(torch.nn.Module):
         diffrac = self.Diffractive_(x)
         amp_s = self.GetTransCoefficient()
         x = Z.Hadamard(diffrac,amp_s)
-        if(self.rDrop>0):
+        if(self.config.rDrop>0):
             drop = Z.rDrop2D(1-self.rDrop,(self.M,self.N),isComlex=True)
             x = Z.Hadamard(x, drop)
         #x = x+self.bias

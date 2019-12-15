@@ -14,6 +14,20 @@ from .Loss import *
 import numpy as np
 from .DiffractiveLayer import *
 
+class DNET_config:
+    def __init__(self,modulation="phase",init_value = "random",chunk=""):
+        '''
+
+        :param modulation:
+        :param init_value: ["random","zero","random_reverse","reverse","chunk"]
+        :param chunk:
+        '''
+        self.init_value = init_value  # "random"  "zero"
+        self.rDrop = 0
+        self.chunk = chunk
+        self.modulation = modulation
+
+
 class D2NNet(nn.Module):
     @staticmethod
     def binary_loss(output, target, reduction='mean'):
@@ -46,7 +60,7 @@ class D2NNet(nn.Module):
         return loss
 
     def predict(self,output):
-        if self.chunk == "binary":
+        if self.config.chunk == "binary":
             nGate = output.shape[1] // 2
             #assert nGate == self.n
             pred = 0
@@ -55,7 +69,7 @@ class D2NNet(nn.Module):
                 val_2 = torch.stack([output[:, no], output[:, no + 1]], 1)
                 pred_i = val_2.max(1, keepdim=True)[1]  # get the index of the max log-probability
                 pred = pred * 2 + pred_i
-        elif self.chunk == "logit":
+        elif self.config.chunk == "logit":
             nGate = output.shape[1]
             # assert nGate == self.n
             pred = 0
@@ -69,37 +83,38 @@ class D2NNet(nn.Module):
             #pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
         return pred
 
-    def __init__(self,IMG_size,nCls,nDifrac,chunk=""):
+    def __init__(self,IMG_size,nCls,nDifrac,config):
         super(D2NNet, self).__init__()
         self.M,self.N=IMG_size
         self.z_modulus = Z.modulus
         self.nDifrac = nDifrac
         self.isFC = False
         self.nClass = nCls
-        self.init_value = "random"    #"random"  "zero"
+        #self.init_value = "random"    #"random"  "zero"
+        self.config = config
 
-        self.chunk = chunk
+        #self.chunk = chunk
         assert(self.M>=self.nClass and self.N>=self.nClass)
         print(f"D2NNet nClass={nCls} shape={self.M,self.N}")
 
         #layer = DiffractiveAMP
         layer = DiffractiveLayer
         self.DD = nn.ModuleList([
-            layer(self.M, self.N,init_value=self.init_value) for i in range(self.nDifrac)
+            layer(self.M, self.N,config) for i in range(self.nDifrac)
         ])
         self.nD = len(self.DD)
         #self.DD.append(DropOutLayer(self.M, self.N,drop=0.9999))
         if self.isFC:
             self.fc1 = nn.Linear(self.M*self.N, self.nClass)
             self.loss = UserLoss.cys_loss
-        elif self.chunk=="binary":
+        elif self.config.chunk=="binary":
             self.last_chunk = BinaryChunk(self.nClass, pooling="max")
             self.loss = D2NNet.binary_loss
-        elif self.chunk == "logit":
+        elif self.config.chunk == "logit":
             self.last_chunk = BinaryChunk(self.nClass,isLogit=True, pooling="max")
             self.loss = D2NNet.logit_loss
         else:
-            self.last_chunk = ChunkPool(self.nClass,pooling="max")
+            self.last_chunk = ChunkPool(self.nClass,pooling="mean")
             self.loss = UserLoss.cys_loss
 
         #total = sum([param.nelement() for param in self.parameters()])
@@ -108,7 +123,7 @@ class D2NNet(nn.Module):
 
     def __repr__(self):
         main_str = super(D2NNet, self).__repr__()
-        main_str += f"\n========init={self.init_value}\n"
+        main_str += f"\n========init={self.config.init_value}"
         return main_str
 
     def forward(self, x):
@@ -123,7 +138,7 @@ class D2NNet(nn.Module):
         else:
             x = self.last_chunk(x)
 
-        if self.chunk=="binary":
+        if self.config.chunk=="binary":
             output = x
         else:
             output = x

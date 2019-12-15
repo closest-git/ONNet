@@ -19,10 +19,11 @@ nLayer = 5
 dataset="fasion_mnist"
 #dataset="mnist"
 #net_type = "cnn"
-net_type = "DNet"
+#net_type = "DNet"
+net_type = "MultiDNet"
 #net_type = "BiDNet"
-#IMG_size = (28, 28)
-IMG_size = (112, 112)
+IMG_size = (28, 28)
+#IMG_size = (112, 112)
 batch_size = 128
 
 class BaseNet(nn.Module):
@@ -183,11 +184,14 @@ def main():
     if net_type == "cnn":
         model = BaseNet()
     elif net_type == "DNet":
-        model = D2NNet(IMG_size,nClass,nLayer)
+        model = D2NNet(IMG_size,nClass,nLayer,DNET_config())
+        model.double()
+    elif net_type == "MultiDNet":
+        model = MultiDNet(IMG_size, nClass, nLayer,[0.3e12,0.35e12,0.4e12,0.42e12], DNET_config())
         model.double()
     elif net_type == "BiDNet":
-        model = D2NNet(IMG_size, nClass, nLayer, chunk="binary")
-        #model = D2NNet(IMG_size, nClass,nLayer, chunk="logit")
+        model = D2NNet(IMG_size, nClass, nLayer, DNET_config(chunk="binary"))
+        #model = D2NNet(IMG_size, nClass,nLayer, DNET_config(chunk="logit"))
         #model = BinaryDNet(IMG_size,nClass,nLayer,1)
         model.double()
 
@@ -212,7 +216,7 @@ def main():
     #optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9,weight_decay=0.0005)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.01,  weight_decay=0.0005)
 
-    for epoch in range(1, 16):
+    for epoch in range(1, 100):
         train( model, device, train_loader, optimizer, epoch, optical_trans)
         test(model, device, test_loader, optical_trans)
 
