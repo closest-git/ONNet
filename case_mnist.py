@@ -6,6 +6,10 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.optim.lr_scheduler import StepLR
+import os
+import sys
+ONNET_DIR = os.path.abspath("./python-package/")
+sys.path.append(ONNET_DIR)  # To find local version of the onnet
 from onnet import *
 
 import math
@@ -20,7 +24,6 @@ net_type = "DNet"
 #IMG_size = (28, 28)
 IMG_size = (112, 112)
 batch_size = 128
-print(f"=======dataset={dataset} net={net_type} IMG_size={IMG_size} batch_size={batch_size}\n")
 
 class BaseNet(nn.Module):
     def __init__(self, nCls=10):
@@ -65,6 +68,7 @@ class View(nn.Module):
 #_loss_ = UserLoss.cys_loss
 
 def train(model, device, train_loader, optimizer, epoch, optical_trans):
+    print(f"\n=======dataset={dataset} net={net_type} IMG_size={IMG_size} batch_size={batch_size}\n")
     nClass = model.nClass
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
@@ -134,27 +138,34 @@ def main():
         num_workers = None
         pin_memory = False
 
-    transform = transforms.Compose([
+    train_trans = transforms.Compose([
+        transforms.RandomAffine(5),
+        transforms.RandomRotation(10),
+        transforms.Resize(IMG_size),
+        transforms.ToTensor(),
+        transforms.Normalize((0.1307,), (0.3081,))
+    ])
+    test_trans = transforms.Compose([
         transforms.Resize(IMG_size),
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])
     if dataset=="emnist":
         train_loader = torch.utils.data.DataLoader(
-            datasets.EMNIST('../data',split="balanced", train=True, download=True, transform=transform),
+            datasets.EMNIST('./data',split="balanced", train=True, download=True, transform=train_trans),
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
         test_loader = torch.utils.data.DataLoader(
-            datasets.EMNIST('../data',split="balanced", train=False, transform=transform),
+            datasets.EMNIST('../data',split="balanced", train=False, transform=test_trans),
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
         # balanced=47       byclass=62
         nClass = 47
         nLayer = 20
     elif dataset=="fasion_mnist":
         train_loader = torch.utils.data.DataLoader(
-            datasets.FashionMNIST('../data',train=True, download=True, transform=transform),
+            datasets.FashionMNIST('./data',train=True, download=True, transform=train_trans),
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
         test_loader = torch.utils.data.DataLoader(
-            datasets.FashionMNIST('../data',train=False, transform=transform),
+            datasets.FashionMNIST('./data',train=False, transform=test_trans),
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
         # balanced=47       byclass=62
         nClass = 10
@@ -163,10 +174,10 @@ def main():
         nClass = 10
         nLayer = 5
         train_loader = torch.utils.data.DataLoader(
-            datasets.MNIST('../data', train=True, download=True,transform=transform),
+            datasets.MNIST('../data', train=True, download=True,transform=train_trans),
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
         test_loader = torch.utils.data.DataLoader(
-            datasets.MNIST('../data', train=False,transform=transform),
+            datasets.MNIST('../data', train=False,transform=test_trans),
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
 
     if net_type == "cnn":

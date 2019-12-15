@@ -91,6 +91,7 @@ class D2NNet(nn.Module):
         #self.DD.append(DropOutLayer(self.M, self.N,drop=0.9999))
         if self.isFC:
             self.fc1 = nn.Linear(self.M*self.N, self.nClass)
+            self.loss = UserLoss.cys_loss
         elif self.chunk=="binary":
             self.last_chunk = BinaryChunk(self.nClass, pooling="max")
             self.loss = D2NNet.binary_loss
