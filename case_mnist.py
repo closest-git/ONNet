@@ -18,11 +18,11 @@ nLayer = 5
 #dataset="emnist"
 dataset="fasion_mnist"
 #dataset="mnist"
-#net_type = "cnn"
+net_type = "cnn"
 #net_type = "DNet"
-net_type = "MultiDNet"
+#net_type = "MultiDNet"
 #net_type = "BiDNet"
-IMG_size = (28, 28)
+IMG_size = (56, 56)
 #IMG_size = (112, 112)
 batch_size = 128
 
@@ -31,11 +31,20 @@ class BaseNet(nn.Module):
         super(BaseNet, self).__init__()
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
-        self.dropout1 = nn.Dropout2d(0.25)
-        self.dropout2 = nn.Dropout2d(0.5)
-        nFC1=43264  #IMG_size = (56, 56)
-        self.fc1 = nn.Linear(nFC1, 128)
-        self.fc2 = nn.Linear(128, 10)
+        self.isDropOut = False
+        self.nFC=1
+        if self.isDropOut:
+            self.dropout1 = nn.Dropout2d(0.25)
+            self.dropout2 = nn.Dropout2d(0.5)
+        if IMG_size[0]==56:
+            nFC1 = 43264
+        else:
+            nFC1 = 9216
+        if self.nFC == 1:
+            self.fc1 = nn.Linear(nFC1, 10)
+        else:
+            self.fc1 = nn.Linear(nFC1, 128)
+            self.fc2 = nn.Linear(128, 10)
         self.loss = F.cross_entropy
         self.nClass = nCls
 
@@ -44,13 +53,17 @@ class BaseNet(nn.Module):
         x = F.relu(x)
         x = self.conv2(x)
         x = F.max_pool2d(x, 2)
-        x = self.dropout1(x)
+        if self.isDropOut:
+            x = self.dropout1(x)
         x = torch.flatten(x, 1)
         x = self.fc1(x)
         x = F.relu(x)
-        x = self.dropout2(x)
-        x = self.fc2(x)
-        output = F.log_softmax(x, dim=1)
+        if self.isDropOut:
+            x = self.dropout2(x)
+        if self.nFC == 2:
+            x = self.fc2(x)
+        #output = F.log_softmax(x, dim=1)
+        output = x
         return output
 
     def predict(self,output):
@@ -187,7 +200,7 @@ def main():
         model = D2NNet(IMG_size,nClass,nLayer,DNET_config())
         model.double()
     elif net_type == "MultiDNet":
-        model = MultiDNet(IMG_size, nClass, nLayer,[0.3e12,0.35e12,0.4e12,0.42e12], DNET_config())
+        model = MultiDNet(IMG_size, nClass, nLayer,[0.1e12,0.2e12,0.3e12,0.35e12,0.4e12,0.42e12], DNET_config())
         model.double()
     elif net_type == "BiDNet":
         model = D2NNet(IMG_size, nClass, nLayer, DNET_config(chunk="binary"))
@@ -214,7 +227,7 @@ def main():
             print(f"\t{name}={param.nelement()}")
     # Optimizer
     #optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9,weight_decay=0.0005)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01,  weight_decay=0.0005)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001,  weight_decay=0.0005)
 
     for epoch in range(1, 100):
         train( model, device, train_loader, optimizer, epoch, optical_trans)

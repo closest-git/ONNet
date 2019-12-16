@@ -1,13 +1,15 @@
 import torch
 import math
 import numpy as np
+from .some_utils import *
 
 class ChunkPool(torch.nn.Module):
-    def __init__(self, nCls,pooling="max",chunk_dim=-1):
+    def __init__(self, nCls,config,pooling="max",chunk_dim=-1):
         super(ChunkPool, self).__init__()
         self.nClass = nCls
         self.pooling = pooling
         self.chunk_dim=chunk_dim
+        self.config = config
 
     def __repr__(self):
         main_str = super(ChunkPool, self).__repr__()
@@ -26,19 +28,27 @@ class ChunkPool(torch.nn.Module):
             x = x1.cuda()
         else:
             x_max=[]
-            split_dim = range(x.shape[self.chunk_dim])
-            sections=[]
-            for arr in np.array_split(np.array(split_dim), self.nClass):
-                sections.append(len(arr))
-            #assert split_size>0
-            for xx in x.split(sections, self.chunk_dim):
-                x2 = xx.contiguous().view(nSamp, -1)
-                if self.pooling == "max":
-                    x3 = torch.max(x2, 1)
-                    x_max.append(x3.values)
-                else:
-                    x3 = torch.mean(x2, 1)
-                    x_max.append(x3)
+            if self.config.output_chunk=="1D":
+                sections=split__sections(x.shape[self.chunk_dim],self.nClass)
+                for xx in x.split(sections, self.chunk_dim):
+                    x2 = xx.contiguous().view(nSamp, -1)
+                    if self.pooling == "max":
+                        x3 = torch.max(x2, 1)
+                        x_max.append(x3.values)
+                    else:
+                        x3 = torch.mean(x2, 1)
+                        x_max.append(x3)
+            else:   #2D
+                regions = split_regions_2d(x.shape,self.nClass)
+                for box in regions:
+                    x2 = x[...,box[0]:box[1],box[2]:box[3]]
+                    x2 = x2.contiguous().view(nSamp, -1)
+                    if self.pooling == "max":
+                        x3 = torch.max(x2, 1)
+                        x_max.append(x3.values)
+                    else:
+                        x3 = torch.mean(x2, 1)
+                        x_max.append(x3)
             assert len(x_max)==self.nClass
             x = torch.stack(x_max,1)
             #x_np = x.detach().cpu().numpy()

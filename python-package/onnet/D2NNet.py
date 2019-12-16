@@ -26,6 +26,7 @@ class DNET_config:
         self.rDrop = 0
         self.chunk = chunk
         self.modulation = modulation
+        self.output_chunk = "1D"        #["1D","2D"]
 
 
 class D2NNet(nn.Module):
@@ -114,7 +115,7 @@ class D2NNet(nn.Module):
             self.last_chunk = BinaryChunk(self.nClass,isLogit=True, pooling="max")
             self.loss = D2NNet.logit_loss
         else:
-            self.last_chunk = ChunkPool(self.nClass,pooling="mean")
+            self.last_chunk = ChunkPool(self.nClass,config,pooling="mean")
             self.loss = UserLoss.cys_loss
 
         #total = sum([param.nelement() for param in self.parameters()])
