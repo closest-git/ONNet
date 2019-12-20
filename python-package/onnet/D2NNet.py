@@ -15,7 +15,7 @@ import numpy as np
 from .DiffractiveLayer import *
 
 class DNET_config:
-    def __init__(self,modulation="phase",init_value = "random",chunk=""):
+    def __init__(self,batch,modulation="phase",init_value = "random",chunk=""):
         '''
 
         :param modulation:
@@ -27,6 +27,16 @@ class DNET_config:
         self.chunk = chunk
         self.modulation = modulation
         self.output_chunk = "1D"        #["1D","2D"]
+        self.batch = batch
+        self.learning_rate = 0.01
+        self.isFC = False
+        if self.isFC == True:
+            self.learning_rate = 0.001
+
+    def __repr__(self):
+        main_str = f"lr={self.learning_rate}_ mod={self.modulation}"
+        if self.isFC:       main_str+="_FC"
+        return main_str
 
 
 class D2NNet(nn.Module):
@@ -89,7 +99,7 @@ class D2NNet(nn.Module):
         self.M,self.N=IMG_size
         self.z_modulus = Z.modulus
         self.nDifrac = nDifrac
-        self.isFC = False
+        #self.isFC = False
         self.nClass = nCls
         #self.init_value = "random"    #"random"  "zero"
         self.config = config
@@ -105,7 +115,7 @@ class D2NNet(nn.Module):
         ])
         self.nD = len(self.DD)
         #self.DD.append(DropOutLayer(self.M, self.N,drop=0.9999))
-        if self.isFC:
+        if self.config.isFC:
             self.fc1 = nn.Linear(self.M*self.N, self.nClass)
             self.loss = UserLoss.cys_loss
         elif self.config.chunk=="binary":
@@ -127,13 +137,13 @@ class D2NNet(nn.Module):
         main_str += f"\n========init={self.config.init_value}"
         return main_str
 
-    def forward(self, x):
+    def input_trans(self,x):    # square-rooted and normalized
         x = x.double()
-        for layD in self.DD:
-            x = layD(x)
+        x = torch.sqrt(x)
+        return x
 
-        x = self.z_modulus(x).cuda()
-        if self.isFC:
+    def do_classify(self,x):
+        if self.config.isFC:
             x = torch.flatten(x, 1)
             x = self.fc1(x)
         else:
@@ -143,7 +153,29 @@ class D2NNet(nn.Module):
             output = x
         else:
             output = x
-            #output = F.log_softmax(x, dim=1)
+            # output = F.log_softmax(x, dim=1)
+        return output
+
+    def forward(self, x):
+        x = self.input_trans(x)
+
+        for layD in self.DD:
+            x = layD(x)
+
+        x = self.z_modulus(x).cuda()
+        output = self.do_classify(x)
+        if False:
+            if self.config.isFC:
+                x = torch.flatten(x, 1)
+                x = self.fc1(x)
+            else:
+                x = self.last_chunk(x)
+
+            if self.config.chunk=="binary":
+                output = x
+            else:
+                output = x
+                #output = F.log_softmax(x, dim=1)
         return output
 
 

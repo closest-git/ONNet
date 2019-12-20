@@ -25,21 +25,25 @@ class MultiDNet(D2NNet):
             x = x0.double()
             for layD in fNet:
                 x = layD(x)
+            #x_sum = torch.max(x_sum,self.z_modulus(x).cuda()).values()
             x_sum += self.z_modulus(x).cuda()
         x = x_sum
 
+        output = self.do_classify(x)
+        '''
         #x = self.z_modulus(x).cuda()
-        if self.isFC:
-            x = torch.flatten(x, 1)
-            x = self.fc1(x)
-        else:
-            x = self.last_chunk(x)
-
-        if self.config.chunk == "binary":
-            output = x
-        else:
-            output = x
-            # output = F.log_softmax(x, dim=1)
+                if self.config.isFC:
+                    x = torch.flatten(x, 1)
+                    x = self.fc1(x)
+                else:
+                    x = self.last_chunk(x)
+        
+                if self.config.chunk == "binary":
+                    output = x
+                else:
+                    output = x
+                    # output = F.log_softmax(x, dim=1)
+        '''
         return output
 
         return output
