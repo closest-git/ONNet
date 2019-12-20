@@ -27,11 +27,11 @@ class DNET_config:
         self.chunk = chunk
         self.modulation = modulation
         self.output_chunk = "2D"        #["1D","2D"]
-        self.output_pooling = "max"
+        self.output_pooling = "mean"
         self.batch = batch
         self.learning_rate = 0.01
         self.isFC = False
-        self.input_scale = 255
+        self.input_scale = 1
         if self.isFC == True:
             self.learning_rate = 0.0001
 
