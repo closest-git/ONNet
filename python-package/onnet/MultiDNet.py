@@ -22,7 +22,9 @@ class MultiDNet(D2NNet):
         nSamp = x0.shape[0]
         x_sum = 0
         for fNet in self.freq_nets:
-            x = x0.double()
+            x = self.input_trans(x0)
+            #d0,d1=x0.min(),x0.max()
+            #x = x0.double()
             for layD in fNet:
                 x = layD(x)
             #x_sum = torch.max(x_sum,self.z_modulus(x).cuda()).values()

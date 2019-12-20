@@ -10,6 +10,7 @@ class ChunkPool(torch.nn.Module):
         self.pooling = pooling
         self.chunk_dim=chunk_dim
         self.config = config
+        #self.regions = split_regions_2d(x.shape,self.nClass)
 
     def __repr__(self):
         main_str = super(ChunkPool, self).__repr__()

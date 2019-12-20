@@ -26,16 +26,18 @@ class DNET_config:
         self.rDrop = 0
         self.chunk = chunk
         self.modulation = modulation
-        self.output_chunk = "1D"        #["1D","2D"]
+        self.output_chunk = "2D"        #["1D","2D"]
+        self.output_pooling = "max"
         self.batch = batch
         self.learning_rate = 0.01
         self.isFC = False
+        self.input_scale = 255
         if self.isFC == True:
-            self.learning_rate = 0.001
+            self.learning_rate = 0.0001
 
     def __repr__(self):
-        main_str = f"lr={self.learning_rate}_ mod={self.modulation}"
-        if self.isFC:       main_str+="_FC"
+        main_str = f"lr={self.learning_rate}_ mod={self.modulation} input={self.input_scale} detector={self.output_chunk}"
+        if self.isFC:       main_str+=" [FC]"
         return main_str
 
 
@@ -125,7 +127,7 @@ class D2NNet(nn.Module):
             self.last_chunk = BinaryChunk(self.nClass,isLogit=True, pooling="max")
             self.loss = D2NNet.logit_loss
         else:
-            self.last_chunk = ChunkPool(self.nClass,config,pooling="mean")
+            self.last_chunk = ChunkPool(self.nClass,config,pooling=config.output_pooling)
             self.loss = UserLoss.cys_loss
 
         #total = sum([param.nelement() for param in self.parameters()])
@@ -138,7 +140,7 @@ class D2NNet(nn.Module):
         return main_str
 
     def input_trans(self,x):    # square-rooted and normalized
-        x = x.double()
+        x = x.double()*self.config.input_scale
         x = torch.sqrt(x)
         return x
 

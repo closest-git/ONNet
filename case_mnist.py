@@ -3,6 +3,8 @@ import argparse
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.utils.tensorboard import SummaryWriter
+#import visdom
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.optim.lr_scheduler import StepLR
@@ -16,8 +18,8 @@ import math
 nClass = 10
 nLayer = 5
 #dataset="emnist"
-dataset="fasion_mnist"
-#dataset="mnist"
+#dataset="fasion_mnist"
+dataset="mnist"
 #net_type = "cnn"
 #net_type = "DNet"
 net_type = "MultiDNet"
@@ -26,6 +28,25 @@ IMG_size = (28, 28)
 #IMG_size = (112, 112)
 #IMG_size = (14, 14)
 batch_size = 128
+
+class Fasion_Net(nn.Module):        #https://pytorch.org/tutorials/intermediate/tensorboard_tutorial.html
+    def __init__(self):
+        super(Net, self).__init__()
+        self.conv1 = nn.Conv2d(1, 6, 5)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 4 * 4, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+
+    def forward(self, x):
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = x.view(-1, 16 * 4 * 4)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
 
 class BaseNet(nn.Module):
     def __init__(self, nCls=10):
@@ -80,11 +101,25 @@ class View(nn.Module):
     def forward(self, x):
         return x.view(-1,*self.shape)
 
-#_loss_ = UserLoss.cys_loss
+train_trans = transforms.Compose([
+        #transforms.RandomAffine(5),
+        #transforms.RandomRotation(10),
+        transforms.Resize(IMG_size),
+        transforms.ToTensor(),
+        #transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)) #Convert a color image to grayscale and normalize the color range to [0,1].
+        #transforms.Normalize((0.1307,), (0.3081,))
+    ])
+test_trans = transforms.Compose([
+    transforms.Resize(IMG_size),
+    transforms.ToTensor(),
+    #transforms.Normalize((0.1307,), (0.3081,))
+])
 
 def train(model, device, train_loader, epoch, optical_trans):
-    print(f"\n=======dataset={dataset} net={net_type} IMG_size={IMG_size} batch_size={batch_size}")
-    print(f"======={model.config}\n")
+    if epoch==1:
+        print(f"\n=======dataset={dataset} net={net_type} IMG_size={IMG_size} batch_size={batch_size}")
+        print(f"======={model.config}")
+        print(f"======={train_trans}\n")
 
     #optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9,weight_decay=0.0005)
     optimizer = torch.optim.Adam(model.parameters(), lr=model.config.learning_rate,  weight_decay=0.0005)
@@ -92,6 +127,9 @@ def train(model, device, train_loader, epoch, optical_trans):
     nClass = model.nClass
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
+        if batch_idx==0:   #check data_range
+            d0,d1=data.min(),data.max()
+            assert(d0>=0)
         data, target = data.to(device), target.to(device)
         optimizer.zero_grad()
         output = model(optical_trans(data))
@@ -158,18 +196,7 @@ def main():
         num_workers = None
         pin_memory = False
 
-    train_trans = transforms.Compose([
-        transforms.RandomAffine(5),
-        transforms.RandomRotation(10),
-        transforms.Resize(IMG_size),
-        transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
-    ])
-    test_trans = transforms.Compose([
-        transforms.Resize(IMG_size),
-        transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
-    ])
+
     if dataset=="emnist":
         train_loader = torch.utils.data.DataLoader(
             datasets.EMNIST('./data',split="balanced", train=True, download=True, transform=train_trans),
@@ -194,10 +221,10 @@ def main():
         nClass = 10
         nLayer = 5
         train_loader = torch.utils.data.DataLoader(
-            datasets.MNIST('../data', train=True, download=True,transform=train_trans),
+            datasets.MNIST('./data', train=True, download=True,transform=train_trans),
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
         test_loader = torch.utils.data.DataLoader(
-            datasets.MNIST('../data', train=False,transform=test_trans),
+            datasets.MNIST('./data', train=False,transform=test_trans),
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
 
     if net_type == "cnn":
