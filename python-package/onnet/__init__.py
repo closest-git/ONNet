@@ -11,6 +11,7 @@ from .D2NNet import D2NNet,DNET_config
 from .Z_utils import COMPLEX_utils
 from .BinaryDNet import *
 from .MultiDNet import *
+from .Visualizing import *
 '''
 try:
 except ImportError:
@@ -27,6 +28,6 @@ except ImportError:
 dir_path = os.path.dirname(os.path.realpath(__file__))
 #print(f"__init_ dir_path={dir_path}")
 
-__all__ = ['D2NNet','DNET_config','OpticalTrans','COMPLEX_utils','MultiDNet','BinaryDNet']
+__all__ = ['D2NNet','DNET_config','OpticalTrans','COMPLEX_utils','MultiDNet','BinaryDNet','Visualize']
 
 

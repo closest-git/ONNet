@@ -3,8 +3,6 @@ import argparse
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.tensorboard import SummaryWriter
-#import visdom
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.optim.lr_scheduler import StepLR
@@ -18,8 +16,8 @@ import math
 nClass = 10
 nLayer = 5
 #dataset="emnist"
-#dataset="fasion_mnist"
-dataset="mnist"
+dataset="fasion_mnist"
+#dataset="mnist"
 #net_type = "cnn"
 #net_type = "DNet"
 net_type = "MultiDNet"
@@ -28,6 +26,7 @@ IMG_size = (28, 28)
 #IMG_size = (112, 112)
 #IMG_size = (14, 14)
 batch_size = 128
+visual = Visualize("onnet")
 
 class Fasion_Net(nn.Module):        #https://pytorch.org/tutorials/intermediate/tensorboard_tutorial.html
     def __init__(self):
@@ -48,9 +47,10 @@ class Fasion_Net(nn.Module):        #https://pytorch.org/tutorials/intermediate/
         x = self.fc3(x)
         return x
 
-class BaseNet(nn.Module):
-    def __init__(self, nCls=10):
-        super(BaseNet, self).__init__()
+class Mnist_Net(nn.Module):
+    def __init__(self,config, nCls=10):
+        super(Mnist_Net, self).__init__()
+        self.config = config
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.isDropOut = False
@@ -203,7 +203,7 @@ def main():
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
         test_loader = torch.utils.data.DataLoader(
             datasets.EMNIST('../data',split="balanced", train=False, transform=test_trans),
-            batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
+            batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
         # balanced=47       byclass=62
         nClass = 47
         nLayer = 20
@@ -213,7 +213,7 @@ def main():
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
         test_loader = torch.utils.data.DataLoader(
             datasets.FashionMNIST('./data',train=False, transform=test_trans),
-            batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
+            batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
         # balanced=47       byclass=62
         nClass = 10
         nLayer = 5
@@ -225,10 +225,10 @@ def main():
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
         test_loader = torch.utils.data.DataLoader(
             datasets.MNIST('./data', train=False,transform=test_trans),
-            batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
+            batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
 
     if net_type == "cnn":
-        model = BaseNet()
+        model = Mnist_Net(config=DNET_config(batch=batch_size))
     elif net_type == "DNet":
         model = D2NNet(IMG_size,nClass,nLayer,DNET_config(batch=batch_size))
         model.double()
@@ -241,9 +241,9 @@ def main():
         #model = D2NNet(IMG_size, nClass,nLayer, DNET_config(chunk="logit"))
         #model = BinaryDNet(IMG_size,nClass,nLayer,1)
         model.double()
-
     model.to(device)
     print(model)
+    #visual.ShowModel(model,train_loader)
 
     if False:       # So strange in initialize
         for m in model.modules():
