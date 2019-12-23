@@ -28,6 +28,6 @@ except ImportError:
 dir_path = os.path.dirname(os.path.realpath(__file__))
 #print(f"__init_ dir_path={dir_path}")
 
-__all__ = ['D2NNet','DNET_config','OpticalTrans','COMPLEX_utils','MultiDNet','BinaryDNet','Visualize']
+__all__ = ['D2NNet','DNET_config','OpticalTrans','COMPLEX_utils','MultiDNet','BinaryDNet','Visualize','Visdom_Visualizer']
 
 

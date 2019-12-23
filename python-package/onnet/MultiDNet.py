@@ -6,12 +6,18 @@ class MultiDNet(D2NNet):
     def __init__(self, IMG_size,nCls,nInterDifrac,freq_list,config):
         super(MultiDNet, self).__init__(IMG_size,nCls,nInterDifrac,config)
         self.freq_list = freq_list
+        nFreq = len(self.freq_list)
         del self.DD;     self.DD = None
+        self.wFreq = torch.nn.Parameter(torch.ones(nFreq))
         self.freq_nets=nn.ModuleList([
             nn.ModuleList([
                 DiffractiveLayer(self.M, self.N, self.config, HZ=freq) for i in range(self.nDifrac)
             ]) for freq in freq_list
         ])
+
+    def legend(self):
+        title = f"MF_DNet({len(self.freq_list)} channels)"
+        return title
 
     def __repr__(self):
         main_str = super(MultiDNet, self).__repr__()
@@ -21,14 +27,14 @@ class MultiDNet(D2NNet):
     def forward(self, x0):
         nSamp = x0.shape[0]
         x_sum = 0
-        for fNet in self.freq_nets:
+        for id,fNet in enumerate(self.freq_nets):
             x = self.input_trans(x0)
             #d0,d1=x0.min(),x0.max()
             #x = x0.double()
             for layD in fNet:
                 x = layD(x)
             #x_sum = torch.max(x_sum,self.z_modulus(x).cuda()).values()
-            x_sum += self.z_modulus(x).cuda()
+            x_sum += self.z_modulus(x).cuda()*self.wFreq[id]
         x = x_sum
 
         output = self.do_classify(x)

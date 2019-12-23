@@ -15,7 +15,7 @@ import numpy as np
 from .DiffractiveLayer import *
 
 class DNET_config:
-    def __init__(self,batch,modulation="phase",init_value = "random",chunk=""):
+    def __init__(self,batch,lr_base,modulation="phase",init_value = "random",chunk="",isFC=False):
         '''
 
         :param modulation:
@@ -29,11 +29,15 @@ class DNET_config:
         self.output_chunk = "2D"        #["1D","2D"]
         self.output_pooling = "mean"
         self.batch = batch
-        self.learning_rate = 0.01
-        self.isFC = False
+        self.learning_rate = lr_base
+        self.isFC = isFC
         self.input_scale = 1
-        if self.isFC == True:
-            self.learning_rate = 0.0001
+        #if self.isFC == True:            self.learning_rate = lr_base/10
+
+    def env_title(self):
+        title=""
+        if self.isFC:       title += "[FC]"
+        return title
 
     def __repr__(self):
         main_str = f"lr={self.learning_rate}_ mod={self.modulation} input={self.input_scale} detector={self.output_chunk}"
@@ -106,8 +110,10 @@ class D2NNet(nn.Module):
         #self.init_value = "random"    #"random"  "zero"
         self.config = config
 
-        #self.chunk = chunk
-        assert(self.M>=self.nClass and self.N>=self.nClass)
+        if self.config.output_chunk == "2D":
+            assert(self.M*self.N>=self.nClass)
+        else:
+            assert (self.M >= self.nClass and self.N >= self.nClass)
         print(f"D2NNet nClass={nCls} shape={self.M,self.N}")
 
         #layer = DiffractiveAMP
@@ -133,6 +139,10 @@ class D2NNet(nn.Module):
         #total = sum([param.nelement() for param in self.parameters()])
         #print(f"nParameters={total}")#\nparams={self.parameters()}
         #print(self)
+
+    def legend(self):
+        title = f"DNNet"
+        return title
 
     def __repr__(self):
         main_str = super(D2NNet, self).__repr__()

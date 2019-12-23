@@ -1,6 +1,9 @@
 '''
+    python -m visdom.server
+    http://localhost:8097
+
     tensorboard --logdir=runs
-    https://localhost:6006/
+    http://localhost:6006/
 
     ONNX export failed on ATen operator ifft because torch.onnx.symbolic.ifft does not exist
 '''
@@ -11,7 +14,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
-#import visdom
+import visdom
 import matplotlib.pyplot as plt
 import numpy as np
 import torchvision
@@ -26,12 +29,14 @@ def matplotlib_imshow(img, one_channel=False):
         plt.imshow(npimg, cmap="Greys")
     else:
         plt.imshow(np.transpose(npimg, (1, 2, 0)))
-    #plt.show()
+    plt.show()
 
 
 class Visualize:
-    def __init__(self,title="onnet"):
-        self.writer = SummaryWriter(f'runs/{title}')
+    def __init__(self,env_title="onnet", **kwargs):
+        self.log_dir = f'runs/{env_title}'
+        self.loss_step = 0
+        self.writer = SummaryWriter(self.log_dir)
 
     def ShowModel(self,model,data_loader):
         '''
@@ -39,16 +44,124 @@ class Visualize:
         '''
         dataiter = iter(data_loader)
         images, labels = dataiter.next()
+        if images.shape[0]>32:
+            images=images[0:32,...]
         if True:
             img_grid = torchvision.utils.make_grid(images)
             matplotlib_imshow(img_grid, one_channel=True)
-            self.writer.add_image('four_fashion_mnist_images', img_grid)
+            self.writer.add_image('one_batch', img_grid)
             self.writer.close()
         image_1 = images[0:1,:,:,:]
-        images = images.cuda()
-        self.writer.add_graph(model,images )
-        self.writer.close()
+        if False:
+            images = images.cuda()
+            self.writer.add_graph(model,images )
+            self.writer.close()
 
+    def UpdateLoss(self,tag,loss,global_step=None):
+        step = self.loss_step if global_step==None else global_step
+        with SummaryWriter(log_dir=self.log_dir) as writer:
+            writer.add_scalar(tag, loss, global_step=step)
+        #self.writer.close()  # 执行close立即刷新，否则将每120秒自动刷新
+        self.loss_step = self.loss_step+1
+
+class  Visdom_Visualizer(Visualize):
+    '''
+    封装了visdom的基本操作，但是你仍然可以通过`self.vis.function`
+    调用原生的visdom接口
+    '''
+
+    def __init__(self,env_title, **kwargs):
+        super(Visdom_Visualizer, self).__init__(env_title)
+        self.viz = visdom.Visdom(env=env_title, **kwargs)
+
+        # 画的第几个数，相当于横座标
+        # 保存（’loss',23） 即loss的第23个点
+        # self.index = {}
+        # self.log_text = ''
+
+    def UpdateLoss(self, title,legend, loss, yLabel='LOSS',global_step=None):
+        self.vis_plot( self.loss_step, loss, title,legend,yLabel)
+        self.loss_step = self.loss_step + 1
+
+    def vis_plot(self,epoch, loss_, title,legend,yLabel):
+        self.viz.line(X=torch.FloatTensor([epoch]), Y=torch.FloatTensor([loss_]), win='loss',
+                 opts=dict(
+                     legend=[legend],  # [config_.use_bn],
+                     fillarea=False,
+                     showlegend=True,
+                     width=1600,
+                     height=800,
+                     xlabel='Epoch',
+                     ylabel=yLabel,
+                     # ytype='log',
+                     title=title,
+                     # marginleft=30,
+                     # marginright=30,
+                     # marginbottom=80,
+                     # margintop=30,
+                 ),
+                 update='append' if epoch > 0 else None)
+
+    def reinit(self, env='default', **kwargs):
+        '''
+        修改visdom的配置
+        '''
+        self.vis = visdom.Visdom(env=env, **kwargs)
+        return self
+
+    def plot_many(self, d):
+        '''
+        一次plot多个
+        @params d: dict (name,value) i.e. ('loss',0.11)
+        '''
+        for k, v in d.iteritems():
+            self.plot(k, v)
+
+    def img_many(self, d):
+        for k, v in d.iteritems():
+            self.img(k, v)
+
+    def plot(self, name, y, **kwargs):
+        '''
+        self.plot('loss',1.00)
+        '''
+        x = self.index.get(name, 0)
+        self.vis.line(Y=np.array([y]), X=np.array([x]),
+                      win=name,
+                      opts=dict(title=name),
+                      update=None if x == 0 else 'append',
+                      **kwargs
+                      )
+        self.index[name] = x + 1
+
+    def img(self, name, img_, **kwargs):
+        '''
+        self.img('input_img',t.Tensor(64,64))
+        self.img('input_imgs',t.Tensor(3,64,64))
+        self.img('input_imgs',t.Tensor(100,1,64,64))
+        self.img('input_imgs',t.Tensor(100,3,64,64),nrows=10)
+
+        ！！！don‘t ~~self.img('input_imgs',t.Tensor(100,64,64),nrows=10)~~！！！
+        '''
+        self.vis.images(img_.cpu().numpy(),
+                        win=(name),
+                        opts=dict(title=name),
+                        **kwargs
+                        )
+
+    def log(self, info, win='log_text'):
+        '''
+        self.log({'loss':1,'lr':0.0001})
+        '''
+
+        self.log_text += ('[{time}] {info} <br>'.format(
+            time=time.strftime('%m%d_%H%M%S'), \
+            info=info))
+        self.vis.text(self.log_text, win)
+        print(self.log_text)
+
+    def __getattr__(self, name):
+        return getattr(self.vis, name)
 
 def PROJECTOR_test():
     """ ==================使用PROJECTOR对高维向量可视化====================

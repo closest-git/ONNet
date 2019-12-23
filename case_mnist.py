@@ -15,18 +15,24 @@ from onnet import *
 import math
 nClass = 10
 nLayer = 5
-#dataset="emnist"
-dataset="fasion_mnist"
+dataset="emnist"
+#dataset="fasion_mnist"
 #dataset="mnist"
 #net_type = "cnn"
 #net_type = "DNet"
-net_type = "MultiDNet"
+net_type = "MF_DNet";   freq_list=[0.3e12, 0.35e12, 0.4e12, 0.42e12]
 #net_type = "BiDNet"
-IMG_size = (28, 28)
-#IMG_size = (112, 112)
+#IMG_size = (28, 28)
+IMG_size = (56, 56)
 #IMG_size = (14, 14)
 batch_size = 128
-visual = Visualize("onnet")
+lr_base=0.002
+config_base=DNET_config(batch=batch_size,lr_base=lr_base)
+env_title=f"{net_type}_{dataset}_{IMG_size}_{lr_base}_{config_base.env_title()}"
+if net_type == "MF_DNet":
+    env_title = env_title+f"_C{len(freq_list)}"
+#visual = Visdom_Visualizer(env_title=env_title)
+visual = Visualize(env_title=env_title)
 
 class Fasion_Net(nn.Module):        #https://pytorch.org/tutorials/intermediate/tensorboard_tutorial.html
     def __init__(self):
@@ -138,9 +144,10 @@ def train(model, device, train_loader, epoch, optical_trans):
         loss.backward()
         optimizer.step()
         if batch_idx % 50 == 0:
+            aLoss = loss.item()
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                epoch, batch_idx * len(data), len(train_loader.dataset),
-                100. * batch_idx / len(train_loader), loss.item()))
+                epoch, batch_idx * len(data), len(train_loader.dataset),100. * batch_idx / len(train_loader),aLoss ))
+            visual.UpdateLoss(title=f"Accuracy on \"{dataset}\"", legend=f"{model.legend()}", loss=aLoss, yLabel="Accuracy")
         #break
 
 def test(model, device, test_loader, optical_trans):
@@ -158,9 +165,10 @@ def test(model, device, test_loader, optical_trans):
             correct += pred.eq(target.view_as(pred)).sum().item()
 
     test_loss /= len(test_loader.dataset)
-    print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.2f}%)\n'.format(
-        test_loss, correct, len(test_loader.dataset),
-        100. * correct / len(test_loader.dataset)))
+    accu = 100. * correct / len(test_loader.dataset)
+    print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.2f}%)\n'.format(test_loss, correct, len(test_loader.dataset),accu))
+    visual.UpdateLoss(title=f"Accuracy on \"{dataset}\"",legend=f"{model.legend()}", loss=accu,yLabel="Accuracy")
+    return accu
 
 def main():
     """Train a simple Hybrid Scattering + CNN model on MNIST.
@@ -202,11 +210,11 @@ def main():
             datasets.EMNIST('./data',split="balanced", train=True, download=True, transform=train_trans),
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
         test_loader = torch.utils.data.DataLoader(
-            datasets.EMNIST('../data',split="balanced", train=False, transform=test_trans),
+            datasets.EMNIST('./data',split="balanced", train=False, transform=test_trans),
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
         # balanced=47       byclass=62
         nClass = 47
-        nLayer = 20
+        nLayer = 5
     elif dataset=="fasion_mnist":
         train_loader = torch.utils.data.DataLoader(
             datasets.FashionMNIST('./data',train=True, download=True, transform=train_trans),
@@ -214,7 +222,6 @@ def main():
         test_loader = torch.utils.data.DataLoader(
             datasets.FashionMNIST('./data',train=False, transform=test_trans),
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
-        # balanced=47       byclass=62
         nClass = 10
         nLayer = 5
     else:
@@ -228,22 +235,22 @@ def main():
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
 
     if net_type == "cnn":
-        model = Mnist_Net(config=DNET_config(batch=batch_size))
+        model = Mnist_Net(config=config_base)
     elif net_type == "DNet":
-        model = D2NNet(IMG_size,nClass,nLayer,DNET_config(batch=batch_size))
+        model = D2NNet(IMG_size,nClass,nLayer,config_base)
         model.double()
-    elif net_type == "MultiDNet":
+    elif net_type == "MF_DNet":
         #model = MultiDNet(IMG_size, nClass, nLayer,[0.3e12,0.35e12,0.4e12,0.42e12,0.5e12,0.6e12], DNET_config())
-        model = MultiDNet(IMG_size, nClass, nLayer, [0.3e12, 0.35e12, 0.4e12, 0.42e12], DNET_config(batch=batch_size))
+        model = MultiDNet(IMG_size, nClass, nLayer, [0.3e12, 0.35e12, 0.4e12, 0.42e12], config_base)
         model.double()
     elif net_type == "BiDNet":
-        model = D2NNet(IMG_size, nClass, nLayer, DNET_config(batch=batch_size,chunk="binary"))
+        model = D2NNet(IMG_size, nClass, nLayer, DNET_config(batch=batch_size,lr_base=lr_base,chunk="binary"))
         #model = D2NNet(IMG_size, nClass,nLayer, DNET_config(chunk="logit"))
         #model = BinaryDNet(IMG_size,nClass,nLayer,1)
         model.double()
     model.to(device)
     print(model)
-    #visual.ShowModel(model,train_loader)
+    visual.ShowModel(model,train_loader)
 
     if False:       # So strange in initialize
         for m in model.modules():
@@ -261,10 +268,12 @@ def main():
             print(f"\t{name}={param.nelement()}")
     # Optimizer
 
-
-    for epoch in range(1, 100):
+    accu_=[]
+    for epoch in range(1, 50):
         train( model, device, train_loader, epoch, optical_trans)
-        test(model, device, test_loader, optical_trans)
+        acc = test(model, device, test_loader, optical_trans)
+        accu_.append(acc)
+    print(f"\n=======\n=======accu_history={accu_}\n")
 
     if args.save_model:
         torch.save(model.state_dict(), "mnist_onn.pt")
