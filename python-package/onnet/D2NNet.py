@@ -27,7 +27,7 @@ class DNET_config:
         self.chunk = chunk
         self.modulation = modulation
         self.output_chunk = "2D"        #["1D","2D"]
-        self.output_pooling = "mean"
+        self.output_pooling = "max"
         self.batch = batch
         self.learning_rate = lr_base
         self.isFC = isFC
@@ -109,6 +109,7 @@ class D2NNet(nn.Module):
         self.nClass = nCls
         #self.init_value = "random"    #"random"  "zero"
         self.config = config
+        self.title = f"DNNet"
 
         if self.config.output_chunk == "2D":
             assert(self.M*self.N>=self.nClass)
@@ -129,6 +130,7 @@ class D2NNet(nn.Module):
         elif self.config.chunk=="binary":
             self.last_chunk = BinaryChunk(self.nClass, pooling="max")
             self.loss = D2NNet.binary_loss
+            self.title = f"DNNet_binary"
         elif self.config.chunk == "logit":
             self.last_chunk = BinaryChunk(self.nClass,isLogit=True, pooling="max")
             self.loss = D2NNet.logit_loss
@@ -141,8 +143,8 @@ class D2NNet(nn.Module):
         #print(self)
 
     def legend(self):
-        title = f"DNNet"
-        return title
+        leg_ = self.title
+        return leg_
 
     def __repr__(self):
         main_str = super(D2NNet, self).__repr__()
@@ -189,8 +191,6 @@ class D2NNet(nn.Module):
                 output = x
                 #output = F.log_softmax(x, dim=1)
         return output
-
-
 
 def main():
     pass

@@ -15,24 +15,49 @@ from onnet import *
 import math
 nClass = 10
 nLayer = 5
-dataset="emnist"
-#dataset="fasion_mnist"
+#dataset="emnist"
+dataset="fasion_mnist"
 #dataset="mnist"
+# IMG_size = (28, 28)
+IMG_size = (56, 56)
+# IMG_size = (14, 14)
+batch_size = 128
+lr_base = 0.002
 #net_type = "cnn"
 #net_type = "DNet"
-net_type = "MF_DNet";   freq_list=[0.3e12, 0.35e12, 0.4e12, 0.42e12]
-#net_type = "BiDNet"
-#IMG_size = (28, 28)
-IMG_size = (56, 56)
-#IMG_size = (14, 14)
-batch_size = 128
-lr_base=0.002
-config_base=DNET_config(batch=batch_size,lr_base=lr_base)
-env_title=f"{net_type}_{dataset}_{IMG_size}_{lr_base}_{config_base.env_title()}"
-if net_type == "MF_DNet":
-    env_title = env_title+f"_C{len(freq_list)}"
-#visual = Visdom_Visualizer(env_title=env_title)
-visual = Visualize(env_title=env_title)
+#net_type = "MF_DNet";   freq_list=[0.3e12, 0.35e12, 0.4e12, 0.42e12]
+net_type = "BiDNet"
+
+
+def Net_instance(net_type):
+    if net_type == "BiDNet":
+        lr_base = 0.01
+
+    config_base = DNET_config(batch=batch_size, lr_base=lr_base)
+    env_title = f"{net_type}_{dataset}_{IMG_size}_{lr_base}_{config_base.env_title()}"
+    if net_type == "MF_DNet":
+        env_title = env_title + f"_C{len(freq_list)}"
+    if net_type == "BiDNet":
+        config_base = DNET_config(batch=batch_size, lr_base=lr_base, chunk="binary")
+
+    if net_type == "cnn":
+        model = Mnist_Net(config=config_base)
+    elif net_type == "DNet":
+        model = D2NNet(IMG_size, nClass, nLayer, config_base)
+        model.double()
+    elif net_type == "MF_DNet":
+        # model = MultiDNet(IMG_size, nClass, nLayer,[0.3e12,0.35e12,0.4e12,0.42e12,0.5e12,0.6e12], DNET_config())
+        model = MultiDNet(IMG_size, nClass, nLayer, [0.3e12, 0.35e12, 0.4e12, 0.42e12], config_base)
+        model.double()
+    elif net_type == "BiDNet":
+        model = D2NNet(IMG_size, nClass, nLayer, config_base)
+        # model = D2NNet(IMG_size, nClass,nLayer, DNET_config(chunk="logit"))
+        # model = BinaryDNet(IMG_size,nClass,nLayer,1)
+        model.double()
+
+    return env_title, model
+
+#visual = Visualize(env_title=env_title)
 
 class Fasion_Net(nn.Module):        #https://pytorch.org/tutorials/intermediate/tensorboard_tutorial.html
     def __init__(self):
@@ -147,10 +172,10 @@ def train(model, device, train_loader, epoch, optical_trans):
             aLoss = loss.item()
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),100. * batch_idx / len(train_loader),aLoss ))
-            visual.UpdateLoss(title=f"Accuracy on \"{dataset}\"", legend=f"{model.legend()}", loss=aLoss, yLabel="Accuracy")
+            #visual.UpdateLoss(title=f"Accuracy on \"{dataset}\"", legend=f"{model.legend()}", loss=aLoss, yLabel="Accuracy")
         #break
 
-def test(model, device, test_loader, optical_trans):
+def test(model, device, test_loader, optical_trans,visual):
     model.eval()
     test_loss = 0
     correct = 0
@@ -171,21 +196,6 @@ def test(model, device, test_loader, optical_trans):
     return accu
 
 def main():
-    """Train a simple Hybrid Scattering + CNN model on MNIST.
-
-        Three models are demoed:
-        'linear' - optical_trans + linear model
-        'mlp' - optical_trans + MLP
-        'cnn' - optical_trans + CNN
-
-        optical_trans 1st order can also be set by the mode
-        Scattering features are normalized by batch normalization.
-
-        scatter + linear achieves 99.15% in 15 epochs
-        scatter + cnn achieves 99.3% in 15 epochs
-
-    """
-
     parser = argparse.ArgumentParser(description='MNIST optical_trans  + hybrid examples')
     parser.add_argument('--mode', type=int, default=2,help='optical_trans 1st or 2nd order')
     parser.add_argument('--classifier', type=str, default='linear',help='classifier model')
@@ -234,23 +244,27 @@ def main():
             datasets.MNIST('./data', train=False,transform=test_trans),
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
 
-    if net_type == "cnn":
-        model = Mnist_Net(config=config_base)
-    elif net_type == "DNet":
-        model = D2NNet(IMG_size,nClass,nLayer,config_base)
-        model.double()
-    elif net_type == "MF_DNet":
-        #model = MultiDNet(IMG_size, nClass, nLayer,[0.3e12,0.35e12,0.4e12,0.42e12,0.5e12,0.6e12], DNET_config())
-        model = MultiDNet(IMG_size, nClass, nLayer, [0.3e12, 0.35e12, 0.4e12, 0.42e12], config_base)
-        model.double()
-    elif net_type == "BiDNet":
-        model = D2NNet(IMG_size, nClass, nLayer, DNET_config(batch=batch_size,lr_base=lr_base,chunk="binary"))
-        #model = D2NNet(IMG_size, nClass,nLayer, DNET_config(chunk="logit"))
-        #model = BinaryDNet(IMG_size,nClass,nLayer,1)
-        model.double()
+    env_title, model = Net_instance(net_type)
+    visual = Visdom_Visualizer(env_title=env_title)
+    '''
+        if net_type == "cnn":
+            model = Mnist_Net(config=config_base)
+        elif net_type == "DNet":
+            model = D2NNet(IMG_size,nClass,nLayer,config_base)
+            model.double()
+        elif net_type == "MF_DNet":
+            #model = MultiDNet(IMG_size, nClass, nLayer,[0.3e12,0.35e12,0.4e12,0.42e12,0.5e12,0.6e12], DNET_config())
+            model = MultiDNet(IMG_size, nClass, nLayer, [0.3e12, 0.35e12, 0.4e12, 0.42e12], config_base)
+            model.double()
+        elif net_type == "BiDNet":
+            model = D2NNet(IMG_size, nClass, nLayer, config_base)
+            #model = D2NNet(IMG_size, nClass,nLayer, DNET_config(chunk="logit"))
+            #model = BinaryDNet(IMG_size,nClass,nLayer,1)
+            model.double()
+    '''
     model.to(device)
     print(model)
-    visual.ShowModel(model,train_loader)
+    #visual.ShowModel(model,train_loader)
 
     if False:       # So strange in initialize
         for m in model.modules():
@@ -271,7 +285,7 @@ def main():
     accu_=[]
     for epoch in range(1, 50):
         train( model, device, train_loader, epoch, optical_trans)
-        acc = test(model, device, test_loader, optical_trans)
+        acc = test(model, device, test_loader, optical_trans,visual)
         accu_.append(acc)
     print(f"\n=======\n=======accu_history={accu_}\n")
 
