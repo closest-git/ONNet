@@ -24,16 +24,16 @@ IMG_size = (56, 56)
 batch_size = 128
 lr_base = 0.002
 #net_type = "cnn"
-#net_type = "DNet"
+net_type = "DNet"
 #net_type = "MF_DNet";   freq_list=[0.3e12, 0.35e12, 0.4e12, 0.42e12]
-net_type = "BiDNet"
+#net_type = "BiDNet"
 
 
-def Net_instance(net_type):
+def Net_instance(net_type,dataset,IMG_size,lr_base,batch_size):
     if net_type == "BiDNet":
         lr_base = 0.01
 
-    config_base = DNET_config(batch=batch_size, lr_base=lr_base)
+    config_base = DNET_config(batch=batch_size, lr_base=lr_base, chunk="differential")
     env_title = f"{net_type}_{dataset}_{IMG_size}_{lr_base}_{config_base.env_title()}"
     if net_type == "MF_DNet":
         env_title = env_title + f"_C{len(freq_list)}"
@@ -52,7 +52,7 @@ def Net_instance(net_type):
     elif net_type == "BiDNet":
         model = D2NNet(IMG_size, nClass, nLayer, config_base)
         # model = D2NNet(IMG_size, nClass,nLayer, DNET_config(chunk="logit"))
-        # model = BinaryDNet(IMG_size,nClass,nLayer,1)
+        #model = BinaryDNet(IMG_size,nClass,nLayer,1, config_base)
         model.double()
 
     return env_title, model
@@ -244,7 +244,7 @@ def main():
             datasets.MNIST('./data', train=False,transform=test_trans),
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
 
-    env_title, model = Net_instance(net_type)
+    env_title, model = Net_instance(net_type,dataset,IMG_size,lr_base,batch_size)
     visual = Visdom_Visualizer(env_title=env_title)
     '''
         if net_type == "cnn":

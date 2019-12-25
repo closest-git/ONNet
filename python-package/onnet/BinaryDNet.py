@@ -3,16 +3,17 @@ import math
 import random
 
 class GatePipe(torch.nn.Module):
-    def __init__(self,M,N, nHidden,pooling="max"):
+    def __init__(self,M,N, nHidden,config,pooling="max"):
         super(GatePipe, self).__init__()
+        self.config = config
         self.M=M
         self.N=N
         self.nHidden = nHidden
         self.pooling = pooling
-        self.layers = nn.ModuleList([DiffractiveAMP(self.M, self.N) for j in range(self.nHidden)])
+        self.layers = nn.ModuleList([DiffractiveLayer(self.M, self.N, self.config, HZ=0.3e12) for j in range(self.nHidden)])
         if True:
             chunk_dim = -1 if random.choice([True, False]) else -2
-            self.pool = PoolForCls(2, pooling=self.pooling,chunk_dim=chunk_dim)
+            self.pool = ChunkPool(2, self.config,pooling=self.pooling,chunk_dim=chunk_dim)
         else:
             self.pt1 = (random.randint(0, self.M-1),random.randint(0,self.N-1))
             self.pt2 = (random.randint(0, self.M - 1), random.randint(0, self.N - 1))
@@ -61,18 +62,22 @@ class BinaryDNet(D2NNet):
         #pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
         return pred
 
-    def __init__(self, IMG_size,nCls,nInterDifrac,nOutDifac):
-        super(BinaryDNet, self).__init__(IMG_size,nCls,nInterDifrac)
+    def __init__(self, IMG_size,nCls,nInterDifrac,nOutDifac,config):
+        super(BinaryDNet, self).__init__(IMG_size,nCls,nInterDifrac,config)
         self.nGate = (int)(math.ceil(math.log2(self.nClass)))
         self.nOutDifac = nOutDifac
-        self.gates = nn.ModuleList( [GatePipe(self.M,self.N,nOutDifac,pooling="mean") for i in range(self.nGate)]  )
-
+        self.gates = nn.ModuleList( [GatePipe(self.M,self.N,nOutDifac,config,pooling="mean") for i in range(self.nGate)]  )
+        self.config = config
         self.loss = BinaryDNet.binary_loss
 
     def __repr__(self):
         main_str = super(BinaryDNet, self).__repr__()
         main_str += f"_nGate={self.nGate}_Difrac=[{self.nDifrac},{self.nOutDifac}]"
         return main_str
+
+    def legend(self):
+        title = f"BinaryDNet"
+        return title
 
     def forward(self, x):
         x = x.double()

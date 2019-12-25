@@ -40,7 +40,8 @@ class DNET_config:
         return title
 
     def __repr__(self):
-        main_str = f"lr={self.learning_rate}_ mod={self.modulation} input={self.input_scale} detector={self.output_chunk}"
+        main_str = f"lr={self.learning_rate}_ mod={self.modulation} input={self.input_scale} detector={self.output_chunk} " \
+            f"chunk={self.chunk}"
         if self.isFC:       main_str+=" [FC]"
         return main_str
 
@@ -131,6 +132,10 @@ class D2NNet(nn.Module):
             self.last_chunk = BinaryChunk(self.nClass, pooling="max")
             self.loss = D2NNet.binary_loss
             self.title = f"DNNet_binary"
+        elif self.config.chunk=="differential":
+            self.last_chunk = ChunkPool(self.nClass*2,config,pooling=config.output_pooling)
+            self.loss = UserLoss.cys_loss
+            self.title = f"DNNet_differential"
         elif self.config.chunk == "logit":
             self.last_chunk = BinaryChunk(self.nClass,isLogit=True, pooling="max")
             self.loss = D2NNet.logit_loss
@@ -165,6 +170,13 @@ class D2NNet(nn.Module):
 
         if self.config.chunk=="binary":
             output = x
+        elif self.config.chunk=="differential":
+            assert x.shape[1]==self.nClass*2
+            #output=torch.zeros_like(x)
+            #output = output(...,self.nClass)
+            for i in range(self.nClass):
+                x[:,i] = (x[:,2*i]-x[:,2*i+1])/(x[:,2*i]+x[:,2*i+1])
+            output=x[...,0:self.nClass]
         else:
             output = x
             # output = F.log_softmax(x, dim=1)
@@ -178,18 +190,6 @@ class D2NNet(nn.Module):
 
         x = self.z_modulus(x).cuda()
         output = self.do_classify(x)
-        if False:
-            if self.config.isFC:
-                x = torch.flatten(x, 1)
-                x = self.fc1(x)
-            else:
-                x = self.last_chunk(x)
-
-            if self.config.chunk=="binary":
-                output = x
-            else:
-                output = x
-                #output = F.log_softmax(x, dim=1)
         return output
 
 def main():
