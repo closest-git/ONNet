@@ -25,7 +25,7 @@ class DNET_config:
         '''
         self.init_value = init_value  # "random"  "zero"
         self.rDrop = 0
-        self.support = support          #["supp_differentia","supp_exp","supp_expW"]
+        self.support = support          #["supp_differentia","supp_exp","supp_sparse","supp_expW"]
         self.modulation = modulation
         self.output_chunk = "2D"        #["1D","2D"]
         self.output_pooling = "max"
@@ -132,8 +132,8 @@ class D2NNet(nn.Module):
             self.loss = UserLoss.cys_loss
             self.title = f"DNNet_FC"
         elif self.config.support!="":#"#self.config.support=="supp_differentia" or self.config.support=="supp_exp" or self.config.support=="supp_expW":
-            self.last_chunk = ChunkPool(self.nClass*2,config,pooling=config.output_pooling)
             self.laySupp = SuppLayer(config,self.nClass)
+            self.last_chunk = ChunkPool(self.laySupp.nChunk, config, pooling=config.output_pooling)
             self.loss = UserLoss.cys_loss
             self.title = f"DNNet_{self.config.support}"
         else:

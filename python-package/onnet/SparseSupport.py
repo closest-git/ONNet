@@ -11,33 +11,57 @@ class SuppLayer(torch.nn.Module):
         super(SuppLayer, self).__init__()
         self.nClass = nClass
         self.nSupp = nSupp
+        self.nChunk = self.nClass*2
         self.config = config
+        self.w_11=False
         if self.config.support=="supp_sparse":
-            self.wSupp = torch.nn.Parameter(torch.ones(self.nClass, self.nSupp))
+            if self.w_11:
+                tSupp = torch.ones(self.nClass, self.nSupp)
+            else:
+                tSupp = torch.Tensor(self.nClass, self.nSupp).uniform_(-1,1)
+            self.wSupp = torch.nn.Parameter(tSupp)
+            self.nChunk = self.nSupp*self.nSupp
+            self.chunk_map = np.random.randint(self.nChunk, size=(self.nClass, self.nSupp))
         #elif self.config.support=="supp_expW":
         #    self.nSupp = 2
         #    self.wSupp = torch.nn.Parameter(torch.ones(2))
 
     def __repr__(self):
-        main_str = f"SuppLayer_[self.nSupp]"
+        w_init="1" if self.w_11 else "random"
+        main_str = f"SupportLayer supp=({self.nSupp},{w_init}) type=\"{self.config.support}\" nChunk={self.nChunk}"
         return main_str
 
+    def sparse_support(self,x):
+        feats=[]
+        for i in range(self.nClass):
+            feat = 0;
+            for j in range(self.nSupp):
+                col = (int)(self.chunk_map[i,j])
+                feat += x[:, col]*self.wSupp[i,j]
+            feats.append(torch.exp(feat))      #why exp is useful???
+            #feats.append(feat)
+        output = torch.stack(feats,1)
+        return output
+
     def forward(self, x):
+        if self.config.support == "supp_sparse":
+            output = self.sparse_support(x)
+            return output
+
+        assert x.shape[1] == self.nClass * 2
         if self.config.support=="supp_differentia":
-            assert x.shape[1]==self.nClass*2
             for i in range(self.nClass):
                 x[:,i] = (x[:,2*i]-x[:,2*i+1])/(x[:,2*i]+x[:,2*i+1])
             output=x[...,0:self.nClass]
         elif self.config.support=="supp_exp":
-            assert x.shape[1]==self.nClass*2
             for i in range(self.nClass):
                 x[:, i] = torch.exp(x[:, 2 * i] - x[:, 2 * i + 1])
             output = x[..., 0:self.nClass]
         elif self.config.support=="supp_expW":
-            assert x.shape[1]==self.nClass*2
             output = torch.zeros_like(x)
             for i in range(self.nClass):
                 output[:, i] = torch.exp(x[:, 2 * i]*self.w2[0] - x[:, 2 * i + 1]*self.w2[1])
             output = output[..., 0:self.nClass]
+
         return output
 

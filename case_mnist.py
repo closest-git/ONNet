@@ -15,8 +15,8 @@ from onnet import *
 import math
 #nClass = 10
 nLayer = 5
-#dataset="emnist"
-dataset="fasion_mnist"
+dataset="emnist"
+#dataset="fasion_mnist"
 #dataset="mnist"
 # IMG_size = (28, 28)
 IMG_size = (56, 56)
@@ -32,8 +32,10 @@ net_type = "DNet"
 def Net_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass):
     if net_type == "BiDNet":
         lr_base = 0.01
+    if dataset == "emnist":
+        lr_base = 0.01
 
-    config_base = DNET_config(batch=batch_size, lr_base=lr_base, support="supp_exp")
+    config_base = DNET_config(batch=batch_size, lr_base=lr_base, support="supp_sparse")
     env_title = f"{net_type}_{dataset}_{IMG_size}_{lr_base}_{config_base.env_title()}"
     if net_type == "MF_DNet":
         env_title = env_title + f"_C{len(freq_list)}"
