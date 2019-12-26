@@ -11,20 +11,21 @@ import torch.nn.functional as F
 from .Z_utils import COMPLEX_utils as Z
 from .PoolForCls import *
 from .Loss import *
+from .SparseSupport import *
 import numpy as np
 from .DiffractiveLayer import *
 
 class DNET_config:
-    def __init__(self,batch,lr_base,modulation="phase",init_value = "random",chunk="",isFC=False):
+    def __init__(self,batch,lr_base,modulation="phase",init_value = "random",support="",isFC=False):
         '''
 
         :param modulation:
         :param init_value: ["random","zero","random_reverse","reverse","chunk"]
-        :param chunk:
+        :param support:
         '''
         self.init_value = init_value  # "random"  "zero"
         self.rDrop = 0
-        self.chunk = chunk
+        self.support = support          #["supp_differentia","supp_exp","supp_expW"]
         self.modulation = modulation
         self.output_chunk = "2D"        #["1D","2D"]
         self.output_pooling = "max"
@@ -35,13 +36,13 @@ class DNET_config:
         #if self.isFC == True:            self.learning_rate = lr_base/10
 
     def env_title(self):
-        title=f"{self.chunk}"
+        title=f"{self.support}"
         if self.isFC:       title += "[FC]"
         return title
 
     def __repr__(self):
         main_str = f"lr={self.learning_rate}_ mod={self.modulation} input={self.input_scale} detector={self.output_chunk} " \
-            f"chunk={self.chunk}"
+            f"support={self.support}"
         if self.isFC:       main_str+=" [FC]"
         return main_str
 
@@ -78,7 +79,7 @@ class D2NNet(nn.Module):
         return loss
 
     def predict(self,output):
-        if self.config.chunk == "binary":
+        if self.config.support == "binary":
             nGate = output.shape[1] // 2
             #assert nGate == self.n
             pred = 0
@@ -87,7 +88,7 @@ class D2NNet(nn.Module):
                 val_2 = torch.stack([output[:, no], output[:, no + 1]], 1)
                 pred_i = val_2.max(1, keepdim=True)[1]  # get the index of the max log-probability
                 pred = pred * 2 + pred_i
-        elif self.config.chunk == "logit":
+        elif self.config.support == "logit":
             nGate = output.shape[1]
             # assert nGate == self.n
             pred = 0
@@ -124,29 +125,32 @@ class D2NNet(nn.Module):
             layer(self.M, self.N,config) for i in range(self.nDifrac)
         ])
         self.nD = len(self.DD)
+        self.laySupp = None
         #self.DD.append(DropOutLayer(self.M, self.N,drop=0.9999))
         if self.config.isFC:
             self.fc1 = nn.Linear(self.M*self.N, self.nClass)
             self.loss = UserLoss.cys_loss
-        elif self.config.chunk=="binary":
-            self.last_chunk = BinaryChunk(self.nClass, pooling="max")
-            self.loss = D2NNet.binary_loss
-            self.title = f"DNNet_binary"
-        elif self.config.chunk=="differ_0" or self.config.chunk=="differ_MM" or self.config.chunk=="differ_w2":
+            self.title = f"DNNet_FC"
+        elif self.config.support!="":#"#self.config.support=="supp_differentia" or self.config.support=="supp_exp" or self.config.support=="supp_expW":
             self.last_chunk = ChunkPool(self.nClass*2,config,pooling=config.output_pooling)
+            self.laySupp = SuppLayer(config,self.nClass)
             self.loss = UserLoss.cys_loss
-            self.w2 = torch.nn.Parameter(torch.ones(2))
-            self.title = f"DNNet_differential"
-        elif self.config.chunk == "logit":
-            self.last_chunk = BinaryChunk(self.nClass,isLogit=True, pooling="max")
-            self.loss = D2NNet.logit_loss
+            self.title = f"DNNet_{self.config.support}"
         else:
             self.last_chunk = ChunkPool(self.nClass,config,pooling=config.output_pooling)
             self.loss = UserLoss.cys_loss
 
-        #total = sum([param.nelement() for param in self.parameters()])
-        #print(f"nParameters={total}")#\nparams={self.parameters()}
-        #print(self)
+        ''' 
+        BinaryChunk is pool
+        elif self.config.support=="binary":
+            self.last_chunk = BinaryChunk(self.nClass, pooling="max")
+            self.loss = D2NNet.binary_loss
+            self.title = f"DNNet_binary"
+        elif self.config.support == "logit":
+            self.last_chunk = BinaryChunk(self.nClass, isLogit=True, pooling="max")
+            self.loss = D2NNet.logit_loss
+        '''
+
 
     def legend(self):
         leg_ = self.title
@@ -166,34 +170,13 @@ class D2NNet(nn.Module):
         if self.config.isFC:
             x = torch.flatten(x, 1)
             x = self.fc1(x)
-        else:
-            x = self.last_chunk(x)
+            return x
 
-        if self.config.chunk=="binary":
-            output = x
-        elif self.config.chunk=="differ_0":
-            assert x.shape[1]==self.nClass*2
-            #output=torch.zeros_like(x)
-            #output = output(...,self.nClass)
-
-            for i in range(self.nClass):
-                x[:,i] = (x[:,2*i]-x[:,2*i+1])/(x[:,2*i]+x[:,2*i+1])
-            output=x[...,0:self.nClass]
-        elif self.config.chunk=="differ_MM":
-            assert x.shape[1]==self.nClass*2
-            for i in range(self.nClass):
-                x[:, i] = torch.exp(x[:, 2 * i] - x[:, 2 * i + 1])
-            output = x[..., 0:self.nClass]
-        elif self.config.chunk=="differ_w2":
-            assert x.shape[1]==self.nClass*2
-            output = torch.zeros_like(x)
-            for i in range(self.nClass):
-                output[:, i] = torch.exp(x[:, 2 * i]*self.w2[0] - x[:, 2 * i + 1]*self.w2[1])
-            output = output[..., 0:self.nClass]
-        else:
-            output = x
-            # output = F.log_softmax(x, dim=1)
-        return output
+        x = self.last_chunk(x)
+        if self.laySupp != None:
+            x = self.laySupp(x)
+        # output = F.log_softmax(x, dim=1)
+        return x
 
     def forward(self, x):
         x = self.input_trans(x)
@@ -202,6 +185,7 @@ class D2NNet(nn.Module):
             x = layD(x)
 
         x = self.z_modulus(x).cuda()
+
         output = self.do_classify(x)
         return output
 

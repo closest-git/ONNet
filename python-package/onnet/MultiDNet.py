@@ -38,20 +38,6 @@ class MultiDNet(D2NNet):
         x = x_sum
 
         output = self.do_classify(x)
-        '''
-        #x = self.z_modulus(x).cuda()
-                if self.config.isFC:
-                    x = torch.flatten(x, 1)
-                    x = self.fc1(x)
-                else:
-                    x = self.last_chunk(x)
-        
-                if self.config.chunk == "binary":
-                    output = x
-                else:
-                    output = x
-                    # output = F.log_softmax(x, dim=1)
-        '''
         return output
 
-        return output
+
