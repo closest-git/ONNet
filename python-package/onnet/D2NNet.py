@@ -35,7 +35,7 @@ class DNET_config:
         #if self.isFC == True:            self.learning_rate = lr_base/10
 
     def env_title(self):
-        title=""
+        title=f"{self.chunk}"
         if self.isFC:       title += "[FC]"
         return title
 
@@ -132,9 +132,10 @@ class D2NNet(nn.Module):
             self.last_chunk = BinaryChunk(self.nClass, pooling="max")
             self.loss = D2NNet.binary_loss
             self.title = f"DNNet_binary"
-        elif self.config.chunk=="differential":
+        elif self.config.chunk=="differ_0" or self.config.chunk=="differ_MM" or self.config.chunk=="differ_w2":
             self.last_chunk = ChunkPool(self.nClass*2,config,pooling=config.output_pooling)
             self.loss = UserLoss.cys_loss
+            self.w2 = torch.nn.Parameter(torch.ones(2))
             self.title = f"DNNet_differential"
         elif self.config.chunk == "logit":
             self.last_chunk = BinaryChunk(self.nClass,isLogit=True, pooling="max")
@@ -170,13 +171,25 @@ class D2NNet(nn.Module):
 
         if self.config.chunk=="binary":
             output = x
-        elif self.config.chunk=="differential":
+        elif self.config.chunk=="differ_0":
             assert x.shape[1]==self.nClass*2
             #output=torch.zeros_like(x)
             #output = output(...,self.nClass)
+
             for i in range(self.nClass):
                 x[:,i] = (x[:,2*i]-x[:,2*i+1])/(x[:,2*i]+x[:,2*i+1])
             output=x[...,0:self.nClass]
+        elif self.config.chunk=="differ_MM":
+            assert x.shape[1]==self.nClass*2
+            for i in range(self.nClass):
+                x[:, i] = torch.exp(x[:, 2 * i] - x[:, 2 * i + 1])
+            output = x[..., 0:self.nClass]
+        elif self.config.chunk=="differ_w2":
+            assert x.shape[1]==self.nClass*2
+            output = torch.zeros_like(x)
+            for i in range(self.nClass):
+                output[:, i] = torch.exp(x[:, 2 * i]*self.w2[0] - x[:, 2 * i + 1]*self.w2[1])
+            output = output[..., 0:self.nClass]
         else:
             output = x
             # output = F.log_softmax(x, dim=1)
