@@ -14,9 +14,10 @@ from onnet import *
 
 import math
 #nClass = 10
-nLayer = 5
-dataset="emnist"
+
+#dataset="emnist"
 #dataset="fasion_mnist"
+dataset="cifar"
 #dataset="mnist"
 # IMG_size = (28, 28)
 IMG_size = (56, 56)
@@ -27,37 +28,6 @@ lr_base = 0.002
 net_type = "DNet"
 #net_type = "MF_DNet";   freq_list=[0.3e12, 0.35e12, 0.4e12, 0.42e12]
 #net_type = "BiDNet"
-
-
-def Net_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass):
-    if net_type == "BiDNet":
-        lr_base = 0.01
-    if dataset == "emnist":
-        lr_base = 0.01
-
-    config_base = DNET_config(batch=batch_size, lr_base=lr_base, support="supp_sparse")
-    env_title = f"{net_type}_{dataset}_{IMG_size}_{lr_base}_{config_base.env_title()}"
-    if net_type == "MF_DNet":
-        env_title = env_title + f"_C{len(freq_list)}"
-    if net_type == "BiDNet":
-        config_base = DNET_config(batch=batch_size, lr_base=lr_base, chunk="binary")
-
-    if net_type == "cnn":
-        model = Mnist_Net(config=config_base)
-    elif net_type == "DNet":
-        model = D2NNet(IMG_size, nClass, nLayer, config_base)
-        model.double()
-    elif net_type == "MF_DNet":
-        # model = MultiDNet(IMG_size, nClass, nLayer,[0.3e12,0.35e12,0.4e12,0.42e12,0.5e12,0.6e12], DNET_config())
-        model = MultiDNet(IMG_size, nClass, nLayer, [0.3e12, 0.35e12, 0.4e12, 0.42e12], config_base)
-        model.double()
-    elif net_type == "BiDNet":
-        model = D2NNet(IMG_size, nClass, nLayer, config_base)
-        # model = D2NNet(IMG_size, nClass,nLayer, DNET_config(chunk="logit"))
-        #model = BinaryDNet(IMG_size,nClass,nLayer,1, config_base)
-        model.double()
-
-    return env_title, model
 
 #visual = Visualize(env_title=env_title)
 
@@ -149,13 +119,15 @@ test_trans = transforms.Compose([
 ])
 
 def train(model, device, train_loader, epoch, optical_trans):
+    # optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9,weight_decay=0.0005)
+    optimizer = torch.optim.Adam(model.parameters(), lr=model.config.learning_rate, weight_decay=0.0005)
     if epoch==1:
         print(f"\n=======dataset={dataset} net={net_type} IMG_size={IMG_size} batch_size={batch_size}")
         print(f"======={model.config}")
+        print(f"======={optimizer}")
         print(f"======={train_trans}\n")
 
-    #optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9,weight_decay=0.0005)
-    optimizer = torch.optim.Adam(model.parameters(), lr=model.config.learning_rate,  weight_decay=0.0005)
+
 
     nClass = model.nClass
     model.train()
@@ -236,6 +208,13 @@ def main():
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
         nClass = 10
         nLayer = 5
+    elif dataset=="cifar":
+        train_loader = torch.utils.data.DataLoader(datasets.CIFAR10('./data',train=True, download=True, transform=train_trans),
+            batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
+        test_loader = torch.utils.data.DataLoader(datasets.CIFAR10('./data',train=False, transform=test_trans),
+            batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
+        nClass = 10
+        nLayer = 5
     else:
         nClass = 10
         nLayer = 5
@@ -246,7 +225,7 @@ def main():
             datasets.MNIST('./data', train=False,transform=test_trans),
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
 
-    env_title, model = Net_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass)
+    env_title, model = DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass)
     visual = Visdom_Visualizer(env_title=env_title)
     '''
         if net_type == "cnn":

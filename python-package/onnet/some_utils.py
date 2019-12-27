@@ -35,7 +35,4 @@ def split_regions_2d(shape,nClass):
                 break
             x2 = x2 + sec_2
         x1 = x1 + sec_1;    x2=0
-
-
-
     return regions
