@@ -16,20 +16,18 @@ import math
 #nClass = 10
 
 #dataset="emnist"
-#dataset="fasion_mnist"
-dataset="cifar"
+dataset="fasion_mnist"
+#dataset="cifar"
 #dataset="mnist"
 # IMG_size = (28, 28)
 IMG_size = (56, 56)
 # IMG_size = (14, 14)
 batch_size = 128
-lr_base = 0.002
+
 #net_type = "cnn"
 net_type = "DNet"
-#net_type = "MF_DNet";   freq_list=[0.3e12, 0.35e12, 0.4e12, 0.42e12]
+#net_type = "MF_DNet";
 #net_type = "BiDNet"
-
-#visual = Visualize(env_title=env_title)
 
 class Fasion_Net(nn.Module):        #https://pytorch.org/tutorials/intermediate/tensorboard_tutorial.html
     def __init__(self):
@@ -105,14 +103,16 @@ class View(nn.Module):
         return x.view(-1,*self.shape)
 
 train_trans = transforms.Compose([
-        #transforms.RandomAffine(5),
+        #transforms.RandomAffine(5,translate=(0,0.1)),
         #transforms.RandomRotation(10),
+        #transforms.Grayscale(),
         transforms.Resize(IMG_size),
         transforms.ToTensor(),
         #transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)) #Convert a color image to grayscale and normalize the color range to [0,1].
         #transforms.Normalize((0.1307,), (0.3081,))
     ])
 test_trans = transforms.Compose([
+    #transforms.Grayscale(),
     transforms.Resize(IMG_size),
     transforms.ToTensor(),
     #transforms.Normalize((0.1307,), (0.3081,))
@@ -170,6 +170,7 @@ def test(model, device, test_loader, optical_trans,visual):
     return accu
 
 def main():
+    lr_base = 0.002
     parser = argparse.ArgumentParser(description='MNIST optical_trans  + hybrid examples')
     parser.add_argument('--mode', type=int, default=2,help='optical_trans 1st or 2nd order')
     parser.add_argument('--classifier', type=str, default='linear',help='classifier model')
@@ -213,8 +214,7 @@ def main():
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
         test_loader = torch.utils.data.DataLoader(datasets.CIFAR10('./data',train=False, transform=test_trans),
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
-        nClass = 10
-        nLayer = 5
+        nClass = 10;        nLayer = 5;     lr_base=0.005
     else:
         nClass = 10
         nLayer = 5
@@ -227,6 +227,7 @@ def main():
 
     env_title, model = DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass)
     visual = Visdom_Visualizer(env_title=env_title)
+    # visual = Visualize(env_title=env_title)
     '''
         if net_type == "cnn":
             model = Mnist_Net(config=config_base)
@@ -245,7 +246,7 @@ def main():
     '''
     model.to(device)
     print(model)
-    #visual.ShowModel(model,train_loader)
+    # visual.ShowModel(model,train_loader)
 
     if False:       # So strange in initialize
         for m in model.modules():

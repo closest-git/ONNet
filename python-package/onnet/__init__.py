@@ -10,7 +10,7 @@ from .optical_trans import OpticalTrans
 from .D2NNet import D2NNet,DNET_config
 from .Z_utils import COMPLEX_utils
 from .BinaryDNet import *
-from .MultiDNet import *
+from .Net_Instance import *
 from .Visualizing import *
 '''
 try:

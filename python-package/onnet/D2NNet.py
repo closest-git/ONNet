@@ -179,6 +179,11 @@ class D2NNet(nn.Module):
         return x
 
     def forward(self, x):
+        nSamp,nChannel = x.shape[0],x.shape[1]
+        assert(nChannel==1)
+        if nChannel>1:
+            no = random.randint(0,nChannel-1)
+            x = x[:,0:1,...]
         x = self.input_trans(x)
 
         for layD in self.DD:
@@ -189,37 +194,43 @@ class D2NNet(nn.Module):
         output = self.do_classify(x)
         return output
 
-nLayer = 5
+class MultiDNet(D2NNet):
+    def __init__(self, IMG_size,nCls,nInterDifrac,freq_list,config):
+        super(MultiDNet, self).__init__(IMG_size,nCls,nInterDifrac,config)
+        self.freq_list = freq_list
+        nFreq = len(self.freq_list)
+        del self.DD;     self.DD = None
+        self.wFreq = torch.nn.Parameter(torch.ones(nFreq))
+        self.freq_nets=nn.ModuleList([
+            nn.ModuleList([
+                DiffractiveLayer(self.M, self.N, self.config, HZ=freq) for i in range(self.nDifrac)
+            ]) for freq in freq_list
+        ])
 
-def DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass):
-    if net_type == "BiDNet":
-        lr_base = 0.01
-    if dataset == "emnist":
-        lr_base = 0.01
+    def legend(self):
+        title = f"MF_DNet({len(self.freq_list)} channels)"
+        return title
 
-    config_base = DNET_config(batch=batch_size, lr_base=lr_base, support="supp_sparse")
-    env_title = f"{net_type}_{dataset}_{IMG_size}_{lr_base}_{config_base.env_title()}"
-    if net_type == "MF_DNet":
-        env_title = env_title + f"_C{len(freq_list)}"
-    if net_type == "BiDNet":
-        config_base = DNET_config(batch=batch_size, lr_base=lr_base, chunk="binary")
+    def __repr__(self):
+        main_str = super(MultiDNet, self).__repr__()
+        main_str += f"\nfreq_list={self.freq_list}_"
+        return main_str
 
-    if net_type == "cnn":
-        model = Mnist_Net(config=config_base)
-    elif net_type == "DNet":
-        model = D2NNet(IMG_size, nClass, nLayer, config_base)
-        model.double()
-    elif net_type == "MF_DNet":
-        # model = MultiDNet(IMG_size, nClass, nLayer,[0.3e12,0.35e12,0.4e12,0.42e12,0.5e12,0.6e12], DNET_config())
-        model = MultiDNet(IMG_size, nClass, nLayer, [0.3e12, 0.35e12, 0.4e12, 0.42e12], config_base)
-        model.double()
-    elif net_type == "BiDNet":
-        model = D2NNet(IMG_size, nClass, nLayer, config_base)
-        # model = D2NNet(IMG_size, nClass,nLayer, DNET_config(chunk="logit"))
-        #model = BinaryDNet(IMG_size,nClass,nLayer,1, config_base)
-        model.double()
+    def forward(self, x0):
+        nSamp = x0.shape[0]
+        x_sum = 0
+        for id,fNet in enumerate(self.freq_nets):
+            x = self.input_trans(x0)
+            #d0,d1=x0.min(),x0.max()
+            #x = x0.double()
+            for layD in fNet:
+                x = layD(x)
+            #x_sum = torch.max(x_sum,self.z_modulus(x).cuda()).values()
+            x_sum += self.z_modulus(x).cuda()*self.wFreq[id]
+        x = x_sum
 
-    return env_title, model
+        output = self.do_classify(x)
+        return output
 
 def main():
     pass
