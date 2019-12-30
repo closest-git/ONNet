@@ -16,9 +16,9 @@ import math
 #nClass = 10
 
 #dataset="emnist"
-dataset="fasion_mnist"
+#dataset="fasion_mnist"
 #dataset="cifar"
-#dataset="mnist"
+dataset="mnist"
 # IMG_size = (28, 28)
 IMG_size = (56, 56)
 # IMG_size = (14, 14)
@@ -26,6 +26,7 @@ batch_size = 128
 
 #net_type = "cnn"
 net_type = "DNet"
+net_type = "WNet"
 #net_type = "MF_DNet";
 #net_type = "BiDNet"
 

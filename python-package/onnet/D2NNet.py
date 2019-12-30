@@ -26,13 +26,14 @@ class DNET_config:
         self.init_value = init_value  # "random"  "zero"
         self.rDrop = 0
         self.support = support          #["supp_differentia","supp_exp","supp_sparse","supp_expW"]
-        self.modulation = modulation
+        self.modulation = modulation    #["phase","phase_amp"]
         self.output_chunk = "2D"        #["1D","2D"]
         self.output_pooling = "max"
         self.batch = batch
         self.learning_rate = lr_base
         self.isFC = isFC
         self.input_scale = 1
+        self.wavelet = None              #dict paramter for wavelet
         #if self.isFC == True:            self.learning_rate = lr_base/10
 
     def env_title(self):
@@ -120,7 +121,10 @@ class D2NNet(nn.Module):
         print(f"D2NNet nClass={nCls} shape={self.M,self.N}")
 
         #layer = DiffractiveAMP
-        layer = DiffractiveLayer
+        if self.config.wavelet is None:
+            layer = DiffractiveLayer
+        else:
+            layer = DiffractiveWavelet
         self.DD = nn.ModuleList([
             layer(self.M, self.N,config) for i in range(self.nDifrac)
         ])
@@ -139,6 +143,9 @@ class D2NNet(nn.Module):
         else:
             self.last_chunk = ChunkPool(self.nClass,config,pooling=config.output_pooling)
             self.loss = UserLoss.cys_loss
+
+        if self.config.wavelet is not None:
+            self.title = self.title+f"_W"
 
         ''' 
         BinaryChunk is pool

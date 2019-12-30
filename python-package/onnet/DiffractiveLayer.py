@@ -4,6 +4,7 @@ from .some_utils import *
 import numpy as np
 import random
 import torch.nn as nn
+import matplotlib.pyplot as plt
 
 #https://pytorch.org/tutorials/beginner/pytorch_with_examples.html#pytorch-custom-nn-modules
 class DiffractiveLayer(torch.nn.Module):
@@ -25,7 +26,6 @@ class DiffractiveLayer(torch.nn.Module):
         main_str = f"DiffractiveLayer_[{(int)(self.Hz/1.0e9)}G]_[{self.M},{self.N}]"
         return main_str
 
-
     def __init__(self, M_in, N_in,config,HZ=0.4e12):
         super(DiffractiveLayer, self).__init__()
         self.SomeInit(M_in, N_in,HZ)
@@ -33,28 +33,30 @@ class DiffractiveLayer(torch.nn.Module):
         self.config = config
         #self.init_value = init_value
         #self.rDrop = rDrop
-        if self.config.modulation=="phase":
-            self.transmission = torch.nn.Parameter(data=torch.Tensor(self.size, self.size), requires_grad=True)
-        else:
-            self.transmission = torch.nn.Parameter(data=torch.Tensor(self.size, self.size, 2), requires_grad=True)
+        if self.config.wavelet is None:
+            if self.config.modulation=="phase":
+                self.transmission = torch.nn.Parameter(data=torch.Tensor(self.size, self.size), requires_grad=True)
+            else:
+                self.transmission = torch.nn.Parameter(data=torch.Tensor(self.size, self.size, 2), requires_grad=True)
 
-        init_param = self.transmission.data
-        if self.config.init_value=="reverse":    #
-            half=self.transmission.data.shape[-2]//2
-            init_param[..., :half, :] = 0
-            init_param[..., half:, :] = np.pi
-        elif self.config.init_value=="random":
-           self.transmission.data.uniform_(0, np.pi*2)
-        elif self.config.init_value == "random_reverse":
-           init_param = torch.randint_like(init_param,0,2)*np.pi
-        elif self.config.init_value == "chunk":
-            sections = split__sections()
-            for xx in init_param.split(sections, -1):
-                xx = random.random(0,np.pi*2)
+            init_param = self.transmission.data
+            if self.config.init_value=="reverse":    #
+                half=self.transmission.data.shape[-2]//2
+                init_param[..., :half, :] = 0
+                init_param[..., half:, :] = np.pi
+            elif self.config.init_value=="random":
+               init_param.uniform_(0, np.pi*2)
+            elif self.config.init_value == "random_reverse":
+               init_param = torch.randint_like(init_param,0,2)*np.pi
+            elif self.config.init_value == "chunk":
+                sections = split__sections()
+                for xx in init_param.split(sections, -1):
+                    xx = random.random(0,np.pi*2)
 
         #self.rDrop = config.rDrop
 
         #self.bias = torch.nn.Parameter(data=torch.Tensor(1, 1), requires_grad=True)
+
 
     def Init_H(self):
         # Parameter
@@ -106,6 +108,7 @@ class DiffractiveLayer(torch.nn.Module):
         :return:
         '''
         amp_s = Z.exp_euler(self.transmission)
+
         return amp_s
 
     def forward(self, x):
@@ -128,4 +131,57 @@ class DiffractiveAMP(DiffractiveLayer):
         # amp_s = Z.sigmoid(self.amp)
         # amp_s = torch.clamp(self.amp, 1.0e-6, 1)
         amp_s = self.transmission
+        return amp_s
+
+class DiffractiveWavelet(DiffractiveLayer):
+    def __init__(self,  M_in, N_in,config,HZ=0.4e12):
+        super(DiffractiveWavelet, self).__init__(M_in, N_in,config,HZ)
+        #self.hough = torch.nn.Parameter(data=torch.Tensor(2), requires_grad=True)
+
+        self.Init_DisTrans()
+
+    def __repr__(self):
+        main_str = f"Diffrac_Wavelet_[{(int)(self.Hz/1.0e9)}G]_[{self.M},{self.N}]"
+        return main_str
+
+    def Init_DisTrans(self):
+        origin_r, origin_c = (self.M-1) / 2, (self.N-1) / 2
+        self.dis_map={}
+        #self.dis_trans = torch.zeros((self.size, self.size)).int()
+        self.wav_indices = torch.LongTensor((self.size*self.size)).cuda()
+        nz=0
+        for r in range(self.M):
+            for c in range(self.N):
+                off = np.sqrt((r - origin_r) * (r - origin_r) + (c - origin_c) * (c - origin_c))
+                i_off = (int)(off+0.5)
+                if i_off not in self.dis_map:
+                    self.dis_map[i_off]=len(self.dis_map)
+                id = self.dis_map[i_off]
+                #self.dis_trans[r, c] = id
+                self.wav_indices[nz] = id;        nz=nz+1
+                #print(f"[{r},{c}]={self.dis_trans[r, c]}")
+        nD = len(self.dis_map)
+        if False:
+            plt.imshow(self.dis_trans.numpy())
+            plt.show()
+
+        self.wavelet = torch.nn.Parameter(data=torch.Tensor(nD), requires_grad=True)
+        self.wavelet.data.uniform_(0, np.pi*2)
+        #self.dis_trans = self.dis_trans.cuda()
+
+    def GetTransCoefficient(self):
+        if False:
+            xita = torch.zeros((self.size, self.size))
+            for r in range(self.M):
+                for c in range(self.N):
+                    pos = self.dis_trans[r, c]
+                    xita[r,c] = self.wavelet[pos]
+            origin_r,origin_c=self.M/2,self.N/2
+            #xita = self.dis_trans*self.hough[0]+self.hough[1]
+        else:
+            xita = torch.index_select(self.wavelet, 0, self.wav_indices)
+            xita = xita.view(self.size, self.size)
+            #print(xita)
+        amp_s = Z.exp_euler(xita)
+
         return amp_s
