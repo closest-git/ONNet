@@ -26,8 +26,8 @@ batch_size = 128
 
 #net_type = "cnn"
 #net_type = "DNet"
-#net_type = "WNet"
-net_type = "MF_WNet"
+net_type = "WNet"
+#net_type = "MF_WNet"
 #net_type = "MF_DNet";
 #net_type = "BiDNet"
 
@@ -244,7 +244,6 @@ def main():
                 m.weight.data.normal_(0, 2. / math.sqrt(m.in_features))
                 m.bias.data.zero_()
 
-    #
     for name, param in model.named_parameters():
         if param.requires_grad:
             print(f"\t{name}={param.nelement()}")
@@ -252,6 +251,7 @@ def main():
 
     accu_=[]
     for epoch in range(1, 50):
+        model.visualize(visual, f"E[{epoch-1}")
         train( model, device, train_loader, epoch, optical_trans)
         acc = test(model, device, test_loader, optical_trans,visual)
         accu_.append(acc)

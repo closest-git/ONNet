@@ -4,7 +4,10 @@ from .some_utils import *
 import numpy as np
 import random
 import torch.nn as nn
+import matplotlib
+#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
 
 #https://pytorch.org/tutorials/beginner/pytorch_with_examples.html#pytorch-custom-nn-modules
 class DiffractiveLayer(torch.nn.Module):
@@ -57,6 +60,16 @@ class DiffractiveLayer(torch.nn.Module):
 
         #self.bias = torch.nn.Parameter(data=torch.Tensor(1, 1), requires_grad=True)
 
+    def visualize(self,visual,suffix):
+        param = self.transmission.data
+        name = f"{suffix}_{self.config.modulation}_"
+        visual.image(name,param)
+
+    def share_weight(self,layer_1):
+        tp = type(self)
+        assert(type(layer_1)==tp)
+        #del self.transmission
+        #self.transmission = layer_1.transmission
 
     def Init_H(self):
         # Parameter
@@ -137,12 +150,23 @@ class DiffractiveWavelet(DiffractiveLayer):
     def __init__(self,  M_in, N_in,config,HZ=0.4e12):
         super(DiffractiveWavelet, self).__init__(M_in, N_in,config,HZ)
         #self.hough = torch.nn.Parameter(data=torch.Tensor(2), requires_grad=True)
-
         self.Init_DisTrans()
+        #self.GetXita()
 
     def __repr__(self):
         main_str = f"Diffrac_Wavelet_[{(int)(self.Hz/1.0e9)}G]_[{self.M},{self.N}]"
         return main_str
+
+    def share_weight(self,layer_1):
+        tp = type(self)
+        assert(type(layer_1)==tp)
+        del self.wavelet
+        self.wavelet = layer_1.wavelet
+        del self.dis_map
+        self.dis_map = layer_1.dis_map
+        del self.wav_indices
+        self.wav_indices = layer_1.wav_indices
+
 
     def Init_DisTrans(self):
         origin_r, origin_c = (self.M-1) / 2, (self.N-1) / 2
@@ -171,7 +195,7 @@ class DiffractiveWavelet(DiffractiveLayer):
         self.wavelet.data.uniform_(0, np.pi*2)
         #self.dis_trans = self.dis_trans.cuda()
 
-    def GetTransCoefficient(self):
+    def GetXita(self):
         if False:
             xita = torch.zeros((self.size, self.size))
             for r in range(self.M):
@@ -183,7 +207,16 @@ class DiffractiveWavelet(DiffractiveLayer):
         else:
             xita = torch.index_select(self.wavelet, 0, self.wav_indices)
             xita = xita.view(self.size, self.size)
-            #print(xita)
-        amp_s = Z.exp_euler(xita)
 
+        # print(xita)
+        return xita
+
+    def GetTransCoefficient(self):
+        xita = self.GetXita()
+        amp_s = Z.exp_euler(xita)
         return amp_s
+
+    def visualize(self,visual,suffix):
+        xita = self.GetXita()
+        name = f"{suffix}_w_"
+        visual.image(name,xita.detach())

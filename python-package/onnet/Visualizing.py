@@ -7,7 +7,7 @@
 
     ONNX export failed on ATen operator ifft because torch.onnx.symbolic.ifft does not exist
 '''
-
+import seaborn as sns;      sns.set()
 from PIL import Image
 import torch
 import torch.nn as nn
@@ -18,6 +18,7 @@ import visdom
 import matplotlib.pyplot as plt
 import numpy as np
 import torchvision
+import cv2
 from torchvision import datasets, transforms
 
 def matplotlib_imshow(img, one_channel=False):
@@ -37,6 +38,78 @@ class Visualize:
         self.log_dir = f'runs/{env_title}'
         self.loss_step = 0
         self.writer = SummaryWriter(self.log_dir)
+        self.img_dir="./dump/images/"
+        self.dpi = 100
+
+    #https://stackoverflow.com/questions/9662995/matplotlib-change-title-and-colorbar-text-and-tick-colors
+    def MatPlot(self,arr, title=""):
+        plt.axis('off')
+        plt.grid(b=None)
+        plt.imshow(arr, interpolation='nearest', cmap='coolwarm')
+        plt.savefig(f'{self.img_dir}{title}.jpg')
+        #plt.show()
+        plt.close()
+
+
+    '''
+            sns.heatmap 很难用，需用自定义，参见https://stackoverflow.com/questions/53248186/custom-ticks-for-seaborn-heatmap
+    '''
+    def HeatMap(self, data, title="", noAxis=True, cbar=True):
+        sns.set(font_scale=2)
+        s = max(data.shape[1] / self.dpi, data.shape[0] / self.dpi)
+        # fig.set_size_inches(18.5, 10.5)
+        cmap = 'coolwarm'  # "plasma"  #https://matplotlib.org/examples/color/colormaps_reference.html
+        # cmap = sns.cubehelix_palette(start=1, rot=3, gamma=0.8, as_cmap=True)
+        if noAxis:  # tight samples for training(No text!!!)
+            figsize = (s, s)
+            fig, ax = plt.subplots(figsize=figsize, dpi=self.dpi)
+            ax = sns.heatmap(data, ax=ax, cmap=cmap, cbar=False, xticklabels=False, yticklabels=False)
+            path = '{}{}_.jpg'.format(self.img_dir, title)
+            fig.savefig(path, bbox_inches='tight', pad_inches=0,figsize=(20,10))
+            if False:
+                image = cv2.imread(path)
+                # image = fig2data(ax.get_figure())      #会放大尺寸，难以理解
+                if (len(title) > 0):
+                    assert (image.shape == self.args.spp_image_shape)  # 必须固定一个尺寸
+                cv2.imshow("",image);       cv2.waitKey(0)
+            plt.close("all")
+            return path
+        else:  # for paper
+            ticks = np.linspace(0, 1, 10)
+            xlabels = [int(i) for i in np.linspace(300, 2000, 10)]
+            x0, x1 = self.xitas.min(), self.xitas.max()
+            ylabels = ["{:.3g}".format(i) for i in np.linspace(x0, x1, 10)]
+            figsize = (s * 1.1, s * 1.1)
+            fig, ax = plt.subplots(figsize=figsize, dpi=args.dpi)  # more concise than plt.figure:
+            if title is None or len(title) == 0:
+                ax.set_title('Reflectance\n{}'.format(self.title))
+            else:
+                ax.set_title(title)
+            # cbar_kws={'label': 'Reflex', 'orientation': 'horizontal'}
+            # sns.set(font_scale=0.2)
+            #  cbar_kws={'label': 'Reflex', 'orientation': 'horizontal'} , center=0.6
+            # ax = sns.heatmap(data, ax=ax, cmap=cmap,yticklabels=ylabels[::-1],xticklabels=xlabels)
+            # cbar_kws = dict(ticks=np.linspace(0, 1, 10))
+            ax = sns.heatmap(data, ax=ax, cmap=cmap, vmin=0, vmax=1, cbar=cbar)
+            plt.ylabel('Incident Angle');
+            plt.xlabel('Wavelength(nm)')
+
+            ax.set_xticklabels(xlabels)
+            ax.set_yticklabels(ylabels[::-1])
+            y_limit = ax.get_ylim();
+            x_limit = ax.get_xlim()
+            ax.set_yticks(ticks * y_limit[0])
+            ax.set_xticks(ticks * x_limit[1])
+            if False:
+                path = '{}/{}/{}_[{}].jpg'.format(args.dump_dir, mType, title, data.shape)
+                plt.show(block=True)
+            # plt.savefig(path,bbox_inches='tight')
+
+            image = fig2data(ax.get_figure())
+            plt.close("all")
+            return image, ""
+
+    plt.close("all")
 
     def ShowModel(self,model,data_loader):
         '''
@@ -57,6 +130,12 @@ class Visualize:
             self.writer.add_graph(model,images )
             self.writer.close()
 
+    def image(self, name, img_, **kwargs):
+        #np.random.rand(3, 512, 256),
+        self.MatPlot(img_.cpu().numpy(),title=name)
+        #self.HeatMap(img_.cpu().numpy(),title=name)
+        return
+
     def UpdateLoss(self,tag,loss,global_step=None):
         step = self.loss_step if global_step==None else global_step
         with SummaryWriter(log_dir=self.log_dir) as writer:
@@ -73,11 +152,7 @@ class  Visdom_Visualizer(Visualize):
     def __init__(self,env_title, **kwargs):
         super(Visdom_Visualizer, self).__init__(env_title)
         self.viz = visdom.Visdom(env=env_title, **kwargs)
-
-        # 画的第几个数，相当于横座标
-        # 保存（’loss',23） 即loss的第23个点
-        # self.index = {}
-        # self.log_text = ''
+        assert self.viz.check_connection()
 
     def UpdateLoss(self, title,legend, loss, yLabel='LOSS',global_step=None):
         self.vis_plot( self.loss_step, loss, title,legend,yLabel)
@@ -103,9 +178,6 @@ class  Visdom_Visualizer(Visualize):
                  update='append' if epoch > 0 else None)
 
     def reinit(self, env='default', **kwargs):
-        '''
-        修改visdom的配置
-        '''
         self.vis = visdom.Visdom(env=env, **kwargs)
         return self
 
@@ -134,20 +206,20 @@ class  Visdom_Visualizer(Visualize):
                       )
         self.index[name] = x + 1
 
-    def img(self, name, img_, **kwargs):
-        '''
-        self.img('input_img',t.Tensor(64,64))
-        self.img('input_imgs',t.Tensor(3,64,64))
-        self.img('input_imgs',t.Tensor(100,1,64,64))
-        self.img('input_imgs',t.Tensor(100,3,64,64),nrows=10)
+    ''' 非常奇怪的出错
+    def image(self, name, img_, **kwargs):
 
-        ！！！don‘t ~~self.img('input_imgs',t.Tensor(100,64,64),nrows=10)~~！！！
-        '''
-        self.vis.images(img_.cpu().numpy(),
-                        win=(name),
+        assert self.viz.check_connection()
+        self.vis.image(
+            np.random.rand(3, 512, 256),
+            opts=dict(title='Random image as jpg!', caption='How random as jpg.', jpgquality=50),
+        )
+        self.vis.image (img_.cpu().numpy(),
+                        #win=(name),
                         opts=dict(title=name),
                         **kwargs
                         )
+    '''
 
     def log(self, info, win='log_text'):
         '''

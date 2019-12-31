@@ -162,6 +162,12 @@ class D2NNet(nn.Module):
             self.loss = D2NNet.logit_loss
         '''
 
+    def visualize(self,visual,suffix):
+        no = 0
+        for layer in self.DD:
+            info = f"{suffix},{no}]"
+            layer.visualize(visual,info)
+            no=no+1
 
     def legend(self):
         leg_ = self.title
@@ -206,8 +212,9 @@ class D2NNet(nn.Module):
         return output
 
 class MultiDNet(D2NNet):
-    def __init__(self, IMG_size,nCls,nInterDifrac,freq_list,config):
+    def __init__(self, IMG_size,nCls,nInterDifrac,freq_list,config,shareWeight=True):
         super(MultiDNet, self).__init__(IMG_size,nCls,nInterDifrac,config)
+        self.isShareWeight=shareWeight
         self.freq_list = freq_list
         nFreq = len(self.freq_list)
         del self.DD;     self.DD = None
@@ -218,6 +225,14 @@ class MultiDNet(D2NNet):
                 layer(self.M, self.N, self.config, HZ=freq) for i in range(self.nDifrac)
             ]) for freq in freq_list
         ])
+        if self.isShareWeight:
+            nSubNet = len(self.freq_nets)
+            net_0 = self.freq_nets[0]
+            for i in range(1,nSubNet):
+                net_1 = self.freq_nets[i]
+                for j in range(self.nDifrac):
+                    net_1[j].share_weight(net_0[j])
+
 
     def legend(self):
         title = f"MF_DNet({len(self.freq_list)} channels)"

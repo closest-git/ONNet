@@ -4,12 +4,13 @@
     <bookmark url="file://$PROJECT_DIR$/case_mnist.py" line="151" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="617760e5-c3b6-4c49-8d8a-74f37b516c48" name="Default Changelist" comment="">
+    <list default="true" id="617760e5-c3b6-4c49-8d8a-74f37b516c48" name="Default Changelist" comment="1)visualize 2)MultiDNet::shareWeight">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/case_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/case_mnist.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python-package/onnet/D2NNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/D2NNet.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python-package/onnet/Net_Instance.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/Net_Instance.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python-package/onnet/Visualizing.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/Visualizing.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,8 +23,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python-package/onnet/Net_Instance.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="283">
-              <caret line="28" selection-start-line="28" selection-end-line="28" />
+            <state relative-caret-position="228">
+              <caret line="12" column="85" selection-start-line="12" selection-start-column="74" selection-end-line="12" selection-end-column="85" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -32,14 +33,12 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/case_cifar.py">
+        <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NNet.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="61" column="4" selection-start-line="61" selection-start-column="4" selection-end-line="61" selection-end-column="4" />
+            <state relative-caret-position="325">
+              <caret line="167" column="35" selection-start-line="167" selection-start-column="35" selection-end-line="167" selection-end-column="35" />
               <folding>
-                <element signature="e#86#98#0" expanded="true" />
-                <element signature="e#871#1341#0" />
-                <element signature="e#1369#1851#0" />
+                <element signature="e#173#185#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -48,61 +47,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/case_mnist.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="32">
-              <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+            <state relative-caret-position="342">
+              <caret line="253" column="45" selection-start-line="253" selection-start-column="45" selection-end-line="253" selection-end-column="45" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python-package/onnet/Visualizing.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="1" column="27" lean-forward="true" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NN_tf.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="38">
-              <caret line="2" column="49" lean-forward="true" selection-start-line="2" selection-start-column="3" selection-end-line="2" selection-end-column="49" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2964">
-              <caret line="156" column="96" selection-start-line="156" selection-start-column="96" selection-end-line="156" selection-end-column="96" />
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://D:/Anaconda3/Lib/site-packages/torch/__init__.pyi">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="12882">
-              <caret line="701" column="8" selection-start-line="701" selection-start-column="8" selection-end-line="701" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python-package/onnet/DropOutLayer.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="12" column="25" selection-start-line="12" selection-start-column="25" selection-end-line="12" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
+                <element signature="e#9116#9499#0" />
               </folding>
             </state>
           </provider>
@@ -111,20 +60,55 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/module.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="9842">
-              <caret line="525" selection-start-line="525" selection-end-line="525" />
+            <state relative-caret-position="154">
+              <caret line="538" selection-start-line="538" selection-end-line="538" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/python-package/onnet/Visualizing.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="89">
+              <caret line="44" column="15" lean-forward="true" selection-start-line="44" selection-start-column="15" selection-end-line="44" selection-end-column="15" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python-package/onnet/Z_utils.py">
+        <entry file="file://$PROJECT_DIR$/python-package/onnet/SparseSupport.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1634">
-              <caret line="86" column="8" selection-start-line="86" selection-start-column="8" selection-end-line="86" selection-end-column="8" />
+            <state relative-caret-position="209">
+              <caret line="16" column="44" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="44" />
               <folding>
-                <element signature="e#82#94#0" expanded="true" />
+                <element signature="e#0#12#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="499">
+              <caret line="220" column="27" selection-start-line="220" selection-start-column="27" selection-end-line="220" selection-end-column="27" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://D:/Anaconda3/Lib/site-packages/matplotlib/pyplot.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://D:/Anaconda3/Lib/site-packages/PIL/Image.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="230">
+              <caret line="2632" column="29" selection-start-line="2632" selection-start-column="29" selection-end-line="2632" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -140,9 +124,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>trainloader</find>
-      <find>args.arch</find>
-      <find>progress_bar</find>
       <find>Files already downloaded and verified</find>
       <find>Building model</find>
       <find>data</find>
@@ -160,7 +141,6 @@
       <find>ShowModel</find>
       <find>transform</find>
       <find>visual</find>
-      <find>supp_sparse</find>
       <find>400</find>
       <find>DiffractiveLayer</find>
       <find>freq_list</find>
@@ -170,6 +150,10 @@
       <find>np.random</find>
       <find>GetTransCoefficient</find>
       <find>lr_base</find>
+      <find>supp_sparse</find>
+      <find>share_weight</find>
+      <find>UpdateLoss</find>
+      <find>HeatMap</find>
     </findStrings>
     <replaceStrings>
       <replace>optical_trans</replace>
@@ -201,7 +185,6 @@
         <option value="$PROJECT_DIR$/python-package/onnet/MultipleBinaryDNet.py" />
         <option value="$PROJECT_DIR$/python-package/case_mnist.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/PoolForCls.py" />
-        <option value="$PROJECT_DIR$/python-package/onnet/Visualizing.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/BinaryDNet.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/RandSuppLayer.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/__init__.py" />
@@ -209,18 +192,19 @@
         <option value="$PROJECT_DIR$/python-package/onnet/SparseSupport.py" />
         <option value="$PROJECT_DIR$/case_cifar.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/MultiDNet.py" />
-        <option value="$PROJECT_DIR$/python-package/onnet/D2NNet.py" />
-        <option value="$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/Net_Instance.py" />
+        <option value="$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py" />
         <option value="$PROJECT_DIR$/case_mnist.py" />
+        <option value="$PROJECT_DIR$/python-package/onnet/D2NNet.py" />
+        <option value="$PROJECT_DIR$/python-package/onnet/Visualizing.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-40" />
-    <option name="y" value="80" />
-    <option name="width" value="1765" />
-    <option name="height" value="1100" />
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
+    <option name="width" value="1760" />
+    <option name="height" value="1098" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -445,7 +429,8 @@
       <workItem from="1577441967866" duration="14026000" />
       <workItem from="1577609161680" duration="17790000" />
       <workItem from="1577693293065" duration="1248000" />
-      <workItem from="1577755238193" duration="1314000" />
+      <workItem from="1577755238193" duration="5797000" />
+      <workItem from="1577761326042" duration="5360000" />
     </task>
     <task id="LOCAL-00001" summary="optical_trans">
       <created>1575352870575</created>
@@ -692,22 +677,29 @@
       <option name="project" value="LOCAL" />
       <updated>1577676544707</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="1)GetLayer_ 2)MF_WNet">
+      <created>1577756811231</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1577756811231</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="314212000" />
+    <option name="totallyTimeSpent" value="324055000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1408" height="878" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7720365" visible="true" weight="0.1725926" />
-      <window_info id="Structure" order="1" sideWeight="0.22796352" side_tool="true" visible="true" weight="0.1725926" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6269531" visible="true" weight="0.27333334" />
+      <window_info id="Structure" order="1" sideWeight="0.37304688" side_tool="true" visible="true" weight="0.27333334" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.55898124" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.60991955" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.31367293" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.31233245" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -721,7 +713,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="SciView" order="3" visible="true" weight="0.17925926" />
+      <window_info anchor="right" id="SciView" order="3" visible="true" weight="0.19629629" />
       <window_info anchor="right" id="Database" order="4" />
     </layout>
   </component>
@@ -729,7 +721,6 @@
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="1)BinaryDNet 2)" />
     <MESSAGE value="1)predict 2)__repr__" />
     <MESSAGE value="1)Z.sigmoid 2)GatePipe" />
     <MESSAGE value="1)Z.phase 2)PoolForCls::chunk_dim 3)" />
@@ -754,7 +745,8 @@
     <MESSAGE value="1)DNet_instance" />
     <MESSAGE value="1)Net_Instance" />
     <MESSAGE value="1)wnet::DiffractiveWavelet" />
-    <option name="LAST_COMMIT_MESSAGE" value="1)wnet::DiffractiveWavelet" />
+    <MESSAGE value="1)GetLayer_ 2)MF_WNet" />
+    <option name="LAST_COMMIT_MESSAGE" value="1)GetLayer_ 2)MF_WNet" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -796,12 +788,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py</url>
-          <line>118</line>
+          <line>131</line>
           <option name="timeStamp" value="170" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/python-package/onnet/Visualizing.py</url>
-          <line>60</line>
+          <line>139</line>
           <option name="timeStamp" value="253" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -811,7 +803,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py</url>
-          <line>125</line>
+          <line>138</line>
           <option name="timeStamp" value="269" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -826,8 +818,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/python-package/onnet/Visualizing.py</url>
-          <line>53</line>
+          <line>126</line>
           <option name="timeStamp" value="336" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py</url>
+          <line>70</line>
+          <option name="timeStamp" value="343" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/python-package/onnet/Visualizing.py</url>
+          <line>216</line>
+          <option name="timeStamp" value="356" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/python-package/onnet/Visualizing.py</url>
+          <line>50</line>
+          <option name="timeStamp" value="379" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -859,7 +866,7 @@
     <SUITE FILE_PATH="coverage/ONNet$case_mnist.coverage" NAME="case_mnist Coverage Results" MODIFIED="1576328212748" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
     <SUITE FILE_PATH="coverage/ONNet$D2NN_tf.coverage" NAME="D2NN_tf Coverage Results" MODIFIED="1575956639323" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$case_face_detect.coverage" NAME="case_face_detect Coverage Results" MODIFIED="1575964746628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
-    <SUITE FILE_PATH="coverage/ONNet$case_mnist__1_.coverage" NAME="case_mnist (1) Coverage Results" MODIFIED="1577755310406" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ONNet$case_mnist__1_.coverage" NAME="case_mnist (1) Coverage Results" MODIFIED="1577771880527" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ONNet$case_mnist___.coverage" NAME="case_mnist - 副本 Coverage Results" MODIFIED="1575363618084" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/net_source" />
     <SUITE FILE_PATH="coverage/ONNet$SparseSupport.coverage" NAME="SparseSupport Coverage Results" MODIFIED="1577345365220" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$D2NN_tf__1_.coverage" NAME="D2NN_tf (1) Coverage Results" MODIFIED="1575542940093" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/net_source" />
@@ -867,14 +874,6 @@
     <SUITE FILE_PATH="coverage/ONNet$try_tensor.coverage" NAME="try_tensor Coverage Results" MODIFIED="1575453260380" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/net_source" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/python-package/net_source/D2NN_tf.py" />
-    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/linear.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="682">
-          <caret line="91" selection-start-line="91" selection-end-line="91" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/Anaconda3/Lib/site-packages/tensorflow/python/util/deprecation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="682">
@@ -1006,13 +1005,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/container.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-275">
-          <caret line="119" column="8" selection-start-line="119" selection-start-column="8" selection-end-line="119" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/Anaconda3/Lib/site-packages/torchvision/datasets/mnist.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4864">
@@ -1121,40 +1113,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NNet.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2318">
-          <caret line="131" selection-start-line="131" selection-end-line="131" />
-          <folding>
-            <element signature="e#173#185#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/Anaconda3/Lib/random.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="14060">
           <caret line="749" selection-start-line="749" selection-end-line="749" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/SparseSupport.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="893">
-          <caret line="47" column="43" selection-start-line="47" selection-start-column="43" selection-end-line="47" selection-end-column="43" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2964">
-          <caret line="156" column="96" selection-start-line="156" selection-start-column="96" selection-end-line="156" selection-end-column="96" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1172,13 +1134,6 @@
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/module.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9842">
-          <caret line="525" selection-start-line="525" selection-end-line="525" />
         </state>
       </provider>
     </entry>
@@ -1204,37 +1159,92 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NN_tf.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3002">
+          <caret line="2" column="49" lean-forward="true" selection-start-line="2" selection-start-column="3" selection-end-line="2" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/container.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="134" selection-start-line="134" selection-end-line="134" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/SparseSupport.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="16" column="44" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/python-package/onnet/Net_Instance.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="28" selection-start-line="28" selection-end-line="28" />
+        <state relative-caret-position="228">
+          <caret line="12" column="85" selection-start-line="12" selection-start-column="74" selection-end-line="12" selection-end-column="85" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/module.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="538" selection-start-line="538" selection-end-line="538" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Anaconda3/Lib/site-packages/PIL/Image.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="2632" column="29" selection-start-line="2632" selection-start-column="29" selection-end-line="2632" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Anaconda3/Lib/site-packages/matplotlib/pyplot.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="499">
+          <caret line="220" column="27" selection-start-line="220" selection-start-column="27" selection-end-line="220" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NNet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="167" column="35" selection-start-line="167" selection-start-column="35" selection-end-line="167" selection-end-column="35" />
+          <folding>
+            <element signature="e#173#185#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/case_mnist.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="32">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+        <state relative-caret-position="342">
+          <caret line="253" column="45" selection-start-line="253" selection-start-column="45" selection-end-line="253" selection-end-column="45" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
+            <element signature="e#9116#9499#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/python-package/onnet/Visualizing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" column="27" lean-forward="true" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NN_tf.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="49" lean-forward="true" selection-start-line="2" selection-start-column="3" selection-end-line="2" selection-end-column="49" />
+        <state relative-caret-position="89">
+          <caret line="44" column="15" lean-forward="true" selection-start-line="44" selection-start-column="15" selection-end-line="44" selection-end-column="15" />
         </state>
       </provider>
     </entry>
