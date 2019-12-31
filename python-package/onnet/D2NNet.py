@@ -103,6 +103,14 @@ class D2NNet(nn.Module):
             #pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
         return pred
 
+    def GetLayer_(self):
+        # layer = DiffractiveAMP
+        if self.config.wavelet is None:
+            layer = DiffractiveLayer
+        else:
+            layer = DiffractiveWavelet
+        return layer
+
     def __init__(self,IMG_size,nCls,nDifrac,config):
         super(D2NNet, self).__init__()
         self.M,self.N=IMG_size
@@ -120,11 +128,7 @@ class D2NNet(nn.Module):
             assert (self.M >= self.nClass and self.N >= self.nClass)
         print(f"D2NNet nClass={nCls} shape={self.M,self.N}")
 
-        #layer = DiffractiveAMP
-        if self.config.wavelet is None:
-            layer = DiffractiveLayer
-        else:
-            layer = DiffractiveWavelet
+        layer = self.GetLayer_()
         self.DD = nn.ModuleList([
             layer(self.M, self.N,config) for i in range(self.nDifrac)
         ])
@@ -208,9 +212,10 @@ class MultiDNet(D2NNet):
         nFreq = len(self.freq_list)
         del self.DD;     self.DD = None
         self.wFreq = torch.nn.Parameter(torch.ones(nFreq))
+        layer = self.GetLayer_()
         self.freq_nets=nn.ModuleList([
             nn.ModuleList([
-                DiffractiveLayer(self.M, self.N, self.config, HZ=freq) for i in range(self.nDifrac)
+                layer(self.M, self.N, self.config, HZ=freq) for i in range(self.nDifrac)
             ]) for freq in freq_list
         ])
 

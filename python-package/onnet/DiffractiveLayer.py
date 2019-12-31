@@ -146,6 +146,8 @@ class DiffractiveWavelet(DiffractiveLayer):
 
     def Init_DisTrans(self):
         origin_r, origin_c = (self.M-1) / 2, (self.N-1) / 2
+        origin_r = random.uniform(0, self.M-1)
+        origin_c = random.uniform(0, self.N - 1)
         self.dis_map={}
         #self.dis_trans = torch.zeros((self.size, self.size)).int()
         self.wav_indices = torch.LongTensor((self.size*self.size)).cuda()

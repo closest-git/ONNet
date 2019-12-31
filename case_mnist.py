@@ -25,8 +25,9 @@ IMG_size = (56, 56)
 batch_size = 128
 
 #net_type = "cnn"
-net_type = "DNet"
-net_type = "WNet"
+#net_type = "DNet"
+#net_type = "WNet"
+net_type = "MF_WNet"
 #net_type = "MF_DNet";
 #net_type = "BiDNet"
 
@@ -229,22 +230,6 @@ def main():
     env_title, model = DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass)
     visual = Visdom_Visualizer(env_title=env_title)
     # visual = Visualize(env_title=env_title)
-    '''
-        if net_type == "cnn":
-            model = Mnist_Net(config=config_base)
-        elif net_type == "DNet":
-            model = D2NNet(IMG_size,nClass,nLayer,config_base)
-            model.double()
-        elif net_type == "MF_DNet":
-            #model = MultiDNet(IMG_size, nClass, nLayer,[0.3e12,0.35e12,0.4e12,0.42e12,0.5e12,0.6e12], DNET_config())
-            model = MultiDNet(IMG_size, nClass, nLayer, [0.3e12, 0.35e12, 0.4e12, 0.42e12], config_base)
-            model.double()
-        elif net_type == "BiDNet":
-            model = D2NNet(IMG_size, nClass, nLayer, config_base)
-            #model = D2NNet(IMG_size, nClass,nLayer, DNET_config(chunk="logit"))
-            #model = BinaryDNet(IMG_size,nClass,nLayer,1)
-            model.double()
-    '''
     model.to(device)
     print(model)
     # visual.ShowModel(model,train_loader)
