@@ -218,5 +218,5 @@ class DiffractiveWavelet(DiffractiveLayer):
 
     def visualize(self,visual,suffix):
         xita = self.GetXita()
-        name = f"{suffix}_w_"
-        visual.image(name,xita.detach())
+        name = f"{suffix}"
+        visual.image(name,torch.sin(xita.detach()))

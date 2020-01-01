@@ -16,7 +16,8 @@ import numpy as np
 from .DiffractiveLayer import *
 
 class DNET_config:
-    def __init__(self,batch,lr_base,modulation="phase",init_value = "random",support="",isFC=False):
+    def __init__(self,batch,lr_base,modulation="phase",init_value = "random",
+                 support=SuppLayer.SUPP.exp,isFC=False):
         '''
 
         :param modulation:
@@ -25,7 +26,7 @@ class DNET_config:
         '''
         self.init_value = init_value  # "random"  "zero"
         self.rDrop = 0
-        self.support = support          #["supp_differentia","supp_exp","supp_sparse","supp_expW"]
+        self.support = support  #None
         self.modulation = modulation    #["phase","phase_amp"]
         self.output_chunk = "2D"        #["1D","2D"]
         self.output_pooling = "max"
@@ -121,12 +122,15 @@ class D2NNet(nn.Module):
         #self.init_value = "random"    #"random"  "zero"
         self.config = config
         self.title = f"DNNet"
+        self.isHighWay = False
 
         if self.config.output_chunk == "2D":
             assert(self.M*self.N>=self.nClass)
         else:
             assert (self.M >= self.nClass and self.N >= self.nClass)
         print(f"D2NNet nClass={nCls} shape={self.M,self.N}")
+        if self.isHighWay:
+            self.wLayer = torch.nn.Parameter(torch.ones(self.nDifrac))
 
         layer = self.GetLayer_()
         self.DD = nn.ModuleList([
@@ -139,17 +143,20 @@ class D2NNet(nn.Module):
             self.fc1 = nn.Linear(self.M*self.N, self.nClass)
             self.loss = UserLoss.cys_loss
             self.title = f"DNNet_FC"
-        elif self.config.support!="":#"#self.config.support=="supp_differentia" or self.config.support=="supp_exp" or self.config.support=="supp_expW":
+        elif self.config.support!=None:
             self.laySupp = SuppLayer(config,self.nClass)
             self.last_chunk = ChunkPool(self.laySupp.nChunk, config, pooling=config.output_pooling)
             self.loss = UserLoss.cys_loss
-            self.title = f"DNNet_{self.config.support}"
+            a = self.config.support
+            self.title = f"DNNet_{self.config.support.value}"
         else:
             self.last_chunk = ChunkPool(self.nClass,config,pooling=config.output_pooling)
             self.loss = UserLoss.cys_loss
 
         if self.config.wavelet is not None:
             self.title = self.title+f"_W"
+        if self.isHighWay:
+            self.title = self.title + f"_H"
 
         ''' 
         BinaryChunk is pool
@@ -164,8 +171,11 @@ class D2NNet(nn.Module):
 
     def visualize(self,visual,suffix):
         no = 0
-        for layer in self.DD:
+        for no,layer in enumerate(self.DD):
             info = f"{suffix},{no}]"
+            if self.isHighWay:
+                a = self.wLayer[no]
+                info = info+f"_{a:.2g}"
             layer.visualize(visual,info)
             no=no+1
 
@@ -202,11 +212,12 @@ class D2NNet(nn.Module):
             no = random.randint(0,nChannel-1)
             x = x[:,0:1,...]
         x = self.input_trans(x)
-
-        for layD in self.DD:
+        identity = 0
+        for no,layD in enumerate(self.DD):
             x = layD(x)
 
         x = self.z_modulus(x).cuda()
+
 
         output = self.do_classify(x)
         return output

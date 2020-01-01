@@ -4,9 +4,13 @@ from .some_utils import *
 import numpy as np
 import random
 import torch.nn as nn
+from enum import Enum
 
 #https://pytorch.org/tutorials/beginner/pytorch_with_examples.html#pytorch-custom-nn-modules
 class SuppLayer(torch.nn.Module):
+    class SUPP(Enum):
+        exp,sparse,expW,diff = 'exp','sparse','expW','differentia'
+
     def __init__(self,config,nClass, nSupp=10):
         super(SuppLayer, self).__init__()
         self.nClass = nClass
@@ -14,7 +18,7 @@ class SuppLayer(torch.nn.Module):
         self.nChunk = self.nClass*2
         self.config = config
         self.w_11=False
-        if self.config.support=="supp_sparse":
+        if self.config.support==self.SUPP.sparse:   #"supp_sparse":
             if self.w_11:
                 tSupp = torch.ones(self.nClass, self.nSupp)
             else:
@@ -44,20 +48,20 @@ class SuppLayer(torch.nn.Module):
         return output
 
     def forward(self, x):
-        if self.config.support == "supp_sparse":
+        if self.config.support == self.SUPP.sparse:     # "supp_sparse":
             output = self.sparse_support(x)
             return output
 
         assert x.shape[1] == self.nClass * 2
-        if self.config.support=="supp_differentia":
+        if self.config.support==self.SUPP.diff:     #"supp_differentia":
             for i in range(self.nClass):
                 x[:,i] = (x[:,2*i]-x[:,2*i+1])/(x[:,2*i]+x[:,2*i+1])
             output=x[...,0:self.nClass]
-        elif self.config.support=="supp_exp":
+        elif self.config.support==self.SUPP.exp:     #"supp_exp":
             for i in range(self.nClass):
                 x[:, i] = torch.exp(x[:, 2 * i] - x[:, 2 * i + 1])
             output = x[..., 0:self.nClass]
-        elif self.config.support=="supp_expW":
+        elif self.config.support==self.SUPP.expW:     #"supp_expW":
             output = torch.zeros_like(x)
             for i in range(self.nClass):
                 output[:, i] = torch.exp(x[:, 2 * i]*self.w2[0] - x[:, 2 * i + 1]*self.w2[1])

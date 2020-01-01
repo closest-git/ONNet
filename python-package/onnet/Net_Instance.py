@@ -10,7 +10,7 @@ def DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass):
     if dataset == "emnist":
         lr_base = 0.01
 
-    config_base = DNET_config(batch=batch_size, lr_base=lr_base, support="supp_sparse")
+    config_base = DNET_config(batch=batch_size, lr_base=lr_base)
     env_title = f"{net_type}_{dataset}_{IMG_size}_{lr_base}_{config_base.env_title()}"
     if net_type == "MF_DNet":
         freq_list = [0.3e12, 0.35e12, 0.4e12, 0.42e12]

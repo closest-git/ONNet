@@ -43,9 +43,11 @@ class Visualize:
 
     #https://stackoverflow.com/questions/9662995/matplotlib-change-title-and-colorbar-text-and-tick-colors
     def MatPlot(self,arr, title=""):
-        plt.axis('off')
+        fig, ax = plt.subplots()
+        #plt.axis('off')
         plt.grid(b=None)
-        plt.imshow(arr, interpolation='nearest', cmap='coolwarm')
+        im = ax.imshow(arr, interpolation='nearest', cmap='coolwarm')
+        fig.colorbar(im, orientation='horizontal')
         plt.savefig(f'{self.img_dir}{title}.jpg')
         #plt.show()
         plt.close()
