@@ -14,6 +14,7 @@ from .Loss import *
 from .SparseSupport import *
 import numpy as np
 from .DiffractiveLayer import *
+import cv2
 
 class DNET_config:
     def __init__(self,batch,lr_base,modulation="phase",init_value = "random",
@@ -122,14 +123,17 @@ class D2NNet(nn.Module):
         #self.init_value = "random"    #"random"  "zero"
         self.config = config
         self.title = f"DNNet"
-        self.isHighWay = False
+        self.highWay = 1        #2
 
         if self.config.output_chunk == "2D":
             assert(self.M*self.N>=self.nClass)
         else:
             assert (self.M >= self.nClass and self.N >= self.nClass)
         print(f"D2NNet nClass={nCls} shape={self.M,self.N}")
-        if self.isHighWay:
+        self.wLayer = torch.nn.Parameter(torch.ones(self.nDifrac))
+        if self.highWay==2:
+            self.wLayer.data.uniform_(-1, 1)
+        elif self.highWay==1:
             self.wLayer = torch.nn.Parameter(torch.ones(self.nDifrac))
 
         layer = self.GetLayer_()
@@ -155,7 +159,7 @@ class D2NNet(nn.Module):
 
         if self.config.wavelet is not None:
             self.title = self.title+f"_W"
-        if self.isHighWay:
+        if self.highWay>0:
             self.title = self.title + f"_H"
 
         ''' 
@@ -171,13 +175,24 @@ class D2NNet(nn.Module):
 
     def visualize(self,visual,suffix):
         no = 0
+        images = []
+        path = f"{visual.img_dir}/{suffix}.jpg"
         for no,layer in enumerate(self.DD):
             info = f"{suffix},{no}]"
-            if self.isHighWay:
+            if self.highWay==2:
+                a = self.wLayer[no]
+                a = torch.sigmoid(a)
+                info = info+f"_{a:.2g}"
+            elif self.highWay==1:
                 a = self.wLayer[no]
                 info = info+f"_{a:.2g}"
-            layer.visualize(visual,info)
+            params = {'save':False,'title':f"Phase map (layer={no+1})"}
+            image = layer.visualize(visual,info,params)
+            images.append(image)
             no=no+1
+        image_all = np.concatenate(images, axis=1)
+        #cv2.imshow("", image_all);    cv2.waitKey(0)
+        cv2.imwrite(path,image_all)
 
     def legend(self):
         leg_ = self.title
@@ -212,12 +227,18 @@ class D2NNet(nn.Module):
             no = random.randint(0,nChannel-1)
             x = x[:,0:1,...]
         x = self.input_trans(x)
-        identity = 0
+        summary = 0
         for no,layD in enumerate(self.DD):
             x = layD(x)
+            if self.highWay==2:
+                s = torch.sigmoid(self.wLayer[no])
+                summary+=x*s
+                x = x*(1-s)
+            elif self.highWay==1:
+                summary += x * self.wLayer[no]
+
 
         x = self.z_modulus(x).cuda()
-
 
         output = self.do_classify(x)
         return output

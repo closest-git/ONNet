@@ -52,11 +52,31 @@ class Visualize:
         #plt.show()
         plt.close()
 
+    def fig2data(self,fig):
+        fig.canvas.draw()
+        if True:  # https://stackoverflow.com/questions/42603161/convert-an-image-shown-in-python-into-an-opencv-image
+            img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep='')
+            img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+            return img
+        else:
+            w, h = fig.canvas.get_width_height()
+            buf = np.fromstring(fig.canvas.tostring_argb(), dtype=np.uint8)
+            buf.shape = (w, h, 4)
+            # canvas.tostring_argb give pixmap in ARGB mode. Roll the ALPHA channel to have it in RGBA mode
+            buf = np.roll(buf, 3, axis=2)
+            return buf
 
     '''
             sns.heatmap 很难用，需用自定义，参见https://stackoverflow.com/questions/53248186/custom-ticks-for-seaborn-heatmap
     '''
-    def HeatMap(self, data, title="", noAxis=True, cbar=True):
+    def HeatMap(self, data, file_name, params={},noAxis=True, cbar=True):
+        title,isSave = file_name,True
+        if 'save' in params:
+            isSave = params['save']
+        if 'title' in params:
+            title = params['title']
+        path = '{}{}_.jpg'.format(self.img_dir, file_name)
         sns.set(font_scale=2)
         s = max(data.shape[1] / self.dpi, data.shape[0] / self.dpi)
         # fig.set_size_inches(18.5, 10.5)
@@ -66,7 +86,6 @@ class Visualize:
             figsize = (s, s)
             fig, ax = plt.subplots(figsize=figsize, dpi=self.dpi)
             ax = sns.heatmap(data, ax=ax, cmap=cmap, cbar=False, xticklabels=False, yticklabels=False)
-            path = '{}{}_.jpg'.format(self.img_dir, title)
             fig.savefig(path, bbox_inches='tight', pad_inches=0,figsize=(20,10))
             if False:
                 image = cv2.imread(path)
@@ -78,38 +97,39 @@ class Visualize:
             return path
         else:  # for paper
             ticks = np.linspace(0, 1, 10)
-            xlabels = [int(i) for i in np.linspace(300, 2000, 10)]
-            x0, x1 = self.xitas.min(), self.xitas.max()
-            ylabels = ["{:.3g}".format(i) for i in np.linspace(x0, x1, 10)]
-            figsize = (s * 1.1, s * 1.1)
-            fig, ax = plt.subplots(figsize=figsize, dpi=args.dpi)  # more concise than plt.figure:
-            if title is None or len(title) == 0:
-                ax.set_title('Reflectance\n{}'.format(self.title))
-            else:
-                ax.set_title(title)
+            xlabels = [int(i) for i in np.linspace(0, 56, 10)]
+            ylabels = xlabels
+            figsize = (s * 10, s * 10)
+            #fig, ax = plt.subplots(figsize=figsize, dpi=self.dpi)  # more concise than plt.figure:
+            fig, ax = plt.subplots(dpi=self.dpi)
+            ax.set_title(title)
             # cbar_kws={'label': 'Reflex', 'orientation': 'horizontal'}
             # sns.set(font_scale=0.2)
             #  cbar_kws={'label': 'Reflex', 'orientation': 'horizontal'} , center=0.6
             # ax = sns.heatmap(data, ax=ax, cmap=cmap,yticklabels=ylabels[::-1],xticklabels=xlabels)
             # cbar_kws = dict(ticks=np.linspace(0, 1, 10))
-            ax = sns.heatmap(data, ax=ax, cmap=cmap, vmin=0, vmax=1, cbar=cbar)
-            plt.ylabel('Incident Angle');
-            plt.xlabel('Wavelength(nm)')
-
-            ax.set_xticklabels(xlabels)
-            ax.set_yticklabels(ylabels[::-1])
-            y_limit = ax.get_ylim();
-            x_limit = ax.get_xlim()
-            ax.set_yticks(ticks * y_limit[0])
-            ax.set_xticks(ticks * x_limit[1])
+            ax = sns.heatmap(data, ax=ax, cmap=cmap,vmin=-1.1, vmax=1.1, cbar=cbar) #
+            #plt.ylabel('Incident Angle');            plt.xlabel('Wavelength(nm)')
             if False:
-                path = '{}/{}/{}_[{}].jpg'.format(args.dump_dir, mType, title, data.shape)
+                ax.set_xticklabels(xlabels);            ax.set_yticklabels(ylabels[::-1])
+                y_limit = ax.get_ylim();
+                x_limit = ax.get_xlim()
+                ax.set_yticks(ticks * y_limit[0])
+                ax.set_xticks(ticks * x_limit[1])
+            else:
+                plt.axis('off')
+            if False:
                 plt.show(block=True)
-            # plt.savefig(path,bbox_inches='tight')
 
-            image = fig2data(ax.get_figure())
+            image = self.fig2data(ax.get_figure())
             plt.close("all")
-            return image, ""
+            #image_all = np.concatenate((img_0, img_1, img_diff), axis=1)
+            #cv2.imshow("", image);    cv2.waitKey(0)
+            if isSave:
+                cv2.imwrite(path, image)
+                return path
+            else:
+                return image
 
     plt.close("all")
 
@@ -132,11 +152,12 @@ class Visualize:
             self.writer.add_graph(model,images )
             self.writer.close()
 
-    def image(self, name, img_, **kwargs):
+    def image(self, file_name, img_, params={}):
         #np.random.rand(3, 512, 256),
-        self.MatPlot(img_.cpu().numpy(),title=name)
-        #self.HeatMap(img_.cpu().numpy(),title=name)
-        return
+        #self.MatPlot(img_.cpu().numpy(),title=name)
+
+        result = self.HeatMap(img_.cpu().numpy(),file_name,params,noAxis=False)
+        return result
 
     def UpdateLoss(self,tag,loss,global_step=None):
         step = self.loss_step if global_step==None else global_step

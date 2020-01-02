@@ -60,10 +60,10 @@ class DiffractiveLayer(torch.nn.Module):
 
         #self.bias = torch.nn.Parameter(data=torch.Tensor(1, 1), requires_grad=True)
 
-    def visualize(self,visual,suffix):
+    def visualize(self,visual,suffix, params):
         param = self.transmission.data
         name = f"{suffix}_{self.config.modulation}_"
-        visual.image(name,param)
+        return visual.image(name,param, params)
 
     def share_weight(self,layer_1):
         tp = type(self)
@@ -216,7 +216,7 @@ class DiffractiveWavelet(DiffractiveLayer):
         amp_s = Z.exp_euler(xita)
         return amp_s
 
-    def visualize(self,visual,suffix):
+    def visualize(self,visual,suffix, params):
         xita = self.GetXita()
         name = f"{suffix}"
-        visual.image(name,torch.sin(xita.detach()))
+        return visual.image(name,torch.sin(xita.detach()), params)
