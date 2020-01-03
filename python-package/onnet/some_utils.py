@@ -1,5 +1,7 @@
 import numpy as np
 import math
+import random
+import os
 
 def split__sections(dim_0,nClass):
     split_dim = range(dim_0)
@@ -36,3 +38,17 @@ def split_regions_2d(shape,nClass):
             x2 = x2 + sec_2
         x1 = x1 + sec_1;    x2=0
     return regions
+
+def seed_everything(seed=0):
+    print(f"======== seed_everything seed={seed}========")
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    np.random.seed(seed)
+    #https://pytorch.org/docs/stable/notes/randomness.html
+    import torch
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False

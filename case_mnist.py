@@ -191,7 +191,7 @@ def main():
         num_workers = None
         pin_memory = False
 
-
+    nLayer = 5
     if dataset=="emnist":
         train_loader = torch.utils.data.DataLoader(
             datasets.EMNIST('./data',split="balanced", train=True, download=True, transform=train_trans),
@@ -201,7 +201,6 @@ def main():
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
         # balanced=47       byclass=62
         nClass = 47
-        nLayer = 5
     elif dataset=="fasion_mnist":
         train_loader = torch.utils.data.DataLoader(
             datasets.FashionMNIST('./data',train=True, download=True, transform=train_trans),
@@ -210,16 +209,14 @@ def main():
             datasets.FashionMNIST('./data',train=False, transform=test_trans),
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
         nClass = 10
-        nLayer = 5
     elif dataset=="cifar":
         train_loader = torch.utils.data.DataLoader(datasets.CIFAR10('./data',train=True, download=True, transform=train_trans),
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
         test_loader = torch.utils.data.DataLoader(datasets.CIFAR10('./data',train=False, transform=test_trans),
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
-        nClass = 10;        nLayer = 5;     lr_base=0.005
+        nClass = 10;        lr_base=0.005
     else:
         nClass = 10
-        nLayer = 5
         train_loader = torch.utils.data.DataLoader(
             datasets.MNIST('./data', train=True, download=True,transform=train_trans),
             batch_size=batch_size, shuffle=True, num_workers=num_workers, pin_memory=pin_memory)
@@ -227,7 +224,7 @@ def main():
             datasets.MNIST('./data', train=False,transform=test_trans),
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
 
-    env_title, model = DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass)
+    env_title, model = DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass,nLayer)
     visual = Visdom_Visualizer(env_title=env_title)
     # visual = Visualize(env_title=env_title)
     model.to(device)

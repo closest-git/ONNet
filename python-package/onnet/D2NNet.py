@@ -17,7 +17,7 @@ from .DiffractiveLayer import *
 import cv2
 
 class DNET_config:
-    def __init__(self,batch,lr_base,modulation="phase",init_value = "random",
+    def __init__(self,batch,lr_base,modulation="phase",init_value = "random",random_seed=42,
                  support=SuppLayer.SUPP.exp,isFC=False):
         '''
 
@@ -25,6 +25,9 @@ class DNET_config:
         :param init_value: ["random","zero","random_reverse","reverse","chunk"]
         :param support:
         '''
+        self.custom_legend = "Express_OFF"      #for paper and debug
+        self.seed = random_seed
+        seed_everything(self.seed)
         self.init_value = init_value  # "random"  "zero"
         self.rDrop = 0
         self.support = support  #None
@@ -39,16 +42,19 @@ class DNET_config:
         #if self.isFC == True:            self.learning_rate = lr_base/10
 
     def env_title(self):
-        title=f"{self.support}"
+        title=f"{self.support.value}"
         if self.isFC:       title += "[FC]"
+        if self.custom_legend is not None:
+            title = title + f"_{self.custom_legend}"
         return title
 
     def __repr__(self):
         main_str = f"lr={self.learning_rate}_ mod={self.modulation} input={self.input_scale} detector={self.output_chunk} " \
             f"support={self.support}"
         if self.isFC:       main_str+=" [FC]"
+        if self.custom_legend is not None:
+            main_str = main_str + f"_{self.custom_legend}"
         return main_str
-
 
 class D2NNet(nn.Module):
     @staticmethod
@@ -123,7 +129,7 @@ class D2NNet(nn.Module):
         #self.init_value = "random"    #"random"  "zero"
         self.config = config
         self.title = f"DNNet"
-        self.highWay = 1        #2
+        self.highWay = 0        #2
 
         if self.config.output_chunk == "2D":
             assert(self.M*self.N>=self.nClass)
@@ -151,7 +157,7 @@ class D2NNet(nn.Module):
             self.laySupp = SuppLayer(config,self.nClass)
             self.last_chunk = ChunkPool(self.laySupp.nChunk, config, pooling=config.output_pooling)
             self.loss = UserLoss.cys_loss
-            a = self.config.support
+            a = self.config.support.value
             self.title = f"DNNet_{self.config.support.value}"
         else:
             self.last_chunk = ChunkPool(self.nClass,config,pooling=config.output_pooling)
@@ -161,6 +167,8 @@ class D2NNet(nn.Module):
             self.title = self.title+f"_W"
         if self.highWay>0:
             self.title = self.title + f"_H"
+        if self.config.custom_legend is not None:
+            self.title = self.title + f"_{self.config.custom_legend}"
 
         ''' 
         BinaryChunk is pool
@@ -179,6 +187,7 @@ class D2NNet(nn.Module):
         path = f"{visual.img_dir}/{suffix}.jpg"
         for no,layer in enumerate(self.DD):
             info = f"{suffix},{no}]"
+            title = f"layer_{no+1}"
             if self.highWay==2:
                 a = self.wLayer[no]
                 a = torch.sigmoid(a)
@@ -186,8 +195,8 @@ class D2NNet(nn.Module):
             elif self.highWay==1:
                 a = self.wLayer[no]
                 info = info+f"_{a:.2g}"
-            params = {'save':False,'title':f"Phase map (layer={no+1})"}
-            image = layer.visualize(visual,info,params)
+                title  = title+f" w={a:.2g}"
+            image = layer.visualize(visual,info,{'save':False,'title':title})
             images.append(image)
             no=no+1
         image_all = np.concatenate(images, axis=1)
@@ -195,7 +204,10 @@ class D2NNet(nn.Module):
         cv2.imwrite(path,image_all)
 
     def legend(self):
-        leg_ = self.title
+        if self.config.custom_legend is not None:
+            leg_ = self.config.custom_legend
+        else:
+            leg_ = self.title
         return leg_
 
     def __repr__(self):
@@ -267,7 +279,10 @@ class MultiDNet(D2NNet):
 
 
     def legend(self):
-        title = f"MF_DNet({len(self.freq_list)} channels)"
+        if self.config.custom_legend is not None:
+            leg_ = self.config.custom_legend
+        else:
+            title = f"MF_DNet({len(self.freq_list)} channels)"
         return title
 
     def __repr__(self):

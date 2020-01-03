@@ -6,12 +6,14 @@
     <bookmark url="file://$PROJECT_DIR$/python-package/onnet/Visualizing.py" line="158" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="617760e5-c3b6-4c49-8d8a-74f37b516c48" name="Default Changelist" comment="1)DNET:::image_all,highWay 2)visual::fig2data">
+    <list default="true" id="617760e5-c3b6-4c49-8d8a-74f37b516c48" name="Default Changelist" comment="1)seed_everything 2)custom_legend">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/case_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/case_mnist.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python-package/onnet/D2NNet.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/D2NNet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python-package/onnet/Net_Instance.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/Net_Instance.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python-package/onnet/Visualizing.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/Visualizing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python-package/onnet/some_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/some_utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -24,8 +26,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python-package/onnet/Net_Instance.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="532">
-              <caret line="28" selection-start-line="28" selection-end-line="28" />
+            <state relative-caret-position="152">
+              <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -36,23 +38,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NNet.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
-              <caret line="238" selection-start-line="238" selection-end-line="238" />
+            <state relative-caret-position="236">
+              <caret line="250" column="8" selection-start-line="250" selection-start-column="8" selection-end-line="250" selection-end-column="8" />
               <folding>
                 <element signature="e#173#185#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/case_mnist.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="258">
-              <caret line="253" selection-start-line="253" selection-end-line="253" />
-              <folding>
-                <element signature="e#0#37#0" expanded="true" />
-                <element signature="e#9116#9499#0" />
               </folding>
             </state>
           </provider>
@@ -70,8 +59,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python-package/onnet/Visualizing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="230">
-              <caret line="38" column="26" selection-start-line="38" selection-start-column="26" selection-end-line="38" selection-end-column="26" />
+            <state relative-caret-position="19">
+              <caret line="1" column="27" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -89,27 +78,26 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py">
+        <entry file="file://$PROJECT_DIR$/case_mnist.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="274">
-              <caret line="221" selection-start-line="221" selection-end-line="221" />
+            <state relative-caret-position="1098">
+              <caret line="227" selection-start-line="227" selection-end-line="227" />
               <folding>
-                <element signature="e#0#12#0" expanded="true" />
+                <element signature="e#0#37#0" expanded="true" />
+                <element signature="e#9116#9499#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://D:/Anaconda3/Lib/site-packages/matplotlib/pyplot.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://D:/Anaconda3/Lib/site-packages/PIL/Image.py">
+        <entry file="file://$PROJECT_DIR$/python-package/onnet/some_utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="49913">
-              <caret line="2632" column="29" selection-start-line="2632" selection-start-column="29" selection-end-line="2632" selection-end-column="29" />
+            <state relative-caret-position="121">
+              <caret line="42" column="58" selection-start-line="42" selection-start-column="58" selection-end-line="42" selection-end-column="58" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -125,13 +113,8 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>lr</find>
-      <find>legend</find>
-      <find>cross_entropy</find>
-      <find>0.01</find>
       <find>ShowModel</find>
       <find>transform</find>
-      <find>visual</find>
       <find>400</find>
       <find>DiffractiveLayer</find>
       <find>freq_list</find>
@@ -154,7 +137,12 @@
       <find>fig2data</find>
       <find>kwargs</find>
       <find>visual.image</find>
+      <find>map</find>
+      <find>layer=</find>
       <find>heatmap</find>
+      <find>legend</find>
+      <find>visual</find>
+      <find>custom_legend</find>
     </findStrings>
     <replaceStrings>
       <replace>optical_trans</replace>
@@ -189,14 +177,14 @@
         <option value="$PROJECT_DIR$/python-package/onnet/BinaryDNet.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/RandSuppLayer.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/__init__.py" />
-        <option value="$PROJECT_DIR$/python-package/onnet/some_utils.py" />
         <option value="$PROJECT_DIR$/case_cifar.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/MultiDNet.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/SparseSupport.py" />
-        <option value="$PROJECT_DIR$/python-package/onnet/Net_Instance.py" />
-        <option value="$PROJECT_DIR$/case_mnist.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py" />
+        <option value="$PROJECT_DIR$/python-package/onnet/Net_Instance.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/Visualizing.py" />
+        <option value="$PROJECT_DIR$/case_mnist.py" />
+        <option value="$PROJECT_DIR$/python-package/onnet/some_utils.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/D2NNet.py" />
       </list>
     </option>
@@ -439,7 +427,7 @@
       <workItem from="1577761326042" duration="6395000" />
       <workItem from="1577866553866" duration="11853000" />
       <workItem from="1577933261117" duration="1808000" />
-      <workItem from="1577952655433" duration="3535000" />
+      <workItem from="1577952655433" duration="12463000" />
     </task>
     <task id="LOCAL-00001" summary="optical_trans">
       <created>1575352870575</created>
@@ -707,23 +695,30 @@
       <option name="project" value="LOCAL" />
       <updated>1577876809673</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="1)DNET:::image_all,highWay 2)visual::fig2data">
+      <created>1577957188133</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1577957188133</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="342286000" />
+    <option name="totallyTimeSpent" value="351214000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1408" height="878" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.50108933" visible="true" weight="0.19481482" />
-      <window_info id="Structure" order="1" sideWeight="0.49891067" side_tool="true" weight="0.19481482" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.5010941" visible="true" weight="0.21925926" />
+      <window_info id="Structure" order="1" sideWeight="0.4989059" side_tool="true" visible="true" weight="0.21925926" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49925926" visible="true" weight="0.32707775" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3847185" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49925926" weight="0.23592493" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.38739946" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -745,7 +740,6 @@
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="1)Z.phase 2)PoolForCls::chunk_dim 3)" />
     <MESSAGE value="1)DiffractiveLayer 2)Z.exp_euler" />
     <MESSAGE value="1)D2NNet::chunk 2)ChunkPool,BinaryChunk" />
     <MESSAGE value="1)D2NNet:::logit_loss,predict 2)init = &quot;anti_symmetry&quot; 3)ChunkPool::split 4)emnist" />
@@ -770,7 +764,8 @@
     <MESSAGE value="1)GetLayer_ 2)MF_WNet" />
     <MESSAGE value="1)visualize,MatPlot 2)MultiDNet::shareWeight" />
     <MESSAGE value="1)SUPP 2)MatPlot" />
-    <option name="LAST_COMMIT_MESSAGE" value="1)SUPP 2)MatPlot" />
+    <MESSAGE value="1)DNET:::image_all,highWay 2)visual::fig2data" />
+    <option name="LAST_COMMIT_MESSAGE" value="1)DNET:::image_all,highWay 2)visual::fig2data" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -855,6 +850,11 @@
           <line>65</line>
           <option name="timeStamp" value="364" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/python-package/onnet/D2NNet.py</url>
+          <line>206</line>
+          <option name="timeStamp" value="371" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -874,7 +874,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ONNet$mnist.coverage" NAME="mnist Coverage Results" MODIFIED="1576933334938" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="D:/Anaconda3/Lib/site-packages/torchvision/datasets" />
-    <SUITE FILE_PATH="coverage/ONNet$D2NNet.coverage" NAME="D2NNet Coverage Results" MODIFIED="1577877345537" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
+    <SUITE FILE_PATH="coverage/ONNet$D2NNet.coverage" NAME="D2NNet Coverage Results" MODIFIED="1578027486783" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$DiffractiveLayer.coverage" NAME="DiffractiveLayer Coverage Results" MODIFIED="1576221937884" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$BinaryDNet.coverage" NAME="BinaryDNet Coverage Results" MODIFIED="1576119870151" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$case_dog_cat.coverage" NAME="case_dog_cat Coverage Results" MODIFIED="1575962483412" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
@@ -885,7 +885,7 @@
     <SUITE FILE_PATH="coverage/ONNet$case_mnist.coverage" NAME="case_mnist Coverage Results" MODIFIED="1576328212748" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
     <SUITE FILE_PATH="coverage/ONNet$D2NN_tf.coverage" NAME="D2NN_tf Coverage Results" MODIFIED="1575956639323" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$case_face_detect.coverage" NAME="case_face_detect Coverage Results" MODIFIED="1575964746628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
-    <SUITE FILE_PATH="coverage/ONNet$case_mnist__1_.coverage" NAME="case_mnist (1) Coverage Results" MODIFIED="1577956317758" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ONNet$case_mnist__1_.coverage" NAME="case_mnist (1) Coverage Results" MODIFIED="1578027492872" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ONNet$case_mnist___.coverage" NAME="case_mnist - 副本 Coverage Results" MODIFIED="1575363618084" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/net_source" />
     <SUITE FILE_PATH="coverage/ONNet$SparseSupport.coverage" NAME="SparseSupport Coverage Results" MODIFIED="1577345365220" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$D2NN_tf__1_.coverage" NAME="D2NN_tf (1) Coverage Results" MODIFIED="1575542940093" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/net_source" />
@@ -1102,16 +1102,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/some_utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="665">
-          <caret line="36" column="32" selection-start-line="36" selection-start-column="32" selection-end-line="36" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/Anaconda3/Lib/site-packages/torchvision/transforms/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1192,16 +1182,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/Net_Instance.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="532">
-          <caret line="28" selection-start-line="28" selection-end-line="28" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/module.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="10089">
@@ -1229,17 +1209,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/case_mnist.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="253" selection-start-line="253" selection-end-line="253" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-            <element signature="e#9116#9499#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="274">
@@ -1250,17 +1219,48 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/some_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="121">
+          <caret line="42" column="58" selection-start-line="42" selection-start-column="58" selection-end-line="42" selection-end-column="58" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/python-package/onnet/Visualizing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="38" column="26" selection-start-line="38" selection-start-column="26" selection-end-line="38" selection-end-column="26" />
+        <state relative-caret-position="19">
+          <caret line="1" column="27" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/Net_Instance.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/case_mnist.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1098">
+          <caret line="227" selection-start-line="227" selection-end-line="227" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+            <element signature="e#9116#9499#0" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NNet.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="238" selection-start-line="238" selection-end-line="238" />
+        <state relative-caret-position="236">
+          <caret line="250" column="8" selection-start-line="250" selection-start-column="8" selection-end-line="250" selection-end-column="8" />
           <folding>
             <element signature="e#173#185#0" expanded="true" />
           </folding>

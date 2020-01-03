@@ -10,6 +10,8 @@
 
 - #### Diffractive network with multiple binary output plane
 
+  ![](./ONNet_wavelet.png)
+
 Optical neural network(ONN) is a novel machine learning framework on the physical principles of optics, which is still in its infancy and shows great potential. ONN tries to find optimal modulation parameters to change the phase, amplitude or other physical variable of optical wave propagation. So in the final output plane, the optical distribution has special pattern which is the indicator of object’s class or value. ONN opens new doors for the machine learning.
 
 
@@ -24,11 +26,18 @@ Please use the following bibtex entry:
 
 ## Future work
 
-More testing datasets ( ImageNet ......).
+- More testing datasets 
 
-Mote models.
+  ​	Cifar, ImageNet ......
 
-Some papers.
+- More models.
+
+  ​	Wavefront Matching Method
+
+  ​	Express network	
+
+- More papers.
+
 
 ## License
 

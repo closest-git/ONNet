@@ -77,7 +77,7 @@ class Visualize:
         if 'title' in params:
             title = params['title']
         path = '{}{}_.jpg'.format(self.img_dir, file_name)
-        sns.set(font_scale=2)
+        sns.set(font_scale=3)
         s = max(data.shape[1] / self.dpi, data.shape[0] / self.dpi)
         # fig.set_size_inches(18.5, 10.5)
         cmap = 'coolwarm'  # "plasma"  #https://matplotlib.org/examples/color/colormaps_reference.html

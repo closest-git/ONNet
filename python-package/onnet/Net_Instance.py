@@ -2,9 +2,7 @@ from .D2NNet import *
 import math
 import random
 
-nLayer = 5
-
-def DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass):
+def DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass,nLayer):
     if net_type == "BiDNet":
         lr_base = 0.01
     if dataset == "emnist":
