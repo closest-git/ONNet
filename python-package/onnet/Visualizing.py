@@ -1,9 +1,10 @@
 '''
     python -m visdom.server
     http://localhost:8097
+    <env_name>.json file present in your ~/.visdom directory.
 
     tensorboard --logdir=runs
-    http://localhost:6006/
+    http://localhost:6006/      非常奇怪的出错
 
     ONNX export failed on ATen operator ifft because torch.onnx.symbolic.ifft does not exist
 '''
@@ -159,7 +160,8 @@ class Visualize:
         result = self.HeatMap(img_.cpu().numpy(),file_name,params,noAxis=False)
         return result
 
-    def UpdateLoss(self,tag,loss,global_step=None):
+    def UpdateLoss(self,title,legend,loss,yLabel='LOSS',global_step=None):
+        tag = legend
         step = self.loss_step if global_step==None else global_step
         with SummaryWriter(log_dir=self.log_dir) as writer:
             writer.add_scalar(tag, loss, global_step=step)

@@ -20,7 +20,7 @@ dataset="fasion_mnist"
 #dataset="cifar"
 #dataset="mnist"
 # IMG_size = (28, 28)
-IMG_size = (56, 56)
+IMG_size = (112, 112)
 # IMG_size = (14, 14)
 batch_size = 128
 
@@ -120,7 +120,7 @@ test_trans = transforms.Compose([
     #transforms.Normalize((0.1307,), (0.3081,))
 ])
 
-def train(model, device, train_loader, epoch, optical_trans):
+def train(model, device, train_loader, epoch, optical_trans,visual):
     # optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9,weight_decay=0.0005)
     optimizer = torch.optim.Adam(model.parameters(), lr=model.config.learning_rate, weight_decay=0.0005)
     if epoch==1:
@@ -191,7 +191,7 @@ def main():
         num_workers = None
         pin_memory = False
 
-    nLayer = 5
+    nLayer = 10
     if dataset=="emnist":
         train_loader = torch.utils.data.DataLoader(
             datasets.EMNIST('./data',split="balanced", train=True, download=True, transform=train_trans),
@@ -241,15 +241,17 @@ def main():
                 m.weight.data.normal_(0, 2. / math.sqrt(m.in_features))
                 m.bias.data.zero_()
 
+    nzParams=0
     for name, param in model.named_parameters():
         if param.requires_grad:
+            nzParams+=param.nelement()
             print(f"\t{name}={param.nelement()}")
-    # Optimizer
+    print(f"========All parameters={nzParams}")
 
     accu_=[]
-    for epoch in range(1, 50):
+    for epoch in range(1, 33):
         model.visualize(visual, f"E[{epoch-1}")
-        train( model, device, train_loader, epoch, optical_trans)
+        train( model, device, train_loader, epoch, optical_trans,visual)
         acc = test(model, device, test_loader, optical_trans,visual)
         accu_.append(acc)
     print(f"\n=======\n=======accu_history={accu_}\n")

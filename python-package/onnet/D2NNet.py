@@ -25,7 +25,7 @@ class DNET_config:
         :param init_value: ["random","zero","random_reverse","reverse","chunk"]
         :param support:
         '''
-        self.custom_legend = "Express_OFF"      #for paper and debug
+        self.custom_legend = "Express Wavenet"  #"Express_OFF"  "Express Wavenet","Pan_OFF Express_OFF"    #for paper and debug
         self.seed = random_seed
         seed_everything(self.seed)
         self.init_value = init_value  # "random"  "zero"
@@ -129,7 +129,7 @@ class D2NNet(nn.Module):
         #self.init_value = "random"    #"random"  "zero"
         self.config = config
         self.title = f"DNNet"
-        self.highWay = 0        #2
+        self.highWay = 1        #2
 
         if self.config.output_chunk == "2D":
             assert(self.M*self.N>=self.nClass)
@@ -248,7 +248,10 @@ class D2NNet(nn.Module):
                 x = x*(1-s)
             elif self.highWay==1:
                 summary += x * self.wLayer[no]
-
+        if self.highWay==2:
+            x=x+summary
+        elif self.highWay == 1:
+            x = summary
 
         x = self.z_modulus(x).cuda()
 
