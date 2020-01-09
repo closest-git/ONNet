@@ -18,9 +18,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 #dataset="emnist"
-dataset="fasion_mnist"
+#dataset="fasion_mnist"
 #dataset="cifar"
-#dataset="mnist"
+dataset="mnist"
 # IMG_size = (28, 28)
 IMG_size = (112, 112)
 # IMG_size = (14, 14)
@@ -151,20 +151,34 @@ def train(model, device, train_loader, epoch, optical_trans,visual):
             #visual.UpdateLoss(title=f"Accuracy on \"{dataset}\"", legend=f"{model.legend()}", loss=aLoss, yLabel="Accuracy")
         #break
 
+def test_one_batch(model,data,target,device):
+    data, target = data.to(device), target.to(device)
+    output = model(data)
+    # output = model(data)
+    loss = model.loss(output, target, reduction='sum').item()  # sum up batch loss
+    pred = model.predict(output)
+    # pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
+    correct = pred.eq(target.view_as(pred)).sum().item()
+    return loss,correct
+
 def test(model, device, test_loader, optical_trans,visual):
     model.eval()
     test_loss = 0
     correct = 0
     with torch.no_grad():
         for data, target in test_loader:
-            data, target = data.to(device), target.to(device)
-            if optical_trans is not None:       data = optical_trans(data)
-            output = model(data)
-            #output = model(data)
-            test_loss += model.loss(output, target, reduction='sum').item() # sum up batch loss
-            pred = model.predict(output)
-            #pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
-            correct += pred.eq(target.view_as(pred)).sum().item()
+            loss, corr = test_one_batch(model, data, target, device)
+            test_loss += loss
+            correct += corr
+            if False:
+                data, target = data.to(device), target.to(device)
+                if optical_trans is not None:       data = optical_trans(data)
+                output = model(data)
+                #output = model(data)
+                test_loss += model.loss(output, target, reduction='sum').item() # sum up batch loss
+                pred = model.predict(output)
+                #pred = output.max(1, keepdim=True)[1]  # get the index of the max log-probability
+                correct += pred.eq(target.view_as(pred)).sum().item()
 
     test_loss /= len(test_loader.dataset)
     accu = 100. * correct / len(test_loader.dataset)
@@ -172,6 +186,33 @@ def test(model, device, test_loader, optical_trans,visual):
     if visual is not None:
         visual.UpdateLoss(title=f"Accuracy on \"{dataset}\"",legend=f"{model.legend()}", loss=accu,yLabel="Accuracy")
     return accu
+
+def Some_Test():
+    use_cuda = torch.cuda.is_available()
+    device = torch.device("cuda" if use_cuda else "cpu")
+    model_path = "E:/ONNet/checkpoint/DNNet_exp_W_H_Express Wavenet_[17,81.91]_.pth"
+    PTH = torch.load(model_path)
+    env_title, model = DNet_instance(PTH['net_type'], PTH['dataset'],
+                                     PTH['IMG_size'], PTH['lr_base'], PTH['batch_size'], PTH['nClass'], PTH['nLayer'])
+    epoch, acc = PTH['epoch'], PTH['acc']
+    model.load_state_dict(PTH['net'])
+    model.to(device)
+    print(f"Load model@{model_path} epoch={epoch},acc={acc}")
+
+    visual = Visdom_Visualizer(env_title,plots=[{"object":"output"}])
+    visual.img_dir = "./dump/X_images/"
+    test_loader = torch.utils.data.DataLoader(datasets.FashionMNIST('./data', train=False,transform=test_trans),
+        batch_size=batch_size, shuffle=False)
+    if True:    #only one batch
+        dataiter = iter(test_loader)
+        images, target = dataiter.next()
+        model.visual = visual
+        loss,correct = test_one_batch(model, images, target, device)
+        model.visual = None
+
+    if False:
+        acc_1 = test(model, device, test_loader, None, None)
+        print(f"Some_Test acc={acc}-{acc_1}")
 
 def main():
     lr_base = 0.002
@@ -277,34 +318,11 @@ def main():
     #if args.save_model:
     #   torch.save(model.state_dict(), "mnist_onn.pt")
 
-def Some_Test():
-    use_cuda = torch.cuda.is_available()
-    device = torch.device("cuda" if use_cuda else "cpu")
-    test_loader = torch.utils.data.DataLoader(datasets.FashionMNIST('./data', train=False,transform=test_trans),
-        batch_size=batch_size, shuffle=False)
-    if True:
-        dataiter = iter(test_loader)
-        images, labels = dataiter.next()
-        img_grid = torchvision.utils.make_grid(images)
-        plt.axis('off');    plt.grid(b=None)
-        plt.imshow(np.transpose(img_grid, (1, 2, 0)))
-        plt.show()
 
-    model_path = "E:/ONNet/checkpoint/DNNet_exp_W_H_Express Wavenet_[17,81.91]_.pth"
-    PTH = torch.load(model_path)
-    env_title, model = DNet_instance(PTH['net_type'], PTH['dataset'],
-            PTH['IMG_size'], PTH['lr_base'], PTH['batch_size'], PTH['nClass'], PTH['nLayer'])
-    epoch,acc = PTH['epoch'],PTH['acc']
-    model.load_state_dict(PTH['net'])
-    model.to(device)
-    print(f"Load model@{model_path} epoch={epoch},acc={acc}")
-
-    acc_1 = test(model, device, test_loader, None, None)
-    print(f"Some_Test acc={acc}-{acc_1}")
 
 
 
 
 if __name__ == '__main__':
-    Some_Test()
-    #main()
+    #Some_Test()
+    main()

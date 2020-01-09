@@ -183,25 +183,28 @@ class D2NNet(nn.Module):
 
     def visualize(self,visual,suffix):
         no = 0
-        images = []
-        path = f"{visual.img_dir}/{suffix}.jpg"
-        for no,layer in enumerate(self.DD):
-            info = f"{suffix},{no}]"
-            title = f"layer_{no+1}"
-            if self.highWay==2:
-                a = self.wLayer[no]
-                a = torch.sigmoid(a)
-                info = info+f"_{a:.2g}"
-            elif self.highWay==1:
-                a = self.wLayer[no]
-                info = info+f"_{a:.2g}"
-                title  = title+f" w={a:.2g}"
-            image = layer.visualize(visual,info,{'save':False,'title':title})
-            images.append(image)
-            no=no+1
-        image_all = np.concatenate(images, axis=1)
-        #cv2.imshow("", image_all);    cv2.waitKey(0)
-        cv2.imwrite(path,image_all)
+        for plot in visual.plots:
+            images,path = [],""
+            if plot['object']=='layer pattern':
+                path = f"{visual.img_dir}/{suffix}.jpg"
+                for no,layer in enumerate(self.DD):
+                    info = f"{suffix},{no}]"
+                    title = f"layer_{no+1}"
+                    if self.highWay==2:
+                        a = self.wLayer[no]
+                        a = torch.sigmoid(a)
+                        info = info+f"_{a:.2g}"
+                    elif self.highWay==1:
+                        a = self.wLayer[no]
+                        info = info+f"_{a:.2g}"
+                        title  = title+f" w={a:.2g}"
+                    image = layer.visualize(visual,info,{'save':False,'title':title})
+                    images.append(image)
+                    no=no+1
+            if len(images)>0:
+                image_all = np.concatenate(images, axis=1)
+            #cv2.imshow("", image_all);    cv2.waitKey(0)
+                cv2.imwrite(path,image_all)
 
     def legend(self):
         if self.config.custom_legend is not None:
@@ -239,9 +242,12 @@ class D2NNet(nn.Module):
             no = random.randint(0,nChannel-1)
             x = x[:,0:1,...]
         x = self.input_trans(x)
+        if hasattr(self,'visual'):            self.visual.onX(x.cpu(), f"X@input")
         summary = 0
         for no,layD in enumerate(self.DD):
+            info = layD.__repr__()
             x = layD(x)
+            if hasattr(self,'visual'):         self.visual.onX(self.z_modulus(x),f"X@{no+1}")
             if self.highWay==2:
                 s = torch.sigmoid(self.wLayer[no])
                 summary+=x*s
@@ -252,7 +258,7 @@ class D2NNet(nn.Module):
             x=x+summary
         elif self.highWay == 1:
             x = summary
-
+        if hasattr(self,'visual'):            self.visual.onX(self.z_modulus(x),f"X@output")
         x = self.z_modulus(x).cuda()
 
         output = self.do_classify(x)

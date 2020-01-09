@@ -35,8 +35,9 @@ def matplotlib_imshow(img, one_channel=False):
 
 
 class Visualize:
-    def __init__(self,env_title="onnet", **kwargs):
+    def __init__(self,env_title="onnet",plots=[], **kwargs):
         self.log_dir = f'runs/{env_title}'
+        self.plots = plots
         self.loss_step = 0
         self.writer = SummaryWriter(self.log_dir)
         self.img_dir="./dump/images/"
@@ -153,6 +154,21 @@ class Visualize:
             self.writer.add_graph(model,images )
             self.writer.close()
 
+    def onX(self,X,title):
+        img_grid = torchvision.utils.make_grid(X).detach().numpy()
+        plt.axis('off');
+        plt.grid(b=None)
+        image_np = np.transpose(img_grid, (1, 2, 0))
+        min_val,max_val = np.max(image_np),np.min(image_np)
+        image_np = (image_np - min_val) / (max_val - min_val)
+        if title is None:
+            plt.imshow(image_np)
+            plt.show()
+        else:
+            path = '{}{}_.jpg'.format(self.img_dir, title)
+            plt.imsave(path, image_np)
+
+
     def image(self, file_name, img_, params={}):
         #np.random.rand(3, 512, 256),
         #self.MatPlot(img_.cpu().numpy(),title=name)
@@ -174,8 +190,8 @@ class  Visdom_Visualizer(Visualize):
     调用原生的visdom接口
     '''
 
-    def __init__(self,env_title, **kwargs):
-        super(Visdom_Visualizer, self).__init__(env_title)
+    def __init__(self,env_title,plots=[], **kwargs):
+        super(Visdom_Visualizer, self).__init__(env_title,plots)
         self.viz = visdom.Visdom(env=env_title, **kwargs)
         assert self.viz.check_connection()
 
