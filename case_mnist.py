@@ -11,9 +11,11 @@ import sys
 ONNET_DIR = os.path.abspath("./python-package/")
 sys.path.append(ONNET_DIR)  # To find local version of the onnet
 from onnet import *
-
+import torchvision
+import cv2
 import math
-#nClass = 10
+import matplotlib.pyplot as plt
+import numpy as np
 
 #dataset="emnist"
 dataset="fasion_mnist"
@@ -129,8 +131,6 @@ def train(model, device, train_loader, epoch, optical_trans,visual):
         print(f"======={optimizer}")
         print(f"======={train_trans}\n")
 
-
-
     nClass = model.nClass
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
@@ -158,7 +158,8 @@ def test(model, device, test_loader, optical_trans,visual):
     with torch.no_grad():
         for data, target in test_loader:
             data, target = data.to(device), target.to(device)
-            output = model(optical_trans(data))
+            if optical_trans is not None:       data = optical_trans(data)
+            output = model(data)
             #output = model(data)
             test_loss += model.loss(output, target, reduction='sum').item() # sum up batch loss
             pred = model.predict(output)
@@ -168,7 +169,8 @@ def test(model, device, test_loader, optical_trans,visual):
     test_loss /= len(test_loader.dataset)
     accu = 100. * correct / len(test_loader.dataset)
     print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.2f}%)\n'.format(test_loss, correct, len(test_loader.dataset),accu))
-    visual.UpdateLoss(title=f"Accuracy on \"{dataset}\"",legend=f"{model.legend()}", loss=accu,yLabel="Accuracy")
+    if visual is not None:
+        visual.UpdateLoss(title=f"Accuracy on \"{dataset}\"",legend=f"{model.legend()}", loss=accu,yLabel="Accuracy")
     return accu
 
 def main():
@@ -248,16 +250,61 @@ def main():
             print(f"\t{name}={param.nelement()}")
     print(f"========All parameters={nzParams}")
 
+    acc,best_acc = 0,0
     accu_=[]
     for epoch in range(1, 33):
+        if False:
+            assert os.path.isdir('checkpoint')
+            pth_path = f'./checkpoint/{model.title}_[{epoch},{acc}]_.pth'
+            torch.save({'net': model.state_dict(), 'acc': acc, 'epoch': epoch,}, pth_path)
+
         model.visualize(visual, f"E[{epoch-1}")
         train( model, device, train_loader, epoch, optical_trans,visual)
         acc = test(model, device, test_loader, optical_trans,visual)
         accu_.append(acc)
+        if acc > best_acc:
+            state = {
+                'net_type':net_type,'dataset':dataset,'IMG_size':IMG_size,'lr_base':lr_base,
+                'batch_size':batch_size,'nClass':nClass, 'nLayer':nLayer,
+                'net': model.state_dict(), 'acc': acc,'epoch': epoch,
+            }
+            assert os.path.isdir('checkpoint')
+            pth_path = f'./checkpoint/{model.title}_[{epoch},{acc}]_.pth'
+            torch.save(state, pth_path)
+            best_acc = acc
     print(f"\n=======\n=======accu_history={accu_}\n")
 
-    if args.save_model:
-        torch.save(model.state_dict(), "mnist_onn.pt")
+    #if args.save_model:
+    #   torch.save(model.state_dict(), "mnist_onn.pt")
+
+def Some_Test():
+    use_cuda = torch.cuda.is_available()
+    device = torch.device("cuda" if use_cuda else "cpu")
+    test_loader = torch.utils.data.DataLoader(datasets.FashionMNIST('./data', train=False,transform=test_trans),
+        batch_size=batch_size, shuffle=False)
+    if True:
+        dataiter = iter(test_loader)
+        images, labels = dataiter.next()
+        img_grid = torchvision.utils.make_grid(images)
+        plt.axis('off');    plt.grid(b=None)
+        plt.imshow(np.transpose(img_grid, (1, 2, 0)))
+        plt.show()
+
+    model_path = "E:/ONNet/checkpoint/DNNet_exp_W_H_Express Wavenet_[17,81.91]_.pth"
+    PTH = torch.load(model_path)
+    env_title, model = DNet_instance(PTH['net_type'], PTH['dataset'],
+            PTH['IMG_size'], PTH['lr_base'], PTH['batch_size'], PTH['nClass'], PTH['nLayer'])
+    epoch,acc = PTH['epoch'],PTH['acc']
+    model.load_state_dict(PTH['net'])
+    model.to(device)
+    print(f"Load model@{model_path} epoch={epoch},acc={acc}")
+
+    acc_1 = test(model, device, test_loader, None, None)
+    print(f"Some_Test acc={acc}-{acc_1}")
+
+
+
 
 if __name__ == '__main__':
-    main()
+    Some_Test()
+    #main()
