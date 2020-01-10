@@ -12,6 +12,7 @@ from .Z_utils import COMPLEX_utils
 from .BinaryDNet import *
 from .Net_Instance import *
 from .Visualizing import *
+from .some_utils import *
 '''
 try:
 except ImportError:
@@ -29,6 +30,8 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 #print(f"__init_ dir_path={dir_path}")
 
 __all__ = ['D2NNet','DNET_config','DNet_instance',
-           'OpticalTrans','COMPLEX_utils','MultiDNet','BinaryDNet','Visualize','Visdom_Visualizer']
+           'OpticalTrans','COMPLEX_utils','MultiDNet','BinaryDNet','Visualize','Visdom_Visualizer',
+           'seed_everything'
+           ]
 
 

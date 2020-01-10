@@ -129,7 +129,7 @@ class D2NNet(nn.Module):
         #self.init_value = "random"    #"random"  "zero"
         self.config = config
         self.title = f"DNNet"
-        self.highWay = 1        #2
+        self.highWay = 3        #2
 
         if self.config.output_chunk == "2D":
             assert(self.M*self.N>=self.nClass)
@@ -247,19 +247,25 @@ class D2NNet(nn.Module):
         for no,layD in enumerate(self.DD):
             info = layD.__repr__()
             x = layD(x)
-            if hasattr(self,'visual'):         self.visual.onX(self.z_modulus(x),f"X@{no+1}")
+            if hasattr(self,'visual'):         self.visual.onX(x,f"X@{no+1}")
             if self.highWay==2:
                 s = torch.sigmoid(self.wLayer[no])
                 summary+=x*s
                 x = x*(1-s)
             elif self.highWay==1:
                 summary += x * self.wLayer[no]
+            elif self.highWay==3:
+                summary += self.z_modulus(x).cuda() * self.wLayer[no]
         if self.highWay==2:
             x=x+summary
+            x = self.z_modulus(x).cuda()
         elif self.highWay == 1:
             x = summary
-        if hasattr(self,'visual'):            self.visual.onX(self.z_modulus(x),f"X@output")
-        x = self.z_modulus(x).cuda()
+            x = self.z_modulus(x).cuda()
+        elif self.highWay == 3:
+            x = summary
+        if hasattr(self,'visual'):            self.visual.onX(x,f"X@output")
+
 
         output = self.do_classify(x)
         return output

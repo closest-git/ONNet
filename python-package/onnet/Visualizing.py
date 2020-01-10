@@ -21,6 +21,7 @@ import numpy as np
 import torchvision
 import cv2
 from torchvision import datasets, transforms
+from .Z_utils import COMPLEX_utils as Z
 
 def matplotlib_imshow(img, one_channel=False):
     if one_channel:
@@ -155,6 +156,10 @@ class Visualize:
             self.writer.close()
 
     def onX(self,X,title):
+        if Z.isComplex(X):
+            #X = torch.cat([X[..., 0],X[..., 1]],0)
+            X = Z.modulus(X)
+            X = X.cpu()
         img_grid = torchvision.utils.make_grid(X).detach().numpy()
         plt.axis('off');
         plt.grid(b=None)

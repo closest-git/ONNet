@@ -21,9 +21,10 @@ import time
 import torch.nn as nn
 import torch.nn.init as init
 
+
 # The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with 6000 images per class. There are 50000 training images and 10000 test images. The dataset is divided into five training batches and one test batch, each with 10000 images.
-IMG_size = (64, 64)
-isDNet = True
+IMG_size = (32, 32)
+isDNet = False
 
 def get_mean_and_std(dataset):
     '''Compute the mean and std value of dataset.'''
@@ -152,7 +153,7 @@ def Init():
     print('==> Preparing data..')
     transform_train = transforms.Compose([
         #transforms.RandomCrop(32, padding=4),
-        transforms.Grayscale(),
+        #transforms.Grayscale(),
         #transforms.RandomHorizontalFlip(),
         transforms.Resize(IMG_size),
         transforms.ToTensor(),
@@ -160,7 +161,7 @@ def Init():
     ])
 
     transform_test = transforms.Compose([
-        transforms.Grayscale(),
+        #transforms.Grayscale(),
         transforms.Resize(IMG_size),
         transforms.ToTensor(),
         #transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
@@ -185,7 +186,7 @@ def Init():
         config_base = net.config
     else:
         # net = VGG('VGG19')
-        # net = ResNet18()
+        net = ResNet18();           env_title='ResNet18';       net.legend = 'ResNet18'
         # net = PreActResNet18()
         # net = GoogLeNet()
         # net = DenseNet121()
@@ -196,9 +197,9 @@ def Init():
         # net = ShuffleNetG2()
         # net = SENet18()
         # net = ShuffleNetV2(1)
-        net = EfficientNetB0()
+        # net = EfficientNetB0();   env_title='EfficientNetB0'
         #visual = Visdom_Visualizer(env_title=env_title)
-        env_title='EfficientNetB0'
+
     print(net)
     net = net.to(device)
     visual = Visdom_Visualizer(env_title=env_title)
@@ -273,7 +274,7 @@ def test(epoch,net,testloader,criterion,visual):
 
     # Save checkpoint.
     acc = 100.*correct/total
-    legend = net.module.legend()
+    legend = "resnet"#net.module.legend()
     visual.UpdateLoss(title=f"Accuracy on \"cifar_10\"", legend=f"{legend}", loss=acc, yLabel="Accuracy")
     if False and acc > best_acc:
         print('Saving..')
@@ -288,8 +289,9 @@ def test(epoch,net,testloader,criterion,visual):
         best_acc = acc
 
 if __name__ == '__main__':
+    seed_everything(42)
     net,trainloader,testloader,optimizer,criterion,visual = Init()
-    legend = net.module.legend()
+    #legend = net.module.legend()
 
     for epoch in range(start_epoch, start_epoch+200):
         train(epoch,net,trainloader,optimizer,criterion)

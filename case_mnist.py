@@ -319,10 +319,6 @@ def main():
     #   torch.save(model.state_dict(), "mnist_onn.pt")
 
 
-
-
-
-
 if __name__ == '__main__':
     #Some_Test()
     main()
