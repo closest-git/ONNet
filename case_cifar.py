@@ -24,7 +24,7 @@ import torch.nn.init as init
 
 # The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with 6000 images per class. There are 50000 training images and 10000 test images. The dataset is divided into five training batches and one test batch, each with 10000 images.
 IMG_size = (32, 32)
-isDNet = False
+isDNet = True
 
 def get_mean_and_std(dataset):
     '''Compute the mean and std value of dataset.'''
@@ -178,11 +178,8 @@ def Init():
     # Model
     print('==> Building model..')
     if isDNet:
-        batch_size = 128
-        lr_base = 0.005
-        # net_type = "cnn"
-        net_type = "DNet"
-        env_title, net = DNet_instance(net_type, 'cifar_10', IMG_size, lr_base, batch_size, 10)
+        config_0 = OptiCNN_config("OptiCNN", 'cifar_10', IMG_size, lr_base=0.005, batch_size=128, nClass=10, nLayer=5)
+        env_title, net = OptiCNN_instance(config_0)
         config_base = net.config
     else:
         # net = VGG('VGG19')
@@ -219,7 +216,7 @@ def Init():
 
     criterion = nn.CrossEntropyLoss()
     if isDNet:
-        optimizer = optim.Adam(net.parameters(), lr=config_base.learning_rate, weight_decay=0.0005)
+        optimizer = optim.Adam(net.parameters(), lr=config_base.lr_base, weight_decay=0.0005)
     else:
         optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
 

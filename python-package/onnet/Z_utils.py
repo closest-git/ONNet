@@ -65,9 +65,11 @@ class COMPLEX_utils(object):
     @staticmethod
     def modulus(x):
         shape = x.size()[:-1]
-        norm = torch.zeros(shape).double()
-        #norm[...,0] = (x[...,0]*x[...,0] + x[...,1]*x[...,1]).sqrt()
-        norm[...] = (x[..., 0] * x[..., 0] + x[..., 1] * x[..., 1]).sqrt()
+        if False:
+            norm = torch.zeros(shape)
+            if x.dtype==torch.float64:
+                norm = norm.double()
+        norm = (x[..., 0] * x[..., 0] + x[..., 1] * x[..., 1]).sqrt()
         return norm
 
     @staticmethod

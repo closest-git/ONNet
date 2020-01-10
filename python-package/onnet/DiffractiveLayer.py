@@ -107,7 +107,7 @@ class DiffractiveLayer(torch.nn.Module):
         df = 1.0 / self.dL
 
         z0 = Z.fft(z0)
-        u1 = Z.Hadamard(z0,self.H_z)
+        u1 = Z.Hadamard(z0,self.H_z.float())
         u2 = Z.fft(u1,"C2C",inverse=True)
         return  u2 * N * N * df * df
 
@@ -127,7 +127,7 @@ class DiffractiveLayer(torch.nn.Module):
     def forward(self, x):
         diffrac = self.Diffractive_(x)
         amp_s = self.GetTransCoefficient()
-        x = Z.Hadamard(diffrac,amp_s)
+        x = Z.Hadamard(diffrac,amp_s.float())
         if(self.config.rDrop>0):
             drop = Z.rDrop2D(1-self.rDrop,(self.M,self.N),isComlex=True)
             x = Z.Hadamard(x, drop)

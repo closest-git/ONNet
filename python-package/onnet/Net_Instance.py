@@ -1,14 +1,22 @@
 from .D2NNet import *
+from .OptiCNN import *
 import math
 import random
+from copy import copy, deepcopy
 
-def DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass,nLayer):
+
+#def DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass,nLayer):     需要重写，只有一个config
+def DNet_instance(config):
+    net_type, dataset, IMG_size, lr_base, batch_size, nClass, nLayer = \
+        config.net_type,config.data_set, config.IMG_size, config.lr_base, config.batch_size, config.nClass, config.nLayer
     if net_type == "BiDNet":
         lr_base = 0.01
     if dataset == "emnist":
         lr_base = 0.01
 
     config_base = DNET_config(batch=batch_size, lr_base=lr_base)
+    if hasattr(config,'feat_extractor'):
+        config_base.feat_extractor = config.feat_extractor
     env_title = f"{net_type}_{dataset}_{IMG_size}_{lr_base}_{config_base.env_title()}"
     if net_type == "MF_DNet":
         freq_list = [0.3e12, 0.35e12, 0.4e12, 0.42e12]
@@ -35,7 +43,19 @@ def DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass,nLayer):
         model = D2NNet(IMG_size, nClass, nLayer, config_base)
         # model = D2NNet(IMG_size, nClass,nLayer, DNET_config(chunk="logit"))
         #model = BinaryDNet(IMG_size,nClass,nLayer,1, config_base)
-    model.double()
+
+    #model.double()
+
+    return env_title, model
+
+def OptiCNN_instance(config):
+    assert config.net_type == "OptiCNN"
+    env_title = f"{config.net_type}_{config.data_set}_{config.IMG_size}_{config.lr_base}_"
+    d_conf = deepcopy(config)
+    d_conf.net_type = "WNet"
+    d_conf.feat_extractor = "layers"
+    _,DNet = DNet_instance(d_conf)
+    model = OptiCNN(config,DNet)
 
     return env_title, model
 

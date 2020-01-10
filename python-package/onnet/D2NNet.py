@@ -129,7 +129,9 @@ class D2NNet(nn.Module):
         #self.init_value = "random"    #"random"  "zero"
         self.config = config
         self.title = f"DNNet"
-        self.highWay = 3        #2
+        self.highWay = 1        #1,2,3
+        if hasattr(self.config,'feat_extractor'):
+            self.feat_extractor = []
 
         if self.config.output_chunk == "2D":
             assert(self.M*self.N>=self.nClass)
@@ -219,7 +221,8 @@ class D2NNet(nn.Module):
         return main_str
 
     def input_trans(self,x):    # square-rooted and normalized
-        x = x.double()*self.config.input_scale
+        #x = x.double()*self.config.input_scale
+        x = x*self.config.input_scale
         x = torch.sqrt(x)
         return x
 
@@ -235,6 +238,9 @@ class D2NNet(nn.Module):
         # output = F.log_softmax(x, dim=1)
         return x
 
+    def OnLayerFeats(self):
+        pass
+
     def forward(self, x):
         nSamp,nChannel = x.shape[0],x.shape[1]
         assert(nChannel==1)
@@ -247,6 +253,8 @@ class D2NNet(nn.Module):
         for no,layD in enumerate(self.DD):
             info = layD.__repr__()
             x = layD(x)
+            if hasattr(self,'feat_extractor'):
+                self.feat_extractor.append((self.z_modulus(x),self.wLayer[no]))
             if hasattr(self,'visual'):         self.visual.onX(x,f"X@{no+1}")
             if self.highWay==2:
                 s = torch.sigmoid(self.wLayer[no])
@@ -255,20 +263,23 @@ class D2NNet(nn.Module):
             elif self.highWay==1:
                 summary += x * self.wLayer[no]
             elif self.highWay==3:
-                summary += self.z_modulus(x).cuda() * self.wLayer[no]
+                summary += self.z_modulus(x) * self.wLayer[no]
         if self.highWay==2:
             x=x+summary
-            x = self.z_modulus(x).cuda()
+            x = self.z_modulus(x)
         elif self.highWay == 1:
             x = summary
-            x = self.z_modulus(x).cuda()
+            x = self.z_modulus(x)
         elif self.highWay == 3:
             x = summary
         if hasattr(self,'visual'):            self.visual.onX(x,f"X@output")
 
 
-        output = self.do_classify(x)
-        return output
+        if hasattr(self,'feat_extractor'):
+            return
+        else:
+            output = self.do_classify(x)
+            return output
 
 class MultiDNet(D2NNet):
     def __init__(self, IMG_size,nCls,nInterDifrac,freq_list,config,shareWeight=True):
@@ -314,8 +325,8 @@ class MultiDNet(D2NNet):
             #x = x0.double()
             for layD in fNet:
                 x = layD(x)
-            #x_sum = torch.max(x_sum,self.z_modulus(x).cuda()).values()
-            x_sum += self.z_modulus(x).cuda()*self.wFreq[id]
+            #x_sum = torch.max(x_sum,self.z_modulus(x))).values()
+            x_sum += self.z_modulus(x)*self.wFreq[id]
         x = x_sum
 
         output = self.do_classify(x)

@@ -267,7 +267,8 @@ def main():
             datasets.MNIST('./data', train=False,transform=test_trans),
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
 
-    env_title, model = DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass,nLayer)
+    config_0 = NET_config(net_type,dataset,IMG_size,lr_base,batch_size,nClass,nLayer)
+    env_title, model = DNet_instance(config_0)          #net_type,dataset,IMG_size,lr_base,batch_size,nClass,nLayer
     visual = Visdom_Visualizer(env_title=env_title)
     # visual = Visualize(env_title=env_title)
     model.to(device)
