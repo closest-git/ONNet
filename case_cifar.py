@@ -57,7 +57,7 @@ def init_params(net):
 
 #_, term_width = os.popen('stty size', 'r').read().split()
 term_width = 80
-TOTAL_BAR_LENGTH = 65.
+TOTAL_BAR_LENGTH = 25.
 last_time = time.time()
 begin_time = last_time
 def progress_bar(current, total, msg=None):
@@ -239,7 +239,7 @@ def train(epoch,net,trainloader,optimizer,criterion):
         optimizer.zero_grad()
         outputs = net(inputs)
         loss = criterion(outputs, targets)
-        loss.backward(retain_graph=True)
+        loss.backward()     #retain_graph=True
         optimizer.step()
 
         train_loss += loss.item()

@@ -36,6 +36,19 @@ def image_transformer():
         ]),
     }
 
+
+
+    def forward_000(self, x):
+        if False:
+            gray = x[:, 0:1]  # to_grayscale(x)
+            self.DNet.forward(gray)
+            # in_opti = self.DNet.concat_layer_modulus()  # self.get_resnet_convs_out(x)
+            for opti, w in self.DNet.feat_extractor:
+                opti = torch.stack([opti, opti, opti], 1).squeeze()  # opti.repeat(3, 1)
+                out_opti = self.resNet.forward(opti)
+                out_sum = out_sum + out_opti * w
+        pass
+
 class OptiCNN(torch.nn.Module):
     def pick_models(self):
         model_names = sorted(name for name in models.__dict__
@@ -70,13 +83,18 @@ class OptiCNN(torch.nn.Module):
 
     def __init__(self, config,DNet):
         super(OptiCNN, self).__init__()
-
+        seed_everything(42)
         self.config = config
 
         self.pick_models()
-        self.resNet = models.resnet18(pretrained=True)
-        self.DNet = DNet
-        print(f"=> creating model back_bone='{self.resNet}' DNet={self.DNet}")
+        backbone = models.resnet18(pretrained=True)
+        #self.DInput = D_input(config,DNet)
+        if hasattr(self,'DInput'):
+            self.CNet = nn.Sequential(*list(backbone.children())[1:])
+        else:
+            self.CNet = nn.Sequential(*list(backbone.children()))
+
+        #print(f"=> creating model CNet='{self.CNet}'\nDNet={self.DNet}")
         if False:   #外层处理
             if config.gpu_device is not None:
                 self.cuda(config.gpu_device)
@@ -92,36 +110,21 @@ class OptiCNN(torch.nn.Module):
     def save_acti(self,x,name):
         acti = x.cpu().data.numpy()
         self.activations.append({'name':name,'shape':acti.shape,'activation':acti})
-#https://forums.fast.ai/t/pytorch-best-way-to-get-at-intermediate-layers-in-vgg-and-resnet/5707/6
-    def get_resnet_all_out(self, x):
-        self.activations=[]
-        self.save_acti(x, "input")
-        x = self.resNet.conv1(x)  # out = [N, 64, 112, 112]
-        self.save_acti(x,"conv1")
-        x = self.resNet.bn1(x)
-        x = self.resNet.relu(x)
-        x = self.resNet.maxpool(x)  # out = [N, 64, 56, 56]
 
-        x = self.resNet.layer1(x)  # out = [N, 64, 56, 56]
-        self.save_acti(x,"layer1")
-        x = self.resNet.layer2(x)  # out = [N, 128, 28, 28]
-        self.save_acti(x, "layer2")
-        x = self.resNet.layer3(x)  # out = [N, 256, 14, 14]
-        self.save_acti(x, "layer3")
-        x = self.resNet.layer4(x)  # out = [N, 512, 7, 7]
-        self.save_acti(x, "layer4")
-        return x  # out = [N, 512, 1 ,1]
+#https://forums.fast.ai/t/pytorch-best-way-to-get-at-intermediate-layers-in-vgg-and-resnet/5707/6
+
 
     def forward(self, x):
-        out_sum = self.resNet.forward(x)
-        if False:
-            gray = x[:,0:1]#to_grayscale(x)
-            self.DNet.forward(gray)
-            #in_opti = self.DNet.concat_layer_modulus()  # self.get_resnet_convs_out(x)
-            for opti,w in self.DNet.feat_extractor:
-                opti = torch.stack([opti,opti,opti],1).squeeze()   #opti.repeat(3, 1)
-                out_opti = self.resNet.forward(opti)
-                out_sum = out_sum+out_opti*w
+        if hasattr(self, 'DInput'):
+            x = self.DInput(x)
+        for no,lay in enumerate(self.CNet):
+            #print(f"{no}:\t{lay}")
+            x = lay(x)
+            if isinstance(lay,nn.AdaptiveAvgPool2d):       #x = self.avgpool(x),        x = x.reshape(x.size(0), -1)
+                x = x.reshape(x.size(0), -1)
+        out_sum = x
+        #out_sum = self.CNet.forward(x)
+
         return out_sum
 
 
