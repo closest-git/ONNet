@@ -1,3 +1,6 @@
+
+import torch
+
 class NET_config:
     def __init__(self,net_type, data_set, IMG_size, lr_base, batch_size,nClass,nLayer):
         #seed_everything(self.seed)

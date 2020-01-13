@@ -215,6 +215,7 @@ def Some_Test():
         print(f"Some_Test acc={acc}-{acc_1}")
 
 def main():
+    #OnInitInstance()
     lr_base = 0.002
     parser = argparse.ArgumentParser(description='MNIST optical_trans  + hybrid examples')
     parser.add_argument('--mode', type=int, default=2,help='optical_trans 1st or 2nd order')

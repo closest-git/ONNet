@@ -242,6 +242,8 @@ class D2NNet(nn.Module):
         pass
 
     def forward(self, x):
+        if hasattr(self, 'feat_extractor'):
+            self.feat_extractor.clear()
         nSamp,nChannel = x.shape[0],x.shape[1]
         assert(nChannel==1)
         if nChannel>1:

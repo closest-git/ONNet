@@ -92,7 +92,7 @@ class OptiCNN(torch.nn.Module):
     def save_acti(self,x,name):
         acti = x.cpu().data.numpy()
         self.activations.append({'name':name,'shape':acti.shape,'activation':acti})
-
+#https://forums.fast.ai/t/pytorch-best-way-to-get-at-intermediate-layers-in-vgg-and-resnet/5707/6
     def get_resnet_all_out(self, x):
         self.activations=[]
         self.save_acti(x, "input")
@@ -114,10 +114,14 @@ class OptiCNN(torch.nn.Module):
 
     def forward(self, x):
         out_sum = self.resNet.forward(x)
-        gray = x[:,0:1]#to_grayscale(x)
-        self.DNet.forward(gray.double())
-        #in_opti = self.DNet.concat_layer_modulus()  # self.get_resnet_convs_out(x)
-
+        if False:
+            gray = x[:,0:1]#to_grayscale(x)
+            self.DNet.forward(gray)
+            #in_opti = self.DNet.concat_layer_modulus()  # self.get_resnet_convs_out(x)
+            for opti,w in self.DNet.feat_extractor:
+                opti = torch.stack([opti,opti,opti],1).squeeze()   #opti.repeat(3, 1)
+                out_opti = self.resNet.forward(opti)
+                out_sum = out_sum+out_opti*w
         return out_sum
 
 
