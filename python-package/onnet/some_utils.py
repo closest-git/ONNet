@@ -1,7 +1,10 @@
 import numpy as np
 import math
 import random
+import torch
+import sys
 import os
+import psutil
 
 def split__sections(dim_0,nClass):
     split_dim = range(dim_0)
@@ -45,9 +48,10 @@ def seed_everything(seed=0):
     os.environ['PYTHONHASHSEED'] = str(seed)
     np.random.seed(seed)
     #https://pytorch.org/docs/stable/notes/randomness.html
-    import torch
+
     torch.manual_seed(seed)
     if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
 
     torch.backends.cudnn.deterministic = True
@@ -64,11 +68,6 @@ def seed_everything(seed=0):
             torch.cuda.manual_seed_all(seed+3)
             torch.backends.cudnn.deterministic = True
 '''
-
-import torch
-import sys
-import os
-import psutil
 
 def cpuStats():
     print(sys.version)

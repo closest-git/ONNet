@@ -1,6 +1,8 @@
 '''
     Train CIFAR10 with PyTorch.
     https://github.com/kuangliu/pytorch-cifar
+
+    https://medium.com/@wwwbbb8510/lessons-learned-from-reproducing-resnet-and-densenet-on-cifar-10-dataset-6e25b03328da
 '''
 import torch
 import torch.nn as nn
@@ -12,7 +14,9 @@ import torchvision.transforms as transforms
 import os
 import sys
 import argparse
-from models import *
+CNN_MODEL_root = os.path.dirname(os.path.abspath(__file__))+"/python-package"
+sys.path.append(CNN_MODEL_root)
+from cnn_models import *
 ONNET_DIR = os.path.abspath("./python-package/")
 sys.path.append(ONNET_DIR)  # To find local version of the onnet
 from onnet import *
@@ -174,11 +178,10 @@ def Init():
     testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
 
     classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
-
     # Model
     print('==> Building model..')
     if isDNet:
-        config_0 = OptiCNN_config("OptiCNN", 'cifar_10', IMG_size, lr_base=0.005, batch_size=128, nClass=10, nLayer=5)
+        config_0 = OptiCNN_config("OptiCNN", 'cifar_10', IMG_size, lr_base=0.1, batch_size=128, nClass=10, nLayer=5)
         env_title, net = OptiCNN_instance(config_0)
         config_base = net.config
     else:
@@ -190,7 +193,8 @@ def Init():
         # net = ResNeXt29_2x64d()
         # net = MobileNet()
         # net = MobileNetV2()
-        # net = DPN92()
+        # net = DPN92();                  env_title='DPN92';       net.legend = 'DPN92'
+        # net = DPN26();        env_title = 'DPN92';        net.legend = 'DPN92'
         # net = ShuffleNetG2()
         # net = SENet18()
         # net = ShuffleNetV2(1)
@@ -202,8 +206,8 @@ def Init():
     visual = Visdom_Visualizer(env_title=env_title)
 
     if device == 'cuda':
-        net = torch.nn.DataParallel(net)
-        cudnn.benchmark = True
+        net = torch.nn.DataParallel(net)        #https://pytorch.org/tutorials/beginner/former_torchies/parallelism_tutorial.html
+        #cudnn.benchmark = True     #结果会有扰动 https://zhuanlan.zhihu.com/p/73711222
 
     if args.resume:
         # Load checkpoint.
@@ -215,10 +219,8 @@ def Init():
         start_epoch = checkpoint['epoch']
 
     criterion = nn.CrossEntropyLoss()
-    if isDNet:
-        optimizer = optim.Adam(net.parameters(), lr=config_base.lr_base, weight_decay=0.0005)
-    else:
-        optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
+    #optimizer = optim.Adam(net.parameters(), lr=config_base.lr_base, weight_decay=0.0005)
+    optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
 
     return net,trainloader,testloader,optimizer,criterion,visual
 
@@ -248,6 +250,7 @@ def train(epoch,net,trainloader,optimizer,criterion):
         correct += predicted.eq(targets).sum().item()
         progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
             % (train_loss/(batch_idx+1), 100.*correct/total, correct, total))
+        #break
 
 
 def test(epoch,net,testloader,criterion,visual):
@@ -268,6 +271,7 @@ def test(epoch,net,testloader,criterion,visual):
             correct += predicted.eq(targets).sum().item()
             progress_bar(batch_idx, len(testloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
                          % (test_loss / (batch_idx + 1), 100. * correct / total, correct, total))
+            #break
 
     # Save checkpoint.
     acc = 100.*correct/total

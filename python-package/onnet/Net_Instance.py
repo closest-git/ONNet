@@ -1,7 +1,6 @@
 from .D2NNet import *
 from .OptiCNN import *
 import math
-import random
 from copy import copy, deepcopy
 
 
@@ -50,7 +49,7 @@ def DNet_instance(config):
 
 def OptiCNN_instance(config):
     assert config.net_type == "OptiCNN"
-    env_title = f"{config.net_type}_{config.data_set}_{config.IMG_size}_{config.lr_base}_"
+    env_title = f"{config.net_type}_{config.dnet_type}_{config.data_set}_{config.IMG_size}_{config.lr_base}_"
     d_conf = deepcopy(config)
     d_conf.nLayer = 2
     d_conf.net_type = "WNet"
