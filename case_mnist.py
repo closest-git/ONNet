@@ -123,6 +123,7 @@ test_trans = transforms.Compose([
 ])
 
 def train(model, device, train_loader, epoch, optical_trans,visual):
+    #model.visual = visual
     # optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9,weight_decay=0.0005)
     optimizer = torch.optim.Adam(model.parameters(), lr=model.config.learning_rate, weight_decay=0.0005)
     if epoch==1:

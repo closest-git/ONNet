@@ -155,11 +155,16 @@ class Visualize:
             self.writer.add_graph(model,images )
             self.writer.close()
 
-    def onX(self,X,title):
+    def onX(self,X,title,nMostPic=64):
+        shape = X.shape
         if Z.isComplex(X):
             #X = torch.cat([X[..., 0],X[..., 1]],0)
             X = Z.modulus(X)
             X = X.cpu()
+        if shape[1]!=1:
+            X = X.contiguous().view(shape[0]*shape[1],1,shape[-2],shape[-1]).cpu()
+        if X.shape[0]>nMostPic:
+            X=X[:nMostPic,...]
         img_grid = torchvision.utils.make_grid(X).detach().numpy()
         plt.axis('off');
         plt.grid(b=None)

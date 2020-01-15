@@ -144,7 +144,7 @@ def format_time(seconds):
 
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
-parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
+parser.add_argument('--lr', default=0.01, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', action='store_true', help='resume from checkpoint')
 args = parser.parse_args()
 
@@ -181,12 +181,12 @@ def Init():
     # Model
     print('==> Building model..')
     if isDNet:
-        config_0 = OptiCNN_config("OptiCNN", 'cifar_10', IMG_size, lr_base=0.1, batch_size=128, nClass=10, nLayer=5)
+        config_0 = OptiCNN_config("OptiCNN", 'cifar_10', IMG_size, lr_base=args.lr, batch_size=128, nClass=10, nLayer=5)
         env_title, net = OptiCNN_instance(config_0)
         config_base = net.config
     else:
         # net = VGG('VGG19')
-        net = ResNet18();           env_title='ResNet18';       net.legend = 'ResNet18'
+        net = ResNet34();           env_title='ResNet50';       net.legend = 'ResNet50'
         # net = PreActResNet18()
         # net = GoogLeNet()
         # net = DenseNet121()
@@ -204,6 +204,7 @@ def Init():
     print(net)
     net = net.to(device)
     visual = Visdom_Visualizer(env_title=env_title)
+    #if hasattr(net, 'DInput'): net.DInput.visual = visual  # 看一看
 
     if device == 'cuda':
         net = torch.nn.DataParallel(net)        #https://pytorch.org/tutorials/beginner/former_torchies/parallelism_tutorial.html
@@ -219,7 +220,8 @@ def Init():
         start_epoch = checkpoint['epoch']
 
     criterion = nn.CrossEntropyLoss()
-    #optimizer = optim.Adam(net.parameters(), lr=config_base.lr_base, weight_decay=0.0005)
+#using SGD with scheduled learning rate much better than Adam
+    #optimizer = optim.Adam(net.parameters(), lr=args.lr, weight_decay=0.0005)
     optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
 
     return net,trainloader,testloader,optimizer,criterion,visual

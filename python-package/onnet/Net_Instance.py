@@ -51,7 +51,7 @@ def OptiCNN_instance(config):
     assert config.net_type == "OptiCNN"
     env_title = f"{config.net_type}_{config.dnet_type}_{config.data_set}_{config.IMG_size}_{config.lr_base}_"
     d_conf = deepcopy(config)
-    d_conf.nLayer = 2
+    d_conf.nLayer = 1
     d_conf.net_type = "WNet"
     d_conf.feat_extractor = "layers"
     _,DNet = DNet_instance(d_conf)

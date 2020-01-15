@@ -1,6 +1,9 @@
 
 import torch
 
+'''
+    parser.add_argument is better than NET_config
+'''
 class NET_config:
     def __init__(self,net_type, data_set, IMG_size, lr_base, batch_size,nClass,nLayer):
         #seed_everything(self.seed)

@@ -40,14 +40,19 @@ def image_transformer():
         ]),
     }
 
+'''
+    1 参见cifar_rgbF.jpg，简单的fourier channel没啥效果
+'''
 class D_input(nn.Module):
     def __init__(self, config, DNet):
         super(D_input, self).__init__()
         self.config = config
         self.DNet = DNet
         self.inplanes = 64
-        self.nLayD = 2#self.DNet.config.nLayer
-        self.c_input = nn.Conv2d(3+self.nLayD, self.inplanes, kernel_size=7, stride=2, padding=3, bias=False)
+        self.nLayD = DNet.nDifrac#self.DNet.config.nLayer
+        #self.nLayD = 1
+        #self.c_input =nn.Conv2d(3+self.nLayD, self.inplanes, kernel_size=7, stride=2, padding=3, bias=False)
+        self.c_input = nn.Conv2d(3+self.nLayD, self.inplanes, kernel_size=3, stride=1, padding=1, bias=False)
 
     def forward(self, x):
 
@@ -99,7 +104,7 @@ class OptiCNN(torch.nn.Module):
         # model_name='densenet121'
         # model_name='alexnet'
         # model_name='senet154'
-        cnn_model = ResNet18()          ;#models.resnet18(pretrained=True)
+        cnn_model = ResNet34()          ;#models.resnet18(pretrained=True)
         return cnn_model
 
     def __init__(self, config,DNet):

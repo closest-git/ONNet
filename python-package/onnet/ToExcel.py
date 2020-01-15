@@ -2,9 +2,11 @@ import numpy as np
 import pandas as pd
 import json
 import glob
+import argparse
 
 def OnVisdom_json(param,title):
-    files = glob.glob(f"{param['data_root']}{param['select']}")
+    search_str = f"{param['data_root']}{param['select']}"
+    files = glob.glob(search_str)
     datas = []
     cols = []
     for i, file in enumerate(files):
@@ -26,7 +28,15 @@ def OnVisdom_json(param,title):
 
 
 if __name__ == '__main__':
-    keyword = "WNet_mnist"
-    param = {"data_root":"F:/arXiv/Diffractive Wavenet - an novel low parameter optical neural network/",
+    parser = argparse.ArgumentParser(description='Load json of visdom curves. Save to EXCEL!')
+    parser.add_argument("keyword", type=str, help="keyword")
+    parser.add_argument("root",  type=str, help="root")
+
+    args = parser.parse_args()
+
+    if hasattr(args,'keyword') and hasattr(args,'root'):
+        keyword = args.keyword  # "WNet_mnist"
+        data_root = args.root   #"F:/arXiv/Diffractive Wavenet - an novel low parameter optical neural network/"
+        param = {"data_root":data_root,
              "select":f"{keyword}*.json"}
-    OnVisdom_json(param,keyword)
+        OnVisdom_json(param,keyword)
