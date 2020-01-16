@@ -4,18 +4,18 @@
     <bookmark url="file://$PROJECT_DIR$/case_mnist.py" line="152" />
     <bookmark url="file://$PROJECT_DIR$/python-package/onnet/Visualizing.py" line="85" />
     <bookmark url="file://$PROJECT_DIR$/python-package/onnet/Visualizing.py" line="168" />
-    <bookmark url="file://$PROJECT_DIR$/case_cifar.py" line="223" />
+    <bookmark url="file://$PROJECT_DIR$/case_cifar.py" line="224" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="617760e5-c3b6-4c49-8d8a-74f37b516c48" name="Default Changelist" comment="1)cudnn.benchmark 2)D_input">
+    <list default="true" id="617760e5-c3b6-4c49-8d8a-74f37b516c48" name="Default Changelist" comment="1)dump_model_params 2)cnn_models">
+      <change afterPath="$PROJECT_DIR$/python-package/cnn_models/OpticalNet.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/case_cifar.py" beforeDir="false" afterPath="$PROJECT_DIR$/case_cifar.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/case_mnist.py" beforeDir="false" afterPath="$PROJECT_DIR$/case_mnist.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python-package/onnet/NET_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/NET_config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python-package/onnet/Net_Instance.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/Net_Instance.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python-package/onnet/OptiCNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/OptiCNN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python-package/onnet/ToExcel.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/ToExcel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python-package/onnet/Visualizing.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/Visualizing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python-package/onnet/OptiCNN.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/RGBO_CNN.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python-package/onnet/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python-package/onnet/some_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/python-package/onnet/some_utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,11 +25,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python-package/onnet/OptiCNN.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/python-package/onnet/RGBO_CNN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
+            <state relative-caret-position="1573">
+              <caret line="128" column="27" lean-forward="true" selection-start-line="127" selection-start-column="40" selection-end-line="128" selection-end-column="27" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -38,19 +38,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python-package/cnn_models/resnet.py">
+        <entry file="file://$PROJECT_DIR$/python-package/cnn_models/OpticalNet.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="256">
-              <caret line="71" column="85" selection-start-line="71" selection-start-column="21" selection-end-line="71" selection-end-column="85" />
+            <state relative-caret-position="-551">
+              <caret line="10" column="18" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="18" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python-package/onnet/NET_config.py">
+        <entry file="file://$PROJECT_DIR$/python-package/onnet/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
+            <state relative-caret-position="168">
+              <caret line="10" column="46" selection-start-line="10" selection-start-column="46" selection-end-line="10" selection-end-column="46" />
             </state>
           </provider>
         </entry>
@@ -58,46 +61,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/case_cifar.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="309">
-              <caret line="154" column="6" selection-start-line="154" selection-start-column="6" selection-end-line="154" selection-end-column="6" />
+            <state relative-caret-position="168">
+              <caret line="183" selection-start-line="183" selection-end-line="183" />
               <folding>
                 <element signature="e#208#220#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/python-package/onnet/ToExcel.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="321">
-              <caret line="26" column="20" lean-forward="true" selection-start-line="26" selection-start-column="20" selection-end-line="26" selection-end-column="20" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/case_mnist.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="56">
-              <caret line="125" column="26" selection-start-line="125" selection-start-column="26" selection-end-line="125" selection-end-column="26" />
-              <folding>
-                <element signature="e#0#37#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python-package/onnet/Net_Instance.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1064">
-              <caret line="56" column="34" selection-start-line="56" selection-start-column="34" selection-end-line="56" selection-end-column="34" />
-              <folding>
-                <element signature="e#0#21#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -106,8 +73,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NNet.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="194">
-              <caret line="259" selection-start-line="259" selection-end-line="259" />
+            <state relative-caret-position="188">
+              <caret line="222" column="8" selection-start-line="222" selection-start-column="8" selection-end-line="222" selection-end-column="8" />
               <folding>
                 <element signature="e#173#185#0" expanded="true" />
               </folding>
@@ -116,21 +83,42 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python-package/onnet/Visualizing.py">
+        <entry file="file://$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="215">
-              <caret line="166" selection-start-line="166" selection-end-line="166" />
+            <state relative-caret-position="-2524">
+              <caret line="12" column="22" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="22" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/python-package/onnet/Z_utils.py">
+        <entry file="file://$PROJECT_DIR$/python-package/onnet/NET_config.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="82">
-              <caret line="187" column="13" selection-start-line="187" selection-start-column="13" selection-end-line="187" selection-end-column="13" />
+            <state relative-caret-position="304">
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://D:/Anaconda3/Lib/codecs.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="95">
+              <caret line="5" column="46" selection-start-line="5" selection-start-column="46" selection-end-line="5" selection-end-column="46" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/python-package/onnet/Net_Instance.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="386">
+              <caret line="73" selection-start-line="73" selection-end-line="73" />
               <folding>
-                <element signature="e#82#94#0" expanded="true" />
+                <element signature="e#0#21#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -147,13 +135,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>isins</find>
-      <find>avgpool</find>
-      <find>stack</find>
-      <find>seed_e</find>
-      <find>Files already downloaded and verified</find>
-      <find>inplanes</find>
-      <find>Init</find>
       <find>DNet</find>
       <find>break</find>
       <find>random</find>
@@ -174,9 +155,16 @@
       <find>.visual</find>
       <find>view</find>
       <find>isDNet</find>
+      <find>Bottleneck</find>
       <find>vis</find>
-      <find>visual</find>
       <find>0.01</find>
+      <find>visual</find>
+      <find>ResNet</find>
+      <find>BasicBlock</find>
+      <find>DiffractiveLayer</find>
+      <find>GetLayer_</find>
+      <find>OptiCNN</find>
+      <find>pool</find>
     </findStrings>
     <replaceStrings>
       <replace>optical_trans</replace>
@@ -211,19 +199,21 @@
         <option value="$PROJECT_DIR$/python-package/onnet/RandSuppLayer.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/MultiDNet.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/SparseSupport.py" />
-        <option value="$PROJECT_DIR$/python-package/onnet/__init__.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/Z_utils.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/D2NNet.py" />
-        <option value="$PROJECT_DIR$/python-package/onnet/some_utils.py" />
         <option value="$PROJECT_DIR$/python-package/net_source/test_2.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/ToExcel.py" />
-        <option value="$PROJECT_DIR$/case_mnist.py" />
-        <option value="$PROJECT_DIR$/python-package/onnet/Net_Instance.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/Visualizing.py" />
-        <option value="$PROJECT_DIR$/case_cifar.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/NET_config.py" />
+        <option value="$PROJECT_DIR$/python-package/onnet/some_utils.py" />
+        <option value="$PROJECT_DIR$/case_mnist.py" />
+        <option value="$PROJECT_DIR$/python-package/cnn_models/OpticalNet.py" />
         <option value="$PROJECT_DIR$/python-package/onnet/OptiCNN.py" />
+        <option value="$PROJECT_DIR$/python-package/onnet/__init__.py" />
+        <option value="$PROJECT_DIR$/python-package/onnet/Net_Instance.py" />
+        <option value="$PROJECT_DIR$/case_cifar.py" />
+        <option value="$PROJECT_DIR$/python-package/onnet/RGBO_CNN.py" />
       </list>
     </option>
   </component>
@@ -255,6 +245,12 @@
               <item name="ONNet" type="b2602c69:ProjectViewProjectNode" />
               <item name="ONNet" type="462c0819:PsiDirectoryNode" />
               <item name="python-package" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ONNet" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ONNet" type="462c0819:PsiDirectoryNode" />
+              <item name="python-package" type="462c0819:PsiDirectoryNode" />
+              <item name="cnn_models" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ONNet" type="b2602c69:ProjectViewProjectNode" />
@@ -293,29 +289,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.ToExcel">
-    <configuration name="DiffractiveLayer" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="ONNet" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/python-package/onnet" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.case_cifar">
     <configuration name="OptiCNN" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="ONNet" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -329,7 +303,29 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python-package/onnet/OptiCNN.py" />
+      <option name="SCRIPT_NAME" value="E:\ONNet\python-package\onnet\RGBO_CNN.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="OpticalNet" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="ONNet" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/python-package/cnn_models" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python-package/cnn_models/OpticalNet.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -407,17 +403,17 @@
     <list>
       <item itemvalue="Python.case_cifar" />
       <item itemvalue="Python.case_mnist (1)" />
-      <item itemvalue="Python.DiffractiveLayer" />
       <item itemvalue="Python.OptiCNN" />
       <item itemvalue="Python.ToExcel" />
+      <item itemvalue="Python.OpticalNet" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.ToExcel" />
         <item itemvalue="Python.case_cifar" />
+        <item itemvalue="Python.OpticalNet" />
+        <item itemvalue="Python.ToExcel" />
         <item itemvalue="Python.case_mnist (1)" />
         <item itemvalue="Python.OptiCNN" />
-        <item itemvalue="Python.DiffractiveLayer" />
       </list>
     </recent_temporary>
   </component>
@@ -482,7 +478,7 @@
       <workItem from="1578641369676" duration="6816000" />
       <workItem from="1578887651493" duration="13891000" />
       <workItem from="1578965922972" duration="6723000" />
-      <workItem from="1578973221447" duration="23593000" />
+      <workItem from="1578973221447" duration="29182000" />
     </task>
     <task id="LOCAL-00001" summary="optical_trans">
       <created>1575352870575</created>
@@ -820,22 +816,29 @@
       <option name="project" value="LOCAL" />
       <updated>1578974209121</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="1)vis::onX 2)cifar-SGD">
+      <created>1579081085109</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1579081085109</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="454716000" />
+    <option name="totallyTimeSpent" value="460305000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1408" height="878" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.3797753" visible="true" weight="0.1874074" />
-      <window_info id="Structure" order="1" sideWeight="0.6202247" side_tool="true" weight="0.1874074" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7062635" visible="true" weight="0.1874074" />
+      <window_info id="Structure" order="1" sideWeight="0.2937365" side_tool="true" visible="true" weight="0.1874074" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49925926" weight="0.18498659" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39678285" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49925926" weight="0.25067025" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.37935656" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -881,7 +884,6 @@
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="1)output_chunk 2)split_regions_2d" />
     <MESSAGE value="1)D2NNet:::input_trans,do_classify" />
     <MESSAGE value="1)shrink 2)train_trans" />
     <MESSAGE value="1)visualize" />
@@ -906,7 +908,8 @@
     <MESSAGE value="1)NET_config 2)modulus" />
     <MESSAGE value="1)OptiCNN::CNet" />
     <MESSAGE value="1)cudnn.benchmark 2)D_input" />
-    <option name="LAST_COMMIT_MESSAGE" value="1)cudnn.benchmark 2)D_input" />
+    <MESSAGE value="1)vis::onX 2)cifar-SGD" />
+    <option name="LAST_COMMIT_MESSAGE" value="1)vis::onX 2)cifar-SGD" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -986,6 +989,21 @@
           <line>164</line>
           <option name="timeStamp" value="395" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/python-package/onnet/Visualizing.py</url>
+          <line>178</line>
+          <option name="timeStamp" value="477" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/python-package/cnn_models/OpticalNet.py</url>
+          <line>42</line>
+          <option name="timeStamp" value="484" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/python-package/cnn_models/OpticalNet.py</url>
+          <line>22</line>
+          <option name="timeStamp" value="485" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -1009,16 +1027,17 @@
     <SUITE FILE_PATH="coverage/ONNet$DiffractiveLayer.coverage" NAME="DiffractiveLayer Coverage Results" MODIFIED="1578639364268" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$BinaryDNet.coverage" NAME="BinaryDNet Coverage Results" MODIFIED="1576119870151" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$case_dog_cat.coverage" NAME="case_dog_cat Coverage Results" MODIFIED="1575962483412" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
-    <SUITE FILE_PATH="coverage/ONNet$case_cifar.coverage" NAME="case_cifar Coverage Results" MODIFIED="1579059978091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ONNet$case_cifar.coverage" NAME="case_cifar Coverage Results" MODIFIED="1579142400478" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ONNet$test_1.coverage" NAME="test_1 Coverage Results" MODIFIED="1574833886089" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
     <SUITE FILE_PATH="coverage/ONNet$case_fft.coverage" NAME="case_fft Coverage Results" MODIFIED="1575873179511" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
     <SUITE FILE_PATH="coverage/ONNet$PoolForCls.coverage" NAME="PoolForCls Coverage Results" MODIFIED="1576827735713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$case_mnist.coverage" NAME="case_mnist Coverage Results" MODIFIED="1576328212748" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
     <SUITE FILE_PATH="coverage/ONNet$OptiCNN.coverage" NAME="OptiCNN Coverage Results" MODIFIED="1578978087249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
-    <SUITE FILE_PATH="coverage/ONNet$ToExcel.coverage" NAME="ToExcel Coverage Results" MODIFIED="1579067283316" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
+    <SUITE FILE_PATH="coverage/ONNet$ToExcel.coverage" NAME="ToExcel Coverage Results" MODIFIED="1579082694004" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$D2NN_tf.coverage" NAME="D2NN_tf Coverage Results" MODIFIED="1575956639323" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$case_face_detect.coverage" NAME="case_face_detect Coverage Results" MODIFIED="1575964746628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package" />
     <SUITE FILE_PATH="coverage/ONNet$case_mnist__1_.coverage" NAME="case_mnist (1) Coverage Results" MODIFIED="1579053140513" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ONNet$OpticalNet.coverage" NAME="OpticalNet Coverage Results" MODIFIED="1579140788667" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/cnn_models" />
     <SUITE FILE_PATH="coverage/ONNet$case_mnist___.coverage" NAME="case_mnist - 副本 Coverage Results" MODIFIED="1575363618084" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/net_source" />
     <SUITE FILE_PATH="coverage/ONNet$SparseSupport.coverage" NAME="SparseSupport Coverage Results" MODIFIED="1577345365220" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/onnet" />
     <SUITE FILE_PATH="coverage/ONNet$D2NN_tf__1_.coverage" NAME="D2NN_tf (1) Coverage Results" MODIFIED="1575542940093" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/net_source" />
@@ -1026,13 +1045,6 @@
     <SUITE FILE_PATH="coverage/ONNet$try_tensor.coverage" NAME="try_tensor Coverage Results" MODIFIED="1575453260380" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python-package/net_source" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/python-package/net_source/unitary_net.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="62" column="14" selection-start-line="62" selection-start-column="14" selection-end-line="62" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/cifar/__init__.py" />
     <entry file="file://$PROJECT_DIR$/models/cifar/wrn.py" />
     <entry file="file://$PROJECT_DIR$/models/cifar/resnet.py" />
@@ -1080,13 +1092,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3002">
           <caret line="2" column="49" lean-forward="true" selection-start-line="2" selection-start-column="3" selection-end-line="2" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/container.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="134" selection-start-line="134" selection-end-line="134" />
         </state>
       </provider>
     </entry>
@@ -1169,16 +1174,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2546">
-          <caret line="134" selection-start-line="134" selection-end-line="134" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/python-package/onnet/pytorch_env.py" />
     <entry file="file://D:/Anaconda3/Lib/site-packages/torchvision/models/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -1206,16 +1201,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/models/resnet.py" />
     <entry file="file://$PROJECT_DIR$/models/__init__.py" />
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="109">
-          <caret line="34" column="11" selection-start-line="34" selection-start-column="11" selection-end-line="34" selection-end-column="11" />
-          <folding>
-            <element signature="e#95#133#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/dpn.py" />
     <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/functional.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -1224,27 +1209,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/Anaconda3/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5852">
-          <caret line="309" selection-start-line="309" selection-end-line="309" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/python-package/net_source/test_2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3458">
           <caret line="184" selection-start-line="184" selection-end-line="184" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/some_utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="969">
-          <caret line="57" column="34" selection-start-line="57" selection-start-column="19" selection-end-line="57" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1293,74 +1261,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NNet.py">
+    <entry file="file://D:/Anaconda3/Lib/site-packages/torch/nn/modules/container.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="259" selection-start-line="259" selection-end-line="259" />
-          <folding>
-            <element signature="e#173#185#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/Visualizing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="166" selection-start-line="166" selection-end-line="166" />
+        <state relative-caret-position="186">
+          <caret line="45" column="8" selection-start-line="45" selection-start-column="8" selection-end-line="45" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/python-package/cnn_models/resnet.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="71" column="85" selection-start-line="71" selection-start-column="21" selection-end-line="71" selection-end-column="85" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/NET_config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/Net_Instance.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1064">
-          <caret line="56" column="34" selection-start-line="56" selection-start-column="34" selection-end-line="56" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/python-package/onnet/OptiCNN.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="43" column="45" selection-start-line="43" selection-start-column="45" selection-end-line="43" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/case_mnist.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="56">
-          <caret line="125" column="26" selection-start-line="125" selection-start-column="26" selection-end-line="125" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/case_cifar.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="154" column="6" selection-start-line="154" selection-start-column="6" selection-end-line="154" selection-end-column="6" />
-          <folding>
-            <element signature="e#208#220#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="198">
+          <caret line="52" column="42" lean-forward="true" selection-end-line="121" />
         </state>
       </provider>
     </entry>
@@ -1370,6 +1281,114 @@
           <caret line="26" column="20" lean-forward="true" selection-start-line="26" selection-start-column="20" selection-end-line="26" selection-end-column="20" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/Visualizing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="178" selection-start-line="178" selection-end-line="178" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/some_utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Anaconda3/Lib/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="5" column="46" selection-start-line="5" selection-start-column="46" selection-end-line="5" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/case_mnist.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="14" column="10" lean-forward="true" selection-start-line="14" selection-start-column="10" selection-end-line="14" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/NET_config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/DiffractiveLayer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2524">
+          <caret line="12" column="22" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/D2NNet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="188">
+          <caret line="222" column="8" selection-start-line="222" selection-start-column="8" selection-end-line="222" selection-end-column="8" />
+          <folding>
+            <element signature="e#173#185#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="10" column="46" selection-start-line="10" selection-start-column="46" selection-end-line="10" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/case_cifar.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="183" selection-start-line="183" selection-end-line="183" />
+          <folding>
+            <element signature="e#208#220#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/Net_Instance.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="386">
+          <caret line="73" selection-start-line="73" selection-end-line="73" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/cnn_models/OpticalNet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-551">
+          <caret line="10" column="18" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python-package/onnet/RGBO_CNN.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1573">
+          <caret line="128" column="27" lean-forward="true" selection-start-line="127" selection-start-column="40" selection-end-line="128" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>

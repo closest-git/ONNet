@@ -14,11 +14,11 @@ import pickle
 from .NET_config import *
 from .D2NNet import *
 
-class OptiCNN_config(NET_config):
+class RGBO_CNN_config(NET_config):
     def __init__(self, net_type, data_set, IMG_size, lr_base, batch_size, nClass, nLayer):
-        super(OptiCNN_config, self).__init__(net_type, data_set, IMG_size, lr_base, batch_size,nClass,nLayer)
+        super(RGBO_CNN_config, self).__init__(net_type, data_set, IMG_size, lr_base, batch_size,nClass,nLayer)
         self.dnet_type = ""
-        #self.dnet_type = "D2"
+        #self.dnet_type = "D3"
 
 def image_transformer():
     """
@@ -55,7 +55,24 @@ class D_input(nn.Module):
         self.c_input = nn.Conv2d(3+self.nLayD, self.inplanes, kernel_size=3, stride=1, padding=1, bias=False)
 
     def forward(self, x):
+        nChan = x.shape[1]
+        gray = x[:, 0:1]*0.3 + 0.59 * x[:, 1:2] + 0.11 * x[:, 2:3]  # to_grayscale(x)
+        listT = []
+        for i in range(nChan):
+            listT.append(x[:, i:i+1])
+        if self.nLayD>=1:
+            self.DNet.forward(gray)
+            assert len(self.DNet.feat_extractor) == self.nLayD
+            for opti, w in self.DNet.feat_extractor:
+                listT.append(opti)          #*w
+        elif self.nLayD==0:#
+            pass
+        else:
+            listT.append(gray)
 
+        x = torch.stack(listT,dim=1).squeeze()
+        if hasattr(self, 'visual'):         self.visual.onX(x, f"D_input")
+        x = self.c_input(x)
         return x
 
     def forward_000(self, x):
@@ -69,7 +86,7 @@ class D_input(nn.Module):
                 out_sum = out_sum + out_opti * w
         pass
 
-class OptiCNN(torch.nn.Module):
+class RGBO_CNN(torch.nn.Module):
     '''
         resnet  https://missinglink.ai/guides/pytorch/pytorch-resnet-building-training-scaling-residual-networks-pytorch/
     '''
@@ -108,7 +125,7 @@ class OptiCNN(torch.nn.Module):
         return cnn_model
 
     def __init__(self, config,DNet):
-        super(OptiCNN, self).__init__()
+        super(RGBO_CNN, self).__init__()
         seed_everything(42)
         self.config = config
         backbone = self.pick_models()
@@ -158,7 +175,7 @@ class OptiCNN(torch.nn.Module):
 
 if __name__ == "__main__":
     config = DNET_config(None)
-    a = OptiCNN(config,nFilmLayer=10)
-    print(f"OptiCNN={a}")
+    a = RGBO_CNN(config,nFilmLayer=10)
+    print(f"RGBO_CNN={a}")
     pass
 

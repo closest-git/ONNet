@@ -181,8 +181,8 @@ def Init():
     # Model
     print('==> Building model..')
     if isDNet:
-        config_0 = OptiCNN_config("OptiCNN", 'cifar_10', IMG_size, lr_base=args.lr, batch_size=128, nClass=10, nLayer=5)
-        env_title, net = OptiCNN_instance(config_0)
+        config_0 = RGBO_CNN_config("RGBO_CNN", 'cifar_10', IMG_size, lr_base=args.lr, batch_size=128, nClass=10, nLayer=5)
+        env_title, net = RGBO_CNN_instance(config_0)
         config_base = net.config
     else:
         # net = VGG('VGG19')
@@ -202,9 +202,10 @@ def Init():
         #visual = Visdom_Visualizer(env_title=env_title)
 
     print(net)
+    Net_dump(net)
     net = net.to(device)
     visual = Visdom_Visualizer(env_title=env_title)
-    #if hasattr(net, 'DInput'): net.DInput.visual = visual  # 看一看
+    #if hasattr(net, 'DInput'):        net.DInput.visual = visual  # 看一看
 
     if device == 'cuda':
         net = torch.nn.DataParallel(net)        #https://pytorch.org/tutorials/beginner/former_torchies/parallelism_tutorial.html

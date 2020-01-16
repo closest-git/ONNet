@@ -287,12 +287,14 @@ def main():
                 m.weight.data.normal_(0, 2. / math.sqrt(m.in_features))
                 m.bias.data.zero_()
 
-    nzParams=0
-    for name, param in model.named_parameters():
-        if param.requires_grad:
-            nzParams+=param.nelement()
-            print(f"\t{name}={param.nelement()}")
-    print(f"========All parameters={nzParams}")
+    nzParams = Net_dump(model)
+    if False:
+        nzParams=0
+        for name, param in model.named_parameters():
+            if param.requires_grad:
+                nzParams+=param.nelement()
+                print(f"\t{name}={param.nelement()}")
+        print(f"========All parameters={nzParams}")
 
     acc,best_acc = 0,0
     accu_=[]

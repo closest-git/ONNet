@@ -1,8 +1,19 @@
 from .D2NNet import *
-from .OptiCNN import *
+from .RGBO_CNN import *
 import math
 from copy import copy, deepcopy
 
+def dump_model_params(model):
+    nzParams = 0
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            nzParams += param.nelement()
+            print(f"\t{name}={param.nelement()}")
+    print(f"========All parameters={nzParams}")
+    return nzParams
+
+def Net_dump(net):
+    nzParams=dump_model_params(net)
 
 #def DNet_instance(net_type,dataset,IMG_size,lr_base,batch_size,nClass,nLayer):     需要重写，只有一个config
 def DNet_instance(config):
@@ -47,15 +58,18 @@ def DNet_instance(config):
 
     return env_title, model
 
-def OptiCNN_instance(config):
-    assert config.net_type == "OptiCNN"
+def RGBO_CNN_instance(config):
+    assert config.net_type == "RGBO_CNN"
     env_title = f"{config.net_type}_{config.dnet_type}_{config.data_set}_{config.IMG_size}_{config.lr_base}_"
-    d_conf = deepcopy(config)
-    d_conf.nLayer = 1
-    d_conf.net_type = "WNet"
-    d_conf.feat_extractor = "layers"
-    _,DNet = DNet_instance(d_conf)
-    model = OptiCNN(config,DNet)
+    assert hasattr(config,'dnet_type')
+
+    if config.dnet_type!="":
+        d_conf = deepcopy(config)
+        d_conf.net_type = "DNet"
+        _,DNet = DNet_instance(d_conf)
+    else:
+        DNet=None
+    model = RGBO_CNN(config,DNet)
 
     return env_title, model
 
