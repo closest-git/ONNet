@@ -15,6 +15,7 @@ from .SparseSupport import *
 import numpy as np
 from .DiffractiveLayer import *
 import cv2
+#from torchscope import scope
 
 class DNET_config:
     def __init__(self,batch,lr_base,modulation="phase",init_value = "random",random_seed=42,

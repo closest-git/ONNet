@@ -6,11 +6,16 @@
 *.user
 *.userosscache
 *.sln.docstates
-
+*.pth
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
 # Build results
+dump/
+runs/
+cnn_models/
+deap/
+checkpoint/
 python-package/net_source/
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -304,3 +309,4 @@ ModelManifest.xml
 /python-package/shap_test.py
 *.pickle
 *.gz
+logger.py

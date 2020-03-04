@@ -185,8 +185,10 @@ def Init():
         env_title, net = RGBO_CNN_instance(config_0)
         config_base = net.config
     else:
+        config_0 = NET_config("OpticalNet", 'cifar_10', IMG_size, lr_base=args.lr, batch_size=128, nClass=10)
         # net = VGG('VGG19')
-        net = ResNet34();           env_title='ResNet50';       net.legend = 'ResNet50'
+        #net = ResNet34();           env_title='ResNet34';       net.legend = 'ResNet34'
+        net = OpticalNet34(config_0);        env_title = 'OpticalNet34';        net.legend = 'OpticalNet34'
         # net = PreActResNet18()
         # net = GoogLeNet()
         # net = DenseNet121()

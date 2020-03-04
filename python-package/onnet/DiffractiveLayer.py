@@ -36,7 +36,7 @@ class DiffractiveLayer(torch.nn.Module):
         self.config = config
         #self.init_value = init_value
         #self.rDrop = rDrop
-        if self.config.wavelet is None:
+        if not hasattr(self.config,'wavelet') or self.config.wavelet is None:
             if self.config.modulation=="phase":
                 self.transmission = torch.nn.Parameter(data=torch.Tensor(self.size, self.size), requires_grad=True)
             else:

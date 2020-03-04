@@ -65,7 +65,13 @@ def RGBO_CNN_instance(config):
 
     if config.dnet_type!="":
         d_conf = deepcopy(config)
-        d_conf.net_type = "DNet"
+        if config.dnet_type == "stack_input":
+            d_conf.net_type = "DNet"
+            #d_conf.nLayer = 1
+            #d_conf.feat_extractor = "layers"
+        else:
+            d_conf.nLayer = 10
+            d_conf.net_type = "WNet"
         _,DNet = DNet_instance(d_conf)
     else:
         DNet=None

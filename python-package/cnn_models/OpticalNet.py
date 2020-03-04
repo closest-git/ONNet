@@ -13,13 +13,14 @@ class OpticalBlock(nn.Module):
 
     def __init__(self,config, in_planes, planes, stride=1):
         super(OpticalBlock, self).__init__()
+        self.config = config
         self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
         self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(planes)
 
         self.shortcut = nn.Sequential()
-        M,N = config.IMG_size[0], config.IMG_size[1]
+        M,N = self.config.IMG_size[0], self.config.IMG_size[1]
         self.diffrac = DiffractiveLayer(M,N,config)
         if stride != 1 or in_planes != self.expansion*planes:
             self.shortcut = nn.Sequential(
@@ -31,8 +32,8 @@ class OpticalBlock(nn.Module):
         out = F.relu(self.bn1(self.conv1(x)))
         out = self.bn2(self.conv2(out))
         out += self.shortcut(x)
-        assert x.shape[-1]==32 and x.shape[-2]==32
-        out += self.diffrac(x)
+        #assert x.shape[-1]==32 and x.shape[-2]==32
+        #out += self.diffrac(x)
         out = F.relu(out)
         return out
 
@@ -41,6 +42,7 @@ class OpticalNet(nn.Module):
     def __init__(self, config,block, num_blocks):
         super(OpticalNet, self).__init__()
         num_classes = config.nClass
+        self.config = config
         self.in_planes = 64
 
         self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
@@ -55,7 +57,7 @@ class OpticalNet(nn.Module):
         strides = [stride] + [1]*(num_blocks-1)
         layers = []
         for stride in strides:
-            layers.append(block(config,self.in_planes, planes, stride))
+            layers.append(block(self.config,self.in_planes, planes, stride))
             self.in_planes = planes * block.expansion
         return nn.Sequential(*layers)
 
@@ -74,6 +76,8 @@ class OpticalNet(nn.Module):
 def OpticalNet18(config):
     return OpticalNet(config,OpticalBlock, [2,2,2,2])
 
+def OpticalNet34(config):
+    return OpticalNet(config,OpticalBlock, [3,4,6,3])
 
 def test():
     net = OpticalNet18()

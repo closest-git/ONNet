@@ -17,8 +17,9 @@ from .D2NNet import *
 class RGBO_CNN_config(NET_config):
     def __init__(self, net_type, data_set, IMG_size, lr_base, batch_size, nClass, nLayer):
         super(RGBO_CNN_config, self).__init__(net_type, data_set, IMG_size, lr_base, batch_size,nClass,nLayer)
-        self.dnet_type = ""
-        #self.dnet_type = "D3"
+        #self.dnet_type = ""
+        self.dnet_type = "stack_input"
+        self.dnet_type = "stack_feature"
 
 def image_transformer():
     """
@@ -57,6 +58,7 @@ class D_input(nn.Module):
     def forward(self, x):
         nChan = x.shape[1]
         gray = x[:, 0:1]*0.3 + 0.59 * x[:, 1:2] + 0.11 * x[:, 2:3]  # to_grayscale(x)
+        return self.DNet.forward(gray)
         listT = []
         for i in range(nChan):
             listT.append(x[:, i:i+1])
@@ -129,9 +131,9 @@ class RGBO_CNN(torch.nn.Module):
         seed_everything(42)
         self.config = config
         backbone = self.pick_models()
-        if self.config.dnet_type != "":
+        if self.config.dnet_type == "stack_feature":
             self.DInput = D_input(config,DNet)
-        if hasattr(self,'DInput'):
+        elif self.config.dnet_type == "stack_input":                  #False and hasattr(self,'DInput'):
             self.CNet = nn.Sequential(*list(backbone.children())[1:])
         else:
             self.CNet = nn.Sequential(*list(backbone.children()))
@@ -156,7 +158,7 @@ class RGBO_CNN(torch.nn.Module):
 #https://forums.fast.ai/t/pytorch-best-way-to-get-at-intermediate-layers-in-vgg-and-resnet/5707/6
 
 
-    def forward(self, x):
+    def forward_0(self, x):
         if hasattr(self, 'DInput'):
             x = self.DInput(x)
         for no,lay in enumerate(self.CNet):
@@ -168,10 +170,22 @@ class RGBO_CNN(torch.nn.Module):
             if isinstance(lay,nn.AdaptiveAvgPool2d):       #x = self.avgpool(x),        x = x.reshape(x.size(0), -1)
                 x = x.reshape(x.size(0), -1)
         out_sum = x
-        #out_sum = self.CNet.forward(x)
-
         return out_sum
 
+    def forward(self, x):
+        out_sum = 0
+        if self.config.dnet_type == "stack_feature":
+            out_sum= self.DInput(x)
+        for no,lay in enumerate(self.CNet):
+            if isinstance(lay,nn.Linear):       #x = self.avgpool(x),        x = x.reshape(x.size(0), -1)
+                x = F.avg_pool2d(x, 4)
+                x = x.reshape(x.size(0), -1)
+            x = lay(x)
+            #print(f"{no}:\t{lay}\nx={x}")
+            if isinstance(lay,nn.AdaptiveAvgPool2d):       #x = self.avgpool(x),        x = x.reshape(x.size(0), -1)
+                x = x.reshape(x.size(0), -1)
+        out_sum += x
+        return out_sum
 
 if __name__ == "__main__":
     config = DNET_config(None)
