@@ -43,13 +43,14 @@ Please use the following bibtex entry:
 
 - More papers.
 
+  
 
 ## License
 
-[MIT](./LICENSE)
+The provided implementation is strictly for academic purposes only. If anyone is interested in using our technology for any commercial use, please contact us.
 
 ## Authors
 
-`ONNet` was written by Yingshi Chen(gsp.cys@gmail.com).
+Yingshi Chen (gsp.cys@gmail.com)
 
 QQ group: 1001583663

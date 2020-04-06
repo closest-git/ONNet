@@ -11,6 +11,7 @@
 *.userprefs
 
 # Build results
+net-source
 dump/
 runs/
 cnn_models/
