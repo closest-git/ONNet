@@ -110,3 +110,40 @@ def OnInitInstance(seed=0):
     seed_everything(seed)
     gpu_device = pytorch_env()
     return gpu_device
+
+def load_model_weights(model, state_dict, log,verbose=True):
+    """
+    Loads the model weights from the state dictionary. Function will only load
+    the weights which have matching key names and dimensions in the state
+    dictionary.
+
+    :param state_dict: Pytorch model state dictionary
+    :param verbose: bool, If True, the function will print the
+        weight keys of parametares that can and cannot be loaded from the
+        checkpoint state dictionary.
+    :return: The model with loaded weights
+    """
+    new_state_dict = model.state_dict()
+    non_loadable, loadable = set(), set()
+
+    for k, v in state_dict.items():
+        if k not in new_state_dict:
+            non_loadable.add(k)
+            continue
+
+        if v.shape != new_state_dict[k].shape:
+            non_loadable.add(k)
+            continue
+
+        new_state_dict[k] = v
+        loadable.add(k)
+
+    if verbose:
+        log.info("### Checkpoint weights that WILL be loaded: ###")
+        {log.info(k) for k in loadable}
+
+        log.info("### Checkpoint weights that CANNOT be loaded: ###")
+        {log.info(k) for k in non_loadable}
+
+    model.load_state_dict(new_state_dict)
+    return model

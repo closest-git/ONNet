@@ -9,6 +9,7 @@
 *.pth
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+*.npy
 
 # Build results
 net-source

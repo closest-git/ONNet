@@ -1,9 +1,17 @@
+from __future__ import absolute_import
+'''
+@Author: Yingshi Chen
+
+@Date: 2020-01-16 10:38:45
+@
+# Description: 
+'''
 # coding: utf-8
 """LiteMORT, Light Gradient Boosting Machine.
 
 __author__ = 'Yingshi Chen'
 """
-from __future__ import absolute_import
+
 import os
 
 from .optical_trans import OpticalTrans
@@ -35,7 +43,7 @@ __all__ = ['NET_config',
            'D2NNet','DNET_config','DNet_instance','RGBO_CNN_instance','Net_dump',
            'RGBO_CNN', 'RGBO_CNN_config',
            'OpticalTrans','COMPLEX_utils','MultiDNet','BinaryDNet','Visualize','Visdom_Visualizer',
-           'seed_everything'
+           'seed_everything','load_model_weights'
            ]
 
 
