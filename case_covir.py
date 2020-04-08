@@ -18,6 +18,7 @@ from torch.nn import CrossEntropyLoss
 from PIL import Image
 import logging
 import sys 
+import time
 ONNET_DIR = os.path.abspath("./python-package/")
 sys.path.append(ONNET_DIR)  # To find local version of the onnet
 #sys.path.append(os.path.abspath("./python-package/cnn_models/")) 
@@ -26,9 +27,9 @@ from onnet import *
 import torch
 from torch.optim import Adam
 from torchvision import transforms
-from sklearn.metrics import f1_score, precision_score, recall_score,accuracy_score
+from sklearn.metrics import f1_score, precision_score, recall_score,accuracy_score,classification_report
 
-
+isONN=True
 class COVID_set(Dataset):
     def __init__(self, config,img_dir, labels_file, transforms):
         self.config = config
@@ -236,23 +237,21 @@ def validate(data_loader, model, best_score, global_step, cfg):
 
         with torch.no_grad():
             logits = model(imgs)
-            probs = model.module.probability(logits)
-            preds = torch.argmax(probs, dim=1).cpu().numpy()
+            if isONN:
+                preds = net.predict(logits).cpu().numpy()
+            else:
+                probs = model.module.probability(logits)
+                preds = torch.argmax(probs, dim=1).cpu().numpy()
 
         labels = labels.cpu().detach().numpy()
-
         predictions.extend(preds)
         gts.extend(labels)
 
     predictions = np.array(predictions, dtype=np.int32)
     gts = np.array(gts, dtype=np.int32)
-    acc, f1, prec, rec = util.clf_metrics(predictions=predictions,
-                                          targets=gts,
-                                          average="macro")
+    acc, f1, prec, rec = clf_metrics(predictions=predictions,targets=gts,average="macro")
     report = classification_report(gts, predictions, output_dict=True)
-
-    log.info("VALIDATION | Accuracy {:.4f} | F1 {:.4f} | Precision {:.4f} | "
-             "Recall {:.4f}".format(acc, f1, prec, rec))
+    log.info("\n====== VALIDATION | Accuracy {:.4f} | F1 {:.4f} | Precision {:.4f} | Recall {:.4f}".format(acc, f1, prec, rec))
 
     if f1 > best_score:
         save_config = {
@@ -261,10 +260,9 @@ def validate(data_loader, model, best_score, global_step, cfg):
                     'global_step': global_step,
                     'clf_report': report
                 }
-        save_model(model=model, config=save_config)
+        #save_model(model=model, config=save_config)
         best_score = f1
-    log.info("Validation end")
-
+    #log.info("Validation end")
     model.train()
     return best_score
 
@@ -280,6 +278,7 @@ def train_transforms(width, height):
                                     shear=5)], p=0.5),
         transforms.RandomApply([
             transforms.ColorJitter(brightness=0.3, contrast=0.3)], p=0.5),
+        transforms.Grayscale(),
         transforms.ToTensor()
     ]
     return transforms.Compose(trans_list)
@@ -288,6 +287,7 @@ def train_transforms(width, height):
 def val_transforms(width, height):
     trans_list = [
         transforms.Resize((height, width)),
+        transforms.Grayscale(),
         transforms.ToTensor()
     ]
     return transforms.Compose(trans_list)
@@ -303,7 +303,7 @@ def clf_metrics(predictions, targets, average='macro'):
 
     return acc, f1, precision, recall
 
-def main():
+def main(model):
     if config.gpu and not torch.cuda.is_available():
         raise ValueError("GPU not supported or enabled on this system.")
     use_gpu = config.gpu
@@ -311,11 +311,7 @@ def main():
     log.info("Loading train dataset")
     train_dataset = COVID_set(config,config.train_imgs, config.train_labels,train_transforms(config.width,config.height))
     train_loader = DataLoader(train_dataset,
-                              batch_size=config.batch_size,
-                              shuffle=True,
-                              drop_last=True,
-                              num_workers=config.n_threads,
-                              pin_memory=use_gpu)
+                              batch_size=config.batch_size,shuffle=True,drop_last=True, num_workers=config.n_threads,pin_memory=use_gpu)
     log.info("Number of training examples {}".format(len(train_dataset)))
 
     log.info("Loading val dataset")
@@ -327,20 +323,9 @@ def main():
                             pin_memory=use_gpu)
     log.info("Number of validation examples {}".format(len(val_dataset)))
 
-    if config.weights:
-        state = torch.load(config.weights)
-        log.info("Loaded model weights from: {}".format(config.weights))
-    else:
-        state = None
-
-    state_dict = state["state_dict"] if state else None
-    model = COVIDNext50(n_classes=config.n_classes)
-    if state_dict:
-        model = load_model_weights(model=model, state_dict=state_dict,log=log)
-
     if use_gpu:
         model.cuda()
-        model = torch.nn.DataParallel(model)
+        #model = torch.nn.DataParallel(model)
     optim_layers = filter(lambda p: p.requires_grad, model.parameters())
 
     # optimizer and lr scheduler
@@ -361,9 +346,9 @@ def main():
 
     # Reset the best metric score
     best_score = -1
+    t0=time.time()
     for epoch in range(config.epochs):
-        log.info("Started epoch {}/{}".format(epoch + 1,
-                                              config.epochs))
+        log.info("\nStarted epoch {}/{}".format(epoch + 1,config.epochs))
         for data in train_loader:
             imgs, labels = data
             imgs = to_device(imgs, gpu=use_gpu)
@@ -374,24 +359,21 @@ def main():
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            lr = optimizer.param_groups[0]['lr'] 
 
             if global_step % config.log_steps == 0 and global_step > 0:
-                probs = model.module.probability(logits)
-                preds = torch.argmax(probs, dim=1).detach().cpu().numpy()
+                if isONN:
+                    preds = net.predict(logits).cpu().numpy()
+                else:
+                    probs = model.module.probability(logits)
+                    preds = torch.argmax(probs, dim=1).detach().cpu().numpy()
                 labels = labels.cpu().detach().numpy()
                 acc, f1, _, _ = clf_metrics(preds, labels)
                 lr = optimizer.param_groups[0]['lr']    #get_learning_rate(optimizer)
+                print(f"\r{global_step} | batch: Loss={loss.item():.3f} | F1={f1:.3f} | Accuracy={acc:.4f} | LR={lr:.2e}\tT={time.time()-t0:.4f}",end="")
 
-                log.info("Step {} | TRAINING batch: Loss {:.4f} | F1 {:.4f} | "
-                         "Accuracy {:.4f} | LR {:.2e}".format(global_step,loss.item(), f1, acc,lr))
 
-            if global_step % config.eval_steps == 0 and global_step > 0:
-                best_score = validate(val_loader,
-                                      model,
-                                      best_score=best_score,
-                                      global_step=global_step,
-                                      cfg=config)
+            if global_step % config.eval_steps == 0 and global_step > 0: 
+                best_score = validate(val_loader, model,best_score=best_score,global_step=global_step,cfg=config)
                 scheduler.step(best_score)
             global_step += 1
 
@@ -430,18 +412,30 @@ def UpdateConfig(config):
     config.ckpts_dir = "./experiments/ckpts"
     return config
 
-IMG_size =  (112, 112)
+IMG_size =  (256, 256)
 if __name__ == '__main__':
-    config_0 = NET_config("WNet",'covid',IMG_size,0,batch_size=16, nClass=3, nLayer=5)
-    #env_title, model = DNet_instance(config_0)  
-    config = UpdateConfig(config_0)
-    seed_everything(config.random_seed)
-    if False:
-        seed = config.random_seed
-        if seed:
-            np.random.seed(seed)
-            torch.manual_seed(seed)
-            if torch.cuda.is_available():
-                torch.cuda.manual_seed_all(seed)    
+    config_0 = NET_config("DNet",'covid',IMG_size,0.01,batch_size=16, nClass=3, nLayer=5)
+    if isONN:
+        env_title, net = DNet_instance(config_0)  
+        config = net.config
+        config = UpdateConfig(config)
+        config.batch_size = 64
+        config.log_steps = 10
+        config.lr = 0.001
+        state = None
+    else:
+        config = UpdateConfig(config_0)
+        if config.weights:
+            state = torch.load(config.weights)
+            log.info("Loaded model weights from: {}".format(config.weights))
+        else:
+            state = None
 
-    main()
+        state_dict = state["state_dict"] if state else None
+        net = COVIDNext50(n_classes=config.n_classes)
+        if state_dict:
+            net = load_model_weights(model=net, state_dict=state_dict,log=log)
+    print(net)
+    Net_dump(net)
+    seed_everything(config.random_seed)    
+    main(net)
