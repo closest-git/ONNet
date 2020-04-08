@@ -415,8 +415,10 @@ def UpdateConfig(config):
 IMG_size =  (256, 256)
 if __name__ == '__main__':
     config_0 = NET_config("DNet",'covid',IMG_size,0.01,batch_size=16, nClass=3, nLayer=5)
+    #config_0 = RGBO_CNN_config("RGBO_CNN",'covid',IMG_size,0.01,batch_size=16, nClass=3, nLayer=5)
     if isONN:
         env_title, net = DNet_instance(config_0)  
+        #env_title, net = RGBO_CNN_instance(config_0)  
         config = net.config
         config = UpdateConfig(config)
         config.batch_size = 64

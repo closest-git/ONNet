@@ -57,7 +57,11 @@ class D_input(nn.Module):
 
     def forward(self, x):
         nChan = x.shape[1]
-        gray = x[:, 0:1]*0.3 + 0.59 * x[:, 1:2] + 0.11 * x[:, 2:3]  # to_grayscale(x)
+        assert nChan==3 or nChan==1
+        if nChan==3:
+            gray = x[:, 0:1]*0.3 + 0.59 * x[:, 1:2] + 0.11 * x[:, 2:3]  # to_grayscale(x)
+        else:
+            gray = x
         return self.DNet.forward(gray)
         listT = []
         for i in range(nChan):
