@@ -32,6 +32,7 @@ from sklearn.metrics import f1_score, precision_score, recall_score,accuracy_sco
 import glob
 from typing import Callable, Any
 from typing import NamedTuple, List
+from case_brain import *
 
 isONN=False
 
@@ -67,7 +68,8 @@ class LungMask_set(Dataset):
         self.config = config
         self.img_root = config.train_img_dir if isTrain else config.test_img_dir
         self.mask_root = config.train_mask_dir if isTrain else config.test_mask_dir
-        self.transforms = transforms
+        self.img_trans = transforms
+        self.msk_trans = transforms
         self.images = self.load_images(self.img_root)
         self.masks = self.load_images(self.mask_root)        
 
@@ -87,9 +89,17 @@ class LungMask_set(Dataset):
             label = self.labels[idx]
             label_tensor = torch.tensor(label, dtype=torch.long)
         else:
-            img = Image.open(self.images[idx])
-            mask = Image.open(self.masks[idx])
-        return img, mask    
+            img = Image.open(self.images[idx]).convert("RGB")
+            mask = Image.open(self.masks[idx])               
+
+        imag_1 = self.img_trans(img).float()
+        mask_1 = self.msk_trans(mask).float()
+        if False:
+            m_0,m_1=np.min(mask_1),np.max(mask_1)
+            mask_1 = mask_1>0     
+            m_0,m_1=np.min(mask_1),np.max(mask_1)
+        return imag_1,mask_1
+  
 
 def to_np(x):
     return x.data.cpu().numpy()
@@ -363,7 +373,7 @@ class Trainer:
 def UpdateConfig(config):
     config.random_seed = 42
     config.gpu = True
-    config.batch_size = 16
+    config.batch_size = 4
     config.IMG_size =  (256, 256)
     config.train_img_dir = "F:/Datasets/lung/fg/"
     config.train_mask_dir = "F:/Datasets/lung/alpha/"
@@ -437,8 +447,13 @@ if __name__ == '__main__':
     trainer = Trainer(net, criterion, optimizer, dice_coeff, config, None)
 #https://github.com/galprz/brain-tumor-segmentation/blob/master/experiment-DeepResUnet.ipynb
 
-    ds_train = LungMask_set(config,train_transforms(config))
-    ds_test = LungMask_set( config,val_transforms(config),isTrain=False)
+    if False:
+        ds_train = LungMask_set(config,train_transforms(config))
+        ds_test = LungMask_set( config,val_transforms(config),isTrain=False)
+    else:
+        config.batch_size = 1
+        ds_train = BrainTumorDatasetMask(root="F:/Datasets/brain/", train=True)
+        ds_test = BrainTumorDatasetMask(root="F:/Datasets/brain/", train=False)
     dl_train = torch.utils.data.DataLoader(ds_train, config.batch_size, shuffle=True)
     dl_test = torch.utils.data.DataLoader(ds_test, config.batch_size, shuffle=False)
 
