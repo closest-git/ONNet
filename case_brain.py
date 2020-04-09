@@ -56,11 +56,12 @@ def normalize(x,  mean=470, std=None):
 
 # https://github.com/galprz/brain-tumor-segmentation
 class BrainTumorDataset(Dataset):    
-    def __init__(self, root, train=True, download=True,
+    def __init__(self,config, root, train=True, download=True,
                                                   classes=(ClassesLabels.Meningioma,
                                                   ClassesLabels.Glioma,
                                                   ClassesLabels.Pituitary)):
         super().__init__()
+        self.config = config
         test_fr = 0.15
         if download:
             get_data_if_needed(root)
@@ -106,7 +107,14 @@ class BrainTumorDataset(Dataset):
             }
             return image_with_metadata
         else:
-            return load_mat_trans(self.root + self.items[idx],target_size=(128,128) )
+            return load_mat_trans(self.root + self.items[idx],target_size=self.config.IMG_size )    #(128,128)
+
+def ToUint8(arr):
+    a_0,a_1 = np.min(arr),np.max(arr)
+    arr = (arr-a_0)/(a_1-a_0)*255
+    arr = arr.astype(np.uint8)
+    a_0,a_1 = np.min(arr),np.max(arr)
+    return arr
 
 def load_mat_trans(path,target_size=None):
     data_mat = hdf5storage.loadmat(path)
@@ -117,16 +125,17 @@ def load_mat_trans(path,target_size=None):
         x = xy[i][0]
         y = xy[i + 1][0]
         landmarks.append((x, y))
-    mask = data[4].astype(np.float)
+    mask = data[4].astype(np.float32)
     m_0,m_1 = np.min(mask),np.max(mask)
     #data[2].dtype = 'uint16'
-    image = data[2].astype(np.float) #ToPILImage()(data[2])    
+    image = data[2].astype(np.float32) #ToPILImage()(data[2])    
     if target_size is not None:
         image = cv2.resize(image,target_size)        
         #cv2.imshow("",image);           cv2.waitKey(0)          
         mask = cv2.resize(mask,target_size)  
-        m_0,m_1 = np.min(mask),np.max(mask)
-        #cv2.imshow("",mask*255);         cv2.waitKey(0)        
+        #cv2.imshow("",mask*255);         cv2.waitKey(0)  
+        image = ToUint8(image)    
+        mask = ToUint8(mask)    
     image_with_metadata = {
         "label": int(data[0][0]),
         "image": image,
@@ -137,14 +146,15 @@ def load_mat_trans(path,target_size=None):
     return image_with_metadata
 
 mask_transformer = transforms.Compose([    
-    #transforms.Resize((height, width), interpolation=0),
     transforms.ToTensor(),        
 ])
 
-image_transformer = transforms.Compose([   
-    #transforms.Resize((height, width), interpolation=0), 
+image_transformer_0 = transforms.Compose([   
     transforms.ToTensor(),    
     transforms.Lambda(lambda x: normalize(x))
+])
+image_transformer = transforms.Compose([   
+    transforms.ToTensor(),    
 ])
 
 class BrainTumorDatasetMask(BrainTumorDataset):
@@ -153,17 +163,20 @@ class BrainTumorDatasetMask(BrainTumorDataset):
         mask = mask_transformer(mask).float()
         return img,mask
 
-    def __init__(self, root, train=True, transform=None, classes=(ClassesLabels.Meningioma,
+    def __init__(self,config, root, train=True, transform=None, classes=(ClassesLabels.Meningioma,
                                                   ClassesLabels.Glioma,
                                                   ClassesLabels.Pituitary)):
-        super().__init__(root, train, classes=classes)
+        super().__init__(config,root, train, classes=classes)
         #self.transform = brain_transform
 
     def __getitem__(self, idx):
         item = super().__getitem__(idx)
         sample = (item["image"], item["mask"])
         #return sample if self.transform is None else self.transform(*sample)
-        return self.transform(item["image"], item["mask"])
+        img,mask = self.transform(item["image"], item["mask"])
+        #i_0,i_1 = torch.min(img),torch.max(img)
+        #m_0,m_1 = torch.min(mask),torch.max(mask)
+        return img,mask
 
 def _arrange_brain_tumor_data(root):
     # Remove and split files

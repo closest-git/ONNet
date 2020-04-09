@@ -19,11 +19,6 @@ import logging
 import sys 
 import time
 import datetime
-ONNET_DIR = os.path.abspath("./python-package/")
-sys.path.append(ONNET_DIR)  # To find local version of the onnet
-#sys.path.append(os.path.abspath("./python-package/cnn_models/")) 
-from cnn_models.resunet import DeepResUNet 
-from onnet import *
 import tqdm
 import torch
 from torch.optim import Adam
@@ -33,8 +28,13 @@ import glob
 from typing import Callable, Any
 from typing import NamedTuple, List
 from case_brain import *
-
+ONNET_DIR = os.path.abspath("./python-package/")
+sys.path.append(ONNET_DIR)  # To find local version of the onnet
+#sys.path.append(os.path.abspath("./python-package/cnn_models/")) 
+from onnet import *
 isONN=False
+if not isONN:
+    from cnn_models.resunet import DeepResUNet 
 
 def train_transforms(config):
     width, height = config.IMG_size[0],config.IMG_size[1]
@@ -362,7 +362,7 @@ class Trainer:
                 avg_score = overall_score / counter
                 pbar.set_description(f'{pbar_name} (Avg. loss:{avg_loss:.3f}, Avg. score:{avg_score:.3f})')                
                 pbar.update()
-                if counter%10==0:           print("")
+                if counter%30==0:           print("")
 
             pbar.set_description(f'{pbar_name} '
                                  f'(Avg. Loss {avg_loss:.3f}, Min {min_loss:.3f}, Max {max_loss:.3f}), '
@@ -374,7 +374,7 @@ def UpdateConfig(config):
     config.random_seed = 42
     config.gpu = True
     config.batch_size = 4
-    config.IMG_size =  (256, 256)
+    config.IMG_size =  (128, 128)
     config.train_img_dir = "F:/Datasets/lung/fg/"
     config.train_mask_dir = "F:/Datasets/lung/alpha/"
     config.test_img_dir = "F:/Datasets/lung/fg/"
@@ -453,8 +453,8 @@ if __name__ == '__main__':
         ds_test = LungMask_set( config,val_transforms(config),isTrain=False)
     else:
         config.batch_size = 16
-        ds_train = BrainTumorDatasetMask(root="F:/Datasets/brain/", train=True)
-        ds_test = BrainTumorDatasetMask(root="F:/Datasets/brain/", train=False)
+        ds_train = BrainTumorDatasetMask(config,root="F:/Datasets/brain/", train=True)
+        ds_test = BrainTumorDatasetMask(config,root="F:/Datasets/brain/", train=False)
     dl_train = torch.utils.data.DataLoader(ds_train, config.batch_size, shuffle=True)
     dl_test = torch.utils.data.DataLoader(ds_test, config.batch_size, shuffle=False)
     print(config)

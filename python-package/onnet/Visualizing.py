@@ -196,20 +196,24 @@ class Visualize:
 
 class  Visdom_Visualizer(Visualize):
     '''
-    封装了visdom的基本操作，但是你仍然可以通过`self.vis.function`
-    调用原生的visdom接口
+    封装了visdom的基本操作
     '''
 
     def __init__(self,env_title,plots=[], **kwargs):
         super(Visdom_Visualizer, self).__init__(env_title,plots)
-        self.viz = visdom.Visdom(env=env_title, **kwargs)
-        assert self.viz.check_connection()
+        try:
+            self.viz = visdom.Visdom(env=env_title, **kwargs)
+            assert self.viz.check_connection()
+        except:
+            self.viz = None
 
     def UpdateLoss(self, title,legend, loss, yLabel='LOSS',global_step=None):
         self.vis_plot( self.loss_step, loss, title,legend,yLabel)
         self.loss_step = self.loss_step + 1
 
     def vis_plot(self,epoch, loss_, title,legend,yLabel):
+        if self.viz is None:
+            return
         self.viz.line(X=torch.FloatTensor([epoch]), Y=torch.FloatTensor([loss_]), win='loss',
                  opts=dict(
                      legend=[legend],  # [config_.use_bn],

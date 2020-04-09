@@ -224,6 +224,8 @@ class D2NNet(nn.Module):
     def input_trans(self,x):    # square-rooted and normalized
         #x = x.double()*self.config.input_scale
         x = x*self.config.input_scale
+        x_0,x_1 = torch.min(x).item(),torch.max(x).item()
+        assert x_0>=0
         x = torch.sqrt(x)
         return x
 
