@@ -357,12 +357,12 @@ class Trainer:
                     min_score = batch_res.score
                 overall_loss += batch_res.loss
                 overall_score += batch_res.score
-                losses.append(batch_res.loss)
-
+                losses.append(batch_res.loss)                
                 avg_loss = overall_loss / counter
                 avg_score = overall_score / counter
-                pbar.set_description(f'{pbar_name} (Avg. loss:{avg_loss:.3f}, Avg. score:{avg_score:.3f})')
+                pbar.set_description(f'{pbar_name} (Avg. loss:{avg_loss:.3f}, Avg. score:{avg_score:.3f})')                
                 pbar.update()
+                if counter%10==0:           print("")
 
             pbar.set_description(f'{pbar_name} '
                                  f'(Avg. Loss {avg_loss:.3f}, Min {min_loss:.3f}, Max {max_loss:.3f}), '
@@ -415,6 +415,7 @@ def dice_coeff(pred, target, threshold=0.5, epsilon=1e-6, use_sigmoid = True):
 
 
 if __name__ == '__main__':
+    #load_mat_test("F:/Datasets/brain/glioma/209.mat")
     config_0 = NET_config("DNet",'covid',(256, 256),0.01,batch_size=16, nClass=3, nLayer=5)
     #config_0 = RGBO_CNN_config("RGBO_CNN",'covid',IMG_size,0.01,batch_size=16, nClass=3, nLayer=5)
     if isONN:
@@ -451,10 +452,10 @@ if __name__ == '__main__':
         ds_train = LungMask_set(config,train_transforms(config))
         ds_test = LungMask_set( config,val_transforms(config),isTrain=False)
     else:
-        config.batch_size = 1
+        config.batch_size = 16
         ds_train = BrainTumorDatasetMask(root="F:/Datasets/brain/", train=True)
         ds_test = BrainTumorDatasetMask(root="F:/Datasets/brain/", train=False)
     dl_train = torch.utils.data.DataLoader(ds_train, config.batch_size, shuffle=True)
     dl_test = torch.utils.data.DataLoader(ds_test, config.batch_size, shuffle=False)
-
+    print(config)
     fit_res = trainer.fit(dl_train,dl_test,num_epochs= config.epochs,checkpoints='dump/saved_models/' + net.__class__.__name__ + "V2")

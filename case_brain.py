@@ -14,6 +14,8 @@ import hdf5storage
 from enum import Enum
 import re
 from torchvision.transforms import transforms
+import cv2
+import numpy as np
 
 def get_data_if_needed(data_path='./data/', url="https://ndownloader.figshare.com/articles/1512427/versions/5"):
     if os.path.isdir(data_path):
@@ -82,28 +84,58 @@ class BrainTumorDataset(Dataset):
 
     def __getitem__(self, idx):
         if not (0 <= idx <  len(self.items)):
-            raise IndexError("Idx out of bound")
+            raise IndexError("Idx out of bound")        
+        if False:
+            data = hdf5storage.loadmat(self.root + self.items[idx])['cjdata'][0]
+            # transform the tumor border to array of (x, y) tuple
+            xy = data[3]
+            landmarks = []
+            for i in range(0, len(xy), 2):
+                x = xy[i][0]
+                y = xy[i + 1][0]
+                landmarks.append((x, y))
+            mask = data[4]
+            data[2].dtype = 'uint16'
+            image = data[2] #ToPILImage()(data[2])
+            image_with_metadata = {
+                "label": int(data[0][0]),
+                "image": image,
+                "landmarks": landmarks,
+                "mask": mask,
+                "bounding_box": convert_landmark_to_bounding_box(landmarks)
+            }
+            return image_with_metadata
+        else:
+            return load_mat_trans(self.root + self.items[idx],target_size=(128,128) )
 
-        data = hdf5storage.loadmat(self.root + self.items[idx])['cjdata'][0]
-        # transform the tumor border to array of (x, y) tuple
-        xy = data[3]
-        landmarks = []
-        for i in range(0, len(xy), 2):
-            x = xy[i][0]
-            y = xy[i + 1][0]
-            landmarks.append((x, y))
-        mask = data[4]
-        data[2].dtype = 'uint16'
-        image_with_metadata = {
-            "label": int(data[0][0]),
-            "image": ToPILImage()(data[2]),
-            "landmarks": landmarks,
-            "mask": mask,
-            "bounding_box": convert_landmark_to_bounding_box(landmarks)
-        }
-        return image_with_metadata
+def load_mat_trans(path,target_size=None):
+    data_mat = hdf5storage.loadmat(path)
+    data = data_mat['cjdata'][0]
+    xy = data[3]
+    landmarks = []
+    for i in range(0, len(xy), 2):
+        x = xy[i][0]
+        y = xy[i + 1][0]
+        landmarks.append((x, y))
+    mask = data[4].astype(np.float)
+    m_0,m_1 = np.min(mask),np.max(mask)
+    #data[2].dtype = 'uint16'
+    image = data[2].astype(np.float) #ToPILImage()(data[2])    
+    if target_size is not None:
+        image = cv2.resize(image,target_size)        
+        #cv2.imshow("",image);           cv2.waitKey(0)          
+        mask = cv2.resize(mask,target_size)  
+        m_0,m_1 = np.min(mask),np.max(mask)
+        #cv2.imshow("",mask*255);         cv2.waitKey(0)        
+    image_with_metadata = {
+        "label": int(data[0][0]),
+        "image": image,
+        "landmarks": landmarks,
+        "mask": mask,
+        "bounding_box": convert_landmark_to_bounding_box(landmarks)
+    }
+    return image_with_metadata
 
-height, width=256,256
 mask_transformer = transforms.Compose([    
     #transforms.Resize((height, width), interpolation=0),
     transforms.ToTensor(),        
@@ -160,3 +192,4 @@ def _arrange_brain_tumor_data(root):
                 os.rename(root + item, root + 'pituitary/' + item)
         else:
             os.remove(root + item)
+
