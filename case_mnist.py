@@ -55,7 +55,9 @@ class Fasion_Net(nn.Module):        #https://pytorch.org/tutorials/intermediate/
 class Mnist_Net(nn.Module):
     def __init__(self,config, nCls=10):
         super(Mnist_Net, self).__init__()
+        self.title = "Mnist_Net"
         self.config = config
+        self.config.learning_rate = 0.01
         self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.isDropOut = False
@@ -270,7 +272,7 @@ def main():
             batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory)
 
     config_0 = NET_config(net_type,dataset,IMG_size,lr_base,batch_size,nClass,nLayer)
-    env_title, model = DNet_instance(config_0)          #net_type,dataset,IMG_size,lr_base,batch_size,nClass,nLayer
+    env_title, model = DNet_instance(config_0)          #net_type,dataset,IMG_size,lr_base,batch_size,nClass,nLayer    
     visual = Visdom_Visualizer(env_title=env_title)
     # visual = Visualize(env_title=env_title)
     model.to(device)
@@ -303,8 +305,9 @@ def main():
             assert os.path.isdir('checkpoint')
             pth_path = f'./checkpoint/{model.title}_[{epoch},{acc}]_.pth'
             torch.save({'net': model.state_dict(), 'acc': acc, 'epoch': epoch,}, pth_path)
-
-        model.visualize(visual, f"E[{epoch-1}")
+ 
+        if hasattr(model,'visualize'):
+            model.visualize(visual, f"E[{epoch-1}")        
         train( model, device, train_loader, epoch, optical_trans,visual)
         acc = test(model, device, test_loader, optical_trans,visual)
         accu_.append(acc)

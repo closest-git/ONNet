@@ -32,9 +32,10 @@ ONNET_DIR = os.path.abspath("./python-package/")
 sys.path.append(ONNET_DIR)  # To find local version of the onnet
 #sys.path.append(os.path.abspath("./python-package/cnn_models/")) 
 from onnet import *
-isONN=False
+isONN=True
 if not isONN:
     from cnn_models.resunet import DeepResUNet 
+IMG_size=(128,128)
 
 def train_transforms(config):
     width, height = config.IMG_size[0],config.IMG_size[1]
@@ -374,7 +375,7 @@ def UpdateConfig(config):
     config.random_seed = 42
     config.gpu = True
     config.batch_size = 4
-    config.IMG_size =  (128, 128)
+    config.IMG_size =  IMG_size
     config.train_img_dir = "F:/Datasets/lung/fg/"
     config.train_mask_dir = "F:/Datasets/lung/alpha/"
     config.test_img_dir = "F:/Datasets/lung/fg/"
@@ -416,9 +417,10 @@ def dice_coeff(pred, target, threshold=0.5, epsilon=1e-6, use_sigmoid = True):
 
 if __name__ == '__main__':
     #load_mat_test("F:/Datasets/brain/glioma/209.mat")
-    config_0 = NET_config("DNet",'covid',(256, 256),0.01,batch_size=16, nClass=3, nLayer=5)
+    config_0 = NET_config("WNet",'covid',IMG_size,0.01,batch_size=16, nClass=8, nLayer=20)
     #config_0 = RGBO_CNN_config("RGBO_CNN",'covid',IMG_size,0.01,batch_size=16, nClass=3, nLayer=5)
     if isONN:
+        #config_0.feat_extractor = "last_layer"
         env_title, net = DNet_instance(config_0)  
         #env_title, net = RGBO_CNN_instance(config_0)  
         config = net.config
@@ -457,5 +459,5 @@ if __name__ == '__main__':
         ds_test = BrainTumorDatasetMask(config,root="F:/Datasets/brain/", train=False)
     dl_train = torch.utils.data.DataLoader(ds_train, config.batch_size, shuffle=True)
     dl_test = torch.utils.data.DataLoader(ds_test, config.batch_size, shuffle=False)
-    print(config)
+    print(f"config={config}")
     fit_res = trainer.fit(dl_train,dl_test,num_epochs= config.epochs,checkpoints='dump/saved_models/' + net.__class__.__name__ + "V2")

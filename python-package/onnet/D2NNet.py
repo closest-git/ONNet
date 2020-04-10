@@ -132,7 +132,8 @@ class D2NNet(nn.Module):
         self.title = f"DNNet"
         self.highWay = 1        #1,2,3
         if hasattr(self.config,'feat_extractor'):
-            self.feat_extractor = []
+            if self.config.feat_extractor!="last_layer":
+                self.feat_extractor = []
 
         if self.config.output_chunk == "2D":
             assert(self.M*self.N>=self.nClass)
@@ -281,7 +282,9 @@ class D2NNet(nn.Module):
 
 
         if hasattr(self,'feat_extractor'):
-            return
+                return
+        elif hasattr(self.config,'feat_extractor') and self.config.feat_extractor=="last_layer":
+            return x
         else:
             output = self.do_classify(x)
             return output
