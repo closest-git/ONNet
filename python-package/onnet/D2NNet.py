@@ -12,6 +12,7 @@ from .Z_utils import COMPLEX_utils as Z
 from .PoolForCls import *
 from .Loss import *
 from .SparseSupport import *
+from .FFT_layer import *
 import numpy as np
 from .DiffractiveLayer import *
 import cv2
@@ -41,6 +42,7 @@ class DNET_config:
         self.input_scale = 1
         self.wavelet = None              #dict paramter for wavelet
         #if self.isFC == True:            self.learning_rate = lr_base/10
+        self.input_plane = ""       #"fourier"
 
     def env_title(self):
         title=f"{self.support.value}"
@@ -131,6 +133,9 @@ class D2NNet(nn.Module):
         self.config = config
         self.title = f"DNNet"
         self.highWay = 1        #1,2,3
+        if self.config.input_plane == "fourier":            
+            self.highWay = 0   
+
         if hasattr(self.config,'feat_extractor'):
             if self.config.feat_extractor!="last_layer":
                 self.feat_extractor = []
@@ -140,18 +145,24 @@ class D2NNet(nn.Module):
         else:
             assert (self.M >= self.nClass and self.N >= self.nClass)
         print(f"D2NNet nClass={nCls} shape={self.M,self.N}")
-        self.wLayer = torch.nn.Parameter(torch.ones(self.nDifrac))
-        if self.highWay==2:
-            self.wLayer.data.uniform_(-1, 1)
-        elif self.highWay==1:
-            self.wLayer = torch.nn.Parameter(torch.ones(self.nDifrac))
+
 
         layer = self.GetLayer_()
+        #fl = FFT_Layer(self.M, self.N,config,isInv=False)
         self.DD = nn.ModuleList([
             layer(self.M, self.N,config) for i in range(self.nDifrac)
         ])
+        if self.config.input_plane=="fourier":
+            self.DD.insert(0,FFT_Layer(self.M, self.N,config,isInv=False))
+            self.DD.append(FFT_Layer(self.M, self.N,config,isInv=True))
         self.nD = len(self.DD)
         self.laySupp = None
+
+        self.wLayer = torch.nn.Parameter(torch.ones(len(self.DD)))
+        if self.highWay==2:
+            self.wLayer.data.uniform_(-1, 1)
+        elif self.highWay==1:
+            self.wLayer = torch.nn.Parameter(torch.ones(len(self.DD)))
         #self.DD.append(DropOutLayer(self.M, self.N,drop=0.9999))
         if self.config.isFC:
             self.fc1 = nn.Linear(self.M*self.N, self.nClass)
@@ -278,11 +289,13 @@ class D2NNet(nn.Module):
             x = self.z_modulus(x)
         elif self.highWay == 3:
             x = summary
+        elif self.highWay == 0:
+            x = self.z_modulus(x)
         if hasattr(self,'visual'):            self.visual.onX(x,f"X@output")
 
 
         if hasattr(self,'feat_extractor'):
-                return
+            return
         elif hasattr(self.config,'feat_extractor') and self.config.feat_extractor=="last_layer":
             return x
         else:

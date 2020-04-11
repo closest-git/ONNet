@@ -198,3 +198,18 @@ class COMPLEX_utils(object):
             C[..., 1].view(-1, C.size(-2)*C.size(-3))[:] = A_r * B_i + A_i * B_r
 
             return C if not inplace else A.copy_(C)
+
+def IFFT(X1,X2,X3):
+    f, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3, sharex='col', sharey='row',figsize=(10,6))
+    Z = ifftn(X1)
+    ax1.imshow(X1, cmap=cm.Reds)
+    ax4.imshow(np.real(Z), cmap=cm.gray)
+    Z = ifftn(X2)
+    ax2.imshow(X2, cmap=cm.Reds)
+    ax5.imshow(np.real(Z), cmap=cm.gray)
+    Z = ifftn(X3)
+    ax3.imshow(X3, cmap=cm.Reds)
+    ax6.imshow(np.real(Z), cmap=cm.gray)
+    plt.show()
+
+

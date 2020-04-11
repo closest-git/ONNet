@@ -21,15 +21,16 @@ class FFT_Layer(torch.nn.Module):
         assert (M_in == N_in)
         self.M = M_in
         self.N = N_in
-        self.isInv = isInverse
+        self.isInv = isInv
 
     def __repr__(self):
-        main_str = f"FFT_Layer{"_i" is self.isInv else "" }G]_[{self.M},{self.N}]"
+        i_ = "_i" if self.isInv else ""
+        main_str = f"FFT_Layer{i_}_[{self.M},{self.N}]"
         return main_str
 
-    def __init__(self, M_in, N_in,config,HZ=0.4e12):
+    def __init__(self, M_in, N_in,config,isInv=False):
         super(FFT_Layer, self).__init__()
-        self.SomeInit(M_in, N_in,HZ)
+        self.SomeInit(M_in, N_in,isInv)
         assert config is not None
         self.config = config
         #self.init_value = init_value
@@ -56,5 +57,21 @@ class FFT_Layer(torch.nn.Module):
         return  u2 * N * N * df * df
 
     def forward(self, x):
-        x = Z.fft(u1,"C2C",inverse=self.isInv)
+        #return x
+        if Z.isComplex(x):
+            z0 = x
+        else:
+            z0 = x.new_zeros(x.shape + (2,))
+            z0[...,0] = x
+        x = Z.fft(z0,"C2C",inverse=self.isInv)
+        x_0,x_1 = torch.min(x),torch.max(x)
         return x
+    
+    def trans(img):
+        plt.figure(figsize=(10,8))
+        plt.subplot(121),plt.imshow(img, cmap = 'gray')
+        plt.title('Input Image'), plt.xticks([]), plt.yticks([])
+        f = (abs(np.fft.fftshift(fftn(img))))**0.25*(255)**3  # Amplify
+        plt.subplot(122),plt.imshow(f, cmap = 'gray')
+        plt.title('Spectrum'), plt.xticks([]), plt.yticks([])
+        plt.show()

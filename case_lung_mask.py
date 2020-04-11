@@ -420,7 +420,7 @@ if __name__ == '__main__':
     config_0 = NET_config("WNet",'covid',IMG_size,0.01,batch_size=16, nClass=8, nLayer=20)
     #config_0 = RGBO_CNN_config("RGBO_CNN",'covid',IMG_size,0.01,batch_size=16, nClass=3, nLayer=5)
     if isONN:
-        #config_0.feat_extractor = "last_layer"
+        config_0.feat_extractor = "last_layer"
         env_title, net = DNet_instance(config_0)  
         #env_title, net = RGBO_CNN_instance(config_0)  
         config = net.config
