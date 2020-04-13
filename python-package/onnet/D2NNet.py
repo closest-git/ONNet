@@ -158,11 +158,13 @@ class D2NNet(nn.Module):
         self.nD = len(self.DD)
         self.laySupp = None
 
-        self.wLayer = torch.nn.Parameter(torch.ones(len(self.DD)))
-        if self.highWay==2:
-            self.wLayer.data.uniform_(-1, 1)
-        elif self.highWay==1:
+        if self.highWay>0:
             self.wLayer = torch.nn.Parameter(torch.ones(len(self.DD)))
+            if self.highWay==2:
+                self.wLayer.data.uniform_(-1, 1)
+            elif self.highWay==1:
+                self.wLayer = torch.nn.Parameter(torch.ones(len(self.DD)))
+
         #self.DD.append(DropOutLayer(self.M, self.N,drop=0.9999))
         if self.config.isFC:
             self.fc1 = nn.Linear(self.M*self.N, self.nClass)

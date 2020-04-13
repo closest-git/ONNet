@@ -63,7 +63,10 @@ class FFT_Layer(torch.nn.Module):
         else:
             z0 = x.new_zeros(x.shape + (2,))
             z0[...,0] = x
-        x = Z.fft(z0,"C2C",inverse=self.isInv)
+        if self.isInv:
+            x = Z.fft(z0,"C2C",inverse=self.isInv)
+        else:
+            x = (Z.fft(z0,"C2C",inverse=self.isInv))
         x_0,x_1 = torch.min(x),torch.max(x)
         return x
     

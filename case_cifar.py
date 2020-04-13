@@ -28,6 +28,7 @@ import torch.nn.init as init
 
 # The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with 6000 images per class. There are 50000 training images and 10000 test images. The dataset is divided into five training batches and one test batch, each with 10000 images.
 IMG_size = (32, 32)
+#IMG_size = (128, 128)
 isDNet = True
 
 def get_mean_and_std(dataset):
@@ -157,7 +158,7 @@ def Init():
     print('==> Preparing data..')
     transform_train = transforms.Compose([
         transforms.RandomCrop(32, padding=4),
-        #transforms.Grayscale(),
+        transforms.Grayscale(),
         transforms.RandomHorizontalFlip(),
         transforms.Resize(IMG_size),
         transforms.ToTensor(),
@@ -165,7 +166,7 @@ def Init():
     ])
 
     transform_test = transforms.Compose([
-        #transforms.Grayscale(),
+        transforms.Grayscale(),
         transforms.Resize(IMG_size),
         transforms.ToTensor(),
         #transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
@@ -181,8 +182,10 @@ def Init():
     # Model
     print('==> Building model..')
     if isDNet:
-        config_0 = RGBO_CNN_config("RGBO_CNN", 'cifar_10', IMG_size, lr_base=args.lr, batch_size=128, nClass=10, nLayer=5)
-        env_title, net = RGBO_CNN_instance(config_0)
+        #config_0 = RGBO_CNN_config("RGBO_CNN", 'cifar_10', IMG_size, lr_base=args.lr, batch_size=128, nClass=10, nLayer=5)
+        #env_title, net = RGBO_CNN_instance(config_0)
+        config_0 = NET_config("DNet",'cifar_10',IMG_size,lr_base=args.lr,batch_size=128, nClass=10, nLayer=10)
+        env_title, net = DNet_instance(config_0)  
         config_base = net.config
     else:
         config_0 = NET_config("OpticalNet", 'cifar_10', IMG_size, lr_base=args.lr, batch_size=128, nClass=10)
@@ -210,7 +213,8 @@ def Init():
     #if hasattr(net, 'DInput'):        net.DInput.visual = visual  # 看一看
 
     if device == 'cuda':
-        net = torch.nn.DataParallel(net)        #https://pytorch.org/tutorials/beginner/former_torchies/parallelism_tutorial.html
+        pass
+        #net = torch.nn.DataParallel(net)        #https://pytorch.org/tutorials/beginner/former_torchies/parallelism_tutorial.html
         #cudnn.benchmark = True     #结果会有扰动 https://zhuanlan.zhihu.com/p/73711222
 
     if args.resume:
@@ -299,6 +303,6 @@ if __name__ == '__main__':
     net,trainloader,testloader,optimizer,criterion,visual = Init()
     #legend = net.module.legend()
 
-    for epoch in range(start_epoch, start_epoch+200):
+    for epoch in range(start_epoch, start_epoch+2000):
         train(epoch,net,trainloader,optimizer,criterion)
         test(epoch,net,testloader,criterion,visual)
