@@ -23,6 +23,7 @@ from .Net_Instance import *
 from .NET_config import *
 from .Visualizing import *
 from .some_utils import *
+from .DiffractiveLayer import *
 '''
 try:
 except ImportError:
@@ -43,7 +44,8 @@ __all__ = ['NET_config',
            'D2NNet','DNET_config','DNet_instance','RGBO_CNN_instance','Net_dump',
            'RGBO_CNN', 'RGBO_CNN_config',
            'OpticalTrans','COMPLEX_utils','MultiDNet','BinaryDNet','Visualize','Visdom_Visualizer',
-           'seed_everything','load_model_weights'
+           'seed_everything','load_model_weights',
+           'DiffractiveLayer'
            ]
 
 

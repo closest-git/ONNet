@@ -14,7 +14,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-from torch.utils.tensorboard import SummaryWriter
+#from torch.utils.tensorboard import SummaryWriter
 import visdom
 import matplotlib.pyplot as plt
 import numpy as np
@@ -40,7 +40,7 @@ class Visualize:
         self.log_dir = f'runs/{env_title}'
         self.plots = plots
         self.loss_step = 0
-        self.writer = SummaryWriter(self.log_dir)
+        self.writer = None  #SummaryWriter(self.log_dir)
         self.img_dir="./dump/images/"
         self.dpi = 100
 

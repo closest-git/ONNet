@@ -16,6 +16,9 @@ from .FFT_layer import *
 import numpy as np
 from .DiffractiveLayer import *
 import cv2
+useAttention=False
+if useAttention:
+    import entmax
 #from torchscope import scope
 
 class DNET_config:
@@ -237,10 +240,14 @@ class D2NNet(nn.Module):
 
     def input_trans(self,x):    # square-rooted and normalized
         #x = x.double()*self.config.input_scale
-        x = x*self.config.input_scale
-        x_0,x_1 = torch.min(x).item(),torch.max(x).item()
-        assert x_0>=0
-        x = torch.sqrt(x)
+        if True:
+            x = x*self.config.input_scale
+            x_0,x_1 = torch.min(x).item(),torch.max(x).item()
+            assert x_0>=0
+            x = torch.sqrt(x)
+        else:       #为何不行，莫名其妙
+            x = Z.exp_euler(x*2*math.pi).float()
+            x_0,x_1 = torch.min(x).item(),torch.max(x).item()
         return x
 
     def do_classify(self,x):

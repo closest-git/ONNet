@@ -327,7 +327,38 @@ def main():
     #if args.save_model:
     #   torch.save(model.state_dict(), "mnist_onn.pt")
 
+'''
+    单衍射层测试算例
+    1) PIL加载图片 2)DiffractiveLayer forward 3)plt显示
+'''
+def layer_test():
+    from PIL import Image
+    img = Image.open("E:/ONNet/data/MNIST/test_2.jpg")    
+    img = train_trans(img)
+
+    config=NET_config(net_type,dataset,IMG_size,0.01,32,10,5)
+    config.modulation = 'phase'
+    config.init_value = "random"
+    config.rDrop = 0        #drop out
+    layer = DiffractiveLayer(IMG_size[0],IMG_size[1],config)
+
+    out = layer.forward(img.cuda())
+    im_out = layer.z_modulus(out)
+    im_out = im_out.squeeze().cpu().detach().numpy()
+
+    fig, ax = plt.subplots()
+    #plt.axis('off')
+    plt.grid(b=None)
+    im = ax.imshow(im_out, interpolation='nearest', cmap='coolwarm')
+    title = f"{layer.__repr__()}"
+    ax.set_title(title,fontsize=12)
+    fig.colorbar(im, orientation='horizontal')
+    plt.show()
+    plt.close()
+
+    print("!!!Good Luck!!!")
 
 if __name__ == '__main__':
     #Some_Test()
+    #layer_test()
     main()
