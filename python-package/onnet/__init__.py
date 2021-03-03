@@ -24,6 +24,8 @@ from .NET_config import *
 from .Visualizing import *
 from .some_utils import *
 from .DiffractiveLayer import *
+from .OpticalFormer import clip_grad,OpticalFormer
+
 '''
 try:
 except ImportError:

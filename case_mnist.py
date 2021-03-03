@@ -21,12 +21,13 @@ import numpy as np
 #dataset="fasion_mnist"
 #dataset="cifar"
 dataset="mnist"
-IMG_size = (28, 28)
+# IMG_size = (28, 28)
 # IMG_size = (56, 56)
 IMG_size = (112, 112)
 # IMG_size = (14, 14)
 batch_size = 128
 
+#net_type = "OptFormer"
 #net_type = "cnn"
 net_type = "DNet"
 #net_type = "WNet"

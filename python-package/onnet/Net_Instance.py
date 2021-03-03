@@ -7,6 +7,7 @@
 '''
 from .D2NNet import *
 from .RGBO_CNN import *
+from .OpticalFormer import *
 import math
 from copy import copy, deepcopy
 
@@ -58,8 +59,8 @@ def DNet_instance(config):
         model = MultiDNet(IMG_size, nClass, nLayer, [0.3e12, 0.35e12, 0.4e12, 0.42e12], config_base)
     elif net_type == "BiDNet":
         model = D2NNet(IMG_size, nClass, nLayer, config_base)
-        # model = D2NNet(IMG_size, nClass,nLayer, DNET_config(chunk="logit"))
-        #model = BinaryDNet(IMG_size,nClass,nLayer,1, config_base)
+    elif net_type == "OptFormer":
+        pass
 
     #model.double()
 
