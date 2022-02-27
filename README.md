@@ -18,15 +18,21 @@
 
 Optical neural network(ONN) is a novel machine learning framework on the physical principles of optics, which is still in its infancy and shows great potential. ONN tries to find optimal modulation parameters to change the phase, amplitude or other physical variable of optical wave propagation. So in the final output plane, the optical distribution has special pattern which is the indicator of object’s class or value. ONN opens new doors for the machine learning.
 
+# BTW:
 
+I used to think that "ONN opens new doors for the machine learning", but now it seems only few people admit the significance of ONN to machine learning. It's really hard to explain why ONN performs so poorly on widely used data sets(CIFAR...), let alone Imagenet!
 
+Fortunately, I find the optical diffraction model has subtle connection with some mathematical models, which is worthy of further study.
+
+---2/27/2022
 
 ## Citation
 
 Please use the following bibtex entry:
 ```
-[1] Chen, Yingshi, et al."An optical diffractive deep neural network with multiple frequency-channels." arXiv preprint arXiv:1912.10730 (2019).
-[2] Chen, Yingshi."Express Wavenet - a low parameter optical neural network with random shift wavelet pattern." arXiv preprint arXiv:2001.01458 (2020).
+[1] Xinyu, Zhang, Jiashuo Shi, and Yingshi Chen. "A Broad-Spectrum Diffractive Network via Ensemble Learning." Opt. Lett 46 (2021): 14.
+[2] Chen, Yingshi, et al."An optical diffractive deep neural network with multiple frequency-channels." arXiv preprint arXiv:1912.10730 (2019).
+[3] Chen, Yingshi, et al. "Express Wavenet: A lower parameter optical neural network with random shift wavelet pattern." Optics Communications 485 (2021): 126709.
 ```
 
 ## Future work
@@ -35,11 +41,7 @@ Please use the following bibtex entry:
 
   ​	Cifar, ImageNet ......
 
-- More models.
-
-  ​	Wavefront Matching Method
-
-  ​	Express network	
+- More models
 
 - More papers.
 
